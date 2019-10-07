@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
+import framework.CustomWindow;
 import framework.Image;
 import framework.Joint;
 import framework.KeyMapping;
@@ -23,8 +26,8 @@ public class TestLevel extends Level{
 	
 	private Polygon test;
 
-	public TestLevel(GameLevels thisLevel) {
-		super(thisLevel);
+	public TestLevel(GameLevels thisLevel, JFrame frame) {
+		super(thisLevel, frame);
 
 		// create some joints
 		body = new Joint(200, 200);

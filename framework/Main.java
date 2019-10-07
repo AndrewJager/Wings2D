@@ -1,10 +1,8 @@
+package framework;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
@@ -23,8 +21,8 @@ public class Main extends Canvas implements Runnable
 	private boolean debug = false;
 	private Thread thread;
 	private boolean running = false;
+	private CustomWindow win;
 	private JFrame frame;
-	private Window win;
 	private boolean mouseDown = false;
 	
 	private LevelManager manager;
@@ -40,16 +38,15 @@ public class Main extends Canvas implements Runnable
 		
 		manager = new LevelManager();
 		
-		menu = new Menu(GameLevels.MENU);
+		menu = new Menu(GameLevels.MENU, this.frame);
 		manager.addLevel(menu);
 		
-		levelA = new TestLevel(GameLevels.TEST);
+		levelA = new TestLevel(GameLevels.TEST, this.frame);
 		manager.addLevel(levelA);	
 	}
 	private void update()
 	{
-		//System.out.println(this.frame.getInsets());
-		manager.update(keys, this.frame, mouseDown);
+		manager.update(keys, mouseDown);
 	}
 	private void render()
 	{
@@ -73,13 +70,8 @@ public class Main extends Canvas implements Runnable
 	
 	public Main()
 	{
-		this.win = new Window(WIDTH, HEIGHT, "title", this, keys);
-		this.frame = win.getFrame();
-		this.win.addMouseListener(new MouseAdapter(){
-	          public void mousePressed(MouseEvent me) { 
-	              System.out.println(me); 
-	            } 
-		});
+		this.win = new CustomWindow(WIDTH, HEIGHT, "title", this, keys);
+		frame = win.getFrame();
 	}
 	
 	public ArrayList<Integer> getKeys()

@@ -36,15 +36,13 @@ public class LevelManager {
 		levels.set(newLevel.getLevel().ordinal(), newLevel);
 		newLevel.setManager(this);
 	}
-	public void update(ArrayList<Integer> keys, JFrame frame, boolean mouseDown)
+	public void update(ArrayList<Integer> keys, boolean mouseDown)
 	{
 		levels.get(curLevel.ordinal()).update(keys);
-		levels.get(curLevel.ordinal()).updateUI(frame, mouseDown);
 	}
 	
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		this.levels.get(curLevel.ordinal()).render(g2d, debug);
-		this.levels.get(curLevel.ordinal()).renderUI(g2d, debug);
 	}
 }

@@ -14,10 +14,12 @@ public class Level {
 	private List<Button> ui;
 	private GameLevels thisLevel;
 	private LevelManager manager;
+	private JFrame frame;
 	
-	public Level(GameLevels thisLevel)
+	public Level(GameLevels thisLevel, JFrame frame)
 	{
 		this.thisLevel = thisLevel;
+		this.frame = frame;
 		objects = new ArrayList<GameObject>();
 		ui = new ArrayList<Button>();
 	}
@@ -38,10 +40,6 @@ public class Level {
 	{
 		this.objects.add(newObject);
 	}
-	public void addUI(Button newButton)
-	{
-		this.ui.add(newButton);
-	}
 	public void update(ArrayList<Integer> keys)
 	{
 		for (int i = 0; i < objects.size(); i++)
@@ -50,25 +48,11 @@ public class Level {
 		}
 		keys.clear();
 	}
-	public void updateUI(JFrame frame, boolean mouseDown)
-	{
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).updateUI(frame, mouseDown);
-		}
-	}
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
 			objects.get(i).render(g2d, debug);
-		}
-	}
-	public void renderUI(Graphics2D g2d, boolean debug)
-	{
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).renderUI(g2d, debug);
 		}
 	}
 }
