@@ -3,6 +3,11 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
@@ -31,6 +36,7 @@ public class Main extends Canvas implements Runnable
 	private Menu menu;
 	
 	private ArrayList<Integer> keys;
+	private Point mouseClick;
 	
 	private void init()
 	{
@@ -47,6 +53,8 @@ public class Main extends Canvas implements Runnable
 	private void update()
 	{
 		manager.update(keys, mouseDown);
+		manager.updateUI(mouseClick);
+		mouseClick = null;
 	}
 	private void render()
 	{
@@ -63,6 +71,7 @@ public class Main extends Canvas implements Runnable
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		manager.render(g2d, debug);
+		manager.renderUI(g2d, debug);
 
 		g.dispose();
 		strat.show();
@@ -72,11 +81,30 @@ public class Main extends Canvas implements Runnable
 	{
 		this.win = new CustomWindow(WIDTH, HEIGHT, "title", this, keys);
 		frame = win.getFrame();
-	}
-	
-	public ArrayList<Integer> getKeys()
-	{
-		return keys;
+		this.addKeyListener(new KeyListener() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	        }
+
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+	            if (!keys.contains(e.getKeyCode()));
+	            {
+	            	keys.add(e.getKeyCode());
+	            }
+	            //System.out.println(e.getKeyCode());
+	            System.out.println(keys);
+	        }
+
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        }
+	    });
+		this.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent e) {
+		    	mouseClick = e.getPoint();
+		    }
+		});
 	}
 	public synchronized void start()
 	{

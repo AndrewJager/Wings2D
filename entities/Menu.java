@@ -16,12 +16,12 @@ import framework.LevelManager;
 import framework.Shape;
 
 public class Menu extends Level{
+	private Button b;
 	public Menu(GameLevels thisLevel, JFrame frame) {
 		super(thisLevel, frame);
+		b = new Button(100, 20, 80, 25, Color.GREEN);
 		
-		JButton b = new JButton("Hello");
-		b.setBounds(50,60,95,30);
-		frame.add(b);
+		this.addUI(b);
 	}
 
 	@Override
@@ -29,6 +29,10 @@ public class Menu extends Level{
 	{
 		KeyMapping mapping = this.getManager().getKeyMapping();
 		if (keys.contains(mapping.getKey("Enter")))
+		{
+			this.getManager().setLevel(GameLevels.TEST);
+		}
+		if (b.getClicked())
 		{
 			this.getManager().setLevel(GameLevels.TEST);
 		}

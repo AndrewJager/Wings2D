@@ -30,25 +30,7 @@ public class CustomWindow extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
-		frame.addKeyListener(new KeyListener() {
-	        @Override
-	        public void keyTyped(KeyEvent e) {
-	        }
-
-	        @Override
-	        public void keyPressed(KeyEvent e) {
-	            if (!game.getKeys().contains(e.getKeyCode()))
-	            {
-	            	game.getKeys().add(e.getKeyCode());
-	            }
-	            System.out.println(game.getKeys());
-	        }
-
-	        @Override
-	        public void keyReleased(KeyEvent e) {
-	        }
-	    });
-		frame.add(b);
+		//frame.add(b);
 		frame.add(game);
         frame.setVisible(true);
 		game.start();
