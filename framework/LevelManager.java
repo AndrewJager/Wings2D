@@ -4,9 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import entities.GameLevels;
+import entities.KeyState;
 
 public class LevelManager {
 	ArrayList<Level> levels = new ArrayList<Level>();
@@ -37,7 +36,7 @@ public class LevelManager {
 		levels.set(newLevel.getLevel().ordinal(), newLevel);
 		newLevel.setManager(this);
 	}
-	public void update(ArrayList<Integer> keys, boolean mouseDown)
+	public void update(KeyState keys, boolean mouseDown)
 	{
 		levels.get(curLevel.ordinal()).update(keys);
 	}

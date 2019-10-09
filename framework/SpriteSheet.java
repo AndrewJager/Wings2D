@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.KeyState;
+
 public class SpriteSheet extends GameObject{
 	private List<Sprite> sprites;
 	private int frame = 0;
@@ -25,7 +27,14 @@ public class SpriteSheet extends GameObject{
 		this.delay = delay;
 	}
 	
-	public void update()
+	/**
+	 * Set frame to 0
+	 */
+	public void reset()
+	{
+		frame = 0;
+	}
+	public void update(KeyState keys)
 	{
 		counter++;
 		if (this.sprites.get(frame).getSpriteDelay() != 0)

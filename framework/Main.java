@@ -31,16 +31,16 @@ public class Main extends Canvas implements Runnable
 	private boolean mouseDown = false;
 	
 	private LevelManager manager;
+	private KeyState keys;
 	
 	private TestLevel levelA;
 	private Menu menu;
 	
-	private ArrayList<Integer> keys;
 	private Point mouseClick;
 	
 	private void init()
 	{
-		keys = new ArrayList<Integer>();
+		keys = new KeyState();
 		
 		manager = new LevelManager();
 		
@@ -79,8 +79,7 @@ public class Main extends Canvas implements Runnable
 	
 	public Main()
 	{
-		this.win = new CustomWindow(WIDTH, HEIGHT, "title", this, keys);
-		frame = win.getFrame();
+		this.win = new CustomWindow(WIDTH, HEIGHT, "title", this);
 		this.addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {
@@ -88,16 +87,36 @@ public class Main extends Canvas implements Runnable
 
 	        @Override
 	        public void keyPressed(KeyEvent e) {
-	            if (!keys.contains(e.getKeyCode()));
-	            {
-	            	keys.add(e.getKeyCode());
-	            }
-	            //System.out.println(e.getKeyCode());
-	            System.out.println(keys);
+	        	int k = e.getKeyCode();
+	        	if (k == manager.getKeyMapping().getKey("Right"))
+	        	{
+	        		keys.right_key = true;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Left"))
+	        	{
+	        		keys.left_key = true;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Enter"))
+	        	{
+	        		keys.left_key = true;
+	        	}
 	        }
 
 	        @Override
 	        public void keyReleased(KeyEvent e) {
+	        	int k = e.getKeyCode();
+	        	if (k == manager.getKeyMapping().getKey("Right"))
+	        	{
+	        		keys.right_key = false;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Left"))
+	        	{
+	        		keys.left_key = false;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Enter"))
+	        	{
+	        		keys.left_key = false;
+	        	}
 	        }
 	    });
 		this.addMouseListener(new MouseAdapter() {

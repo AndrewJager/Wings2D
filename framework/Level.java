@@ -1,6 +1,5 @@
 package framework;
 
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import entities.GameLevels;
+import entities.KeyState;
 
 public class Level {
 	private List<GameObject> objects;
@@ -42,13 +42,12 @@ public class Level {
 	{
 		this.objects.add(newObject);
 	}
-	public void update(ArrayList<Integer> keys)
+	public void update(KeyState keys)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			objects.get(i).update();
+			objects.get(i).update(keys);
 		}
-		keys.clear();
 	}
 	public void updateUI(Point mouseClick)
 	{
