@@ -14,9 +14,11 @@ public class Image {
 	private double x, y;
 	private Color color;
 	private double rotation = 0;
+	private static int imageCount = 0;
 
 	public Image(Shape shape, Color color)
 	{
+		imageCount = getImageCount() + 1;
 		this.x = 0;
 		this.y = 0;
 		this.shape = shape;
@@ -145,5 +147,9 @@ public class Image {
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;
+	}
+
+	public static int getImageCount() {
+		return imageCount;
 	}
 }

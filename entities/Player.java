@@ -18,13 +18,11 @@ import framework.Sprite;
 import framework.SpriteSheet;
 
 public class Player extends GameObject{
-	private Level level;
 	private PlayerStates state, targetState;
 	private boolean facingRight = true;
 	private int idle = 0; // Count of how many frames from last commmand
 	private final int IDLE_COUNT = 20;
 	private Map<PlayerStates, SpriteSheet> animations;
-	private double x, y;
 	private Shape myShape;
 	private Image img, img2, img3, eye_img;
 	
@@ -32,12 +30,49 @@ public class Player extends GameObject{
 	private Sprite one, two, three, four, five;
 	private SpriteSheet sheet;
 	
+	private int SPEED = 3;
+	
 	public Player(Level level)
 	{
-		this.level = level;
 		animations = new HashMap<PlayerStates, SpriteSheet>();
+		this.setX(100);
+		this.setY(250);
 		
-		// create some joints
+		Sprite sprite;
+		one = setToBaseSprite();
+		shoulder.rotate(-45);
+		head.rotate(-45);
+		two = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
+		head.rotate(-45);
+		shoulder.rotate(20);
+		head.rotate(-45);
+		three = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
+		sheet = new SpriteSheet(one, two, three);
+		
+		animations.put(PlayerStates.WALK_R, sheet);
+		
+		shoulder.rotate(20);
+		head.rotate(-45);
+		four = setToBaseSprite();
+		shoulder.rotate(20);
+		head.rotate(90);
+		five = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
+		
+		sheet = new SpriteSheet(four, five);
+		animations.put(PlayerStates.WALK_L, sheet);
+		sheet = new SpriteSheet(one);
+		animations.put(PlayerStates.IDLE_R, sheet);
+		animations.put(PlayerStates.IDLE_L, sheet);
+		state = PlayerStates.WALK_R;
+	}
+	
+	/**
+	 * Sets all joints to starting position, and returns a new sprite
+	 * @return Sprite
+	 */
+	public Sprite setToBaseSprite()
+	{
+		// create the joints
 		body = new Joint(200, 200);
 		head = new Joint(body, 0, -20);
 		shoulder = new Joint(body, 30, 0);
@@ -47,7 +82,7 @@ public class Player extends GameObject{
 		r_eye = new Joint(head, 5, 2);
 		l_eye = new Joint(head, -5, 2);
 		
-		// create a shape and image
+		// create shapes and images
 		myShape = new Shape();
 		myShape.addPoint(0, 10);  
 		myShape.addPoint(10, 0);
@@ -85,45 +120,25 @@ public class Player extends GameObject{
 		r_eye.addImage(eye_img);
 		l_eye.addImage(eye_img);
 		
-		
-		one = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		shoulder.rotate(-45);
-		head.rotate(-45);
-		two = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		head.rotate(-45);
-		shoulder.rotate(20);
-		head.rotate(-45);
-		three = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		sheet = new SpriteSheet(one, two, three);
-		
-		animations.put(PlayerStates.WALK_R, sheet);
-		
-		shoulder.rotate(20);
-		head.rotate(-45);
-		four = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		shoulder.rotate(20);
-		head.rotate(-90);
-		five = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		
-		sheet = new SpriteSheet(four, five);
-		animations.put(PlayerStates.WALK_L, sheet);
-		sheet = new SpriteSheet(one);
-		animations.put(PlayerStates.IDLE_R, sheet);
-		animations.put(PlayerStates.IDLE_L, sheet);
-		state = PlayerStates.WALK_R;
+		Sprite BaseSprite = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
+		return BaseSprite;
 	}
+	
 	@Override
 	public void update(KeyState keys) {
+		int xVel = 0;
 		animations.get(state).update(keys);
 		
 		if (keys.right_key)
 		{
 			targetState = PlayerStates.WALK_R;
+			xVel = SPEED;
 			idle = 0;
 		}
 		if (keys.left_key)
 		{
 			targetState = PlayerStates.WALK_L;
+			xVel = -SPEED;
 			idle = 0;
 		}
 		
@@ -151,7 +166,6 @@ public class Player extends GameObject{
 			targetState = null;
 			animations.get(state).reset();
 		}
-		System.out.println(keys);
 		switch(state)
 		{
 		case IDLE_R:
@@ -166,7 +180,15 @@ public class Player extends GameObject{
 		default:
 			break;
 		}
-		
+		for (SpriteSheet sheet : animations.values()) {
+			sheet.setTranslated(false);
+		}
+		for (SpriteSheet sheet : animations.values()) {
+			if (!sheet.getTranslated())
+			{
+				sheet.translate(xVel, 0);
+			}
+		}
 	}
 
 	@Override

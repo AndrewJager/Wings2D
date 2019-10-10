@@ -49,6 +49,8 @@ public class Main extends Canvas implements Runnable
 		
 		levelA = new TestLevel(GameLevels.TEST, this.frame);
 		manager.addLevel(levelA);	
+		
+		manager.setLevel(GameLevels.TEST);
 	}
 	private void update()
 	{
@@ -168,7 +170,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				//System.out.println("FPS: " + frames);
+				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}

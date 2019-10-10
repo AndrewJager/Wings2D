@@ -1,8 +1,11 @@
 package entities;
 
 public class KeyState {
-	public boolean right_key = false, left_key = false, enter_key = false,
-			esc_key = false;
+	public boolean
+		right_key = false, 
+		left_key = false, 
+		enter_key = false,
+		esc_key = false;
 	
 	public String toString()
 	{

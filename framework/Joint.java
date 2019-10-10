@@ -6,24 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Joint {
-	private double x, y;
+	private double x, y, xOffset, yOffset;
 	private List<Joint> children;
 	private List<Image> images;
-	private double limitX, limitY;
+	private static int jointCount = 0;
 	
 	public Joint(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
+		this.xOffset = 0;
+		this.yOffset = 0;
 		this.children = new ArrayList<Joint>();
 		this.images = new ArrayList<Image>();
+		jointCount = getJointCount() + 1;
 	}
 	public Joint(Joint parent, double xOffset, double yOffset)
 	{
 		this(parent.getX() + xOffset, parent.getY() + yOffset);
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
 		parent.addChild(this);
 	}
-	
 	public void translate(int x, int y)
 	{
 		this.x = this.x + x;
@@ -123,5 +127,8 @@ public class Joint {
 	}
 	public List<Image> getImages() {
 		return images;
+	}
+	public static int getJointCount() {
+		return jointCount;
 	}
 }

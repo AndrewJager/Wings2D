@@ -10,13 +10,14 @@ public class SpriteSheet extends GameObject{
 	private List<Sprite> sprites;
 	private int frame = 0;
 	private int length, counter = 0, delay = 30;
+	private boolean translated = false; // Used to prevent sprite from being moved more than once per update
 	
 	public SpriteSheet(Sprite...frames)
 	{
 		sprites = new ArrayList<Sprite>();
 		for(int i = 0; i < frames.length; i++)
 		{
-			this.sprites.add(frames[i]);
+			this.sprites.add(frames[i].copy());
 		}
 		length = sprites.size();
 	}
@@ -59,6 +60,28 @@ public class SpriteSheet extends GameObject{
 		}
 	}
 	
+	public void translate(int x, int y)
+	{
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			sprites.get(i).setTranslated(false);
+		}
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			if (!sprites.get(i).getTranslated())
+			{
+				sprites.get(i).translate(x, y);
+			}
+		}
+		translated = true;
+	}
+	public boolean getTranslated() {
+		return translated;
+	}
+
+	public void setTranslated(boolean translated) {
+		this.translated = translated;
+	}
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		this.sprites.get(frame).render(g2d, debug);
