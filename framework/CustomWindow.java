@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import entities.Main;
+
 public class CustomWindow extends JPanel{
 	private static final long serialVersionUID = -6335376203853772958L;
 	private JFrame frame;

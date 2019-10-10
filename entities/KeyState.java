@@ -5,7 +5,8 @@ public class KeyState {
 		right_key = false, 
 		left_key = false, 
 		enter_key = false,
-		esc_key = false;
+		esc_key = false,
+		jump_key = false;
 	
 	public String toString()
 	{

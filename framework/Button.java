@@ -2,10 +2,7 @@ package framework;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.Point;
-
-import javax.swing.JFrame;
 
 public class Button{
 	private int x, y, width, height;

@@ -1,4 +1,4 @@
-package framework;
+package entities;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -102,6 +102,14 @@ public class Main extends Canvas implements Runnable
 	        	{
 	        		keys.left_key = true;
 	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Esc"))
+	        	{
+	        		keys.esc_key = true;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Jump"))
+	        	{
+	        		keys.jump_key = true;
+	        	}
 	        }
 
 	        @Override
@@ -118,6 +126,14 @@ public class Main extends Canvas implements Runnable
 	        	else if(k == manager.getKeyMapping().getKey("Enter"))
 	        	{
 	        		keys.left_key = false;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Esc"))
+	        	{
+	        		keys.esc_key = false;
+	        	}
+	        	else if(k == manager.getKeyMapping().getKey("Jump"))
+	        	{
+	        		keys.jump_key = false;
 	        	}
 	        }
 	    });
@@ -170,7 +186,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+				//System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}

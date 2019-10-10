@@ -20,6 +20,7 @@ public class LevelManager {
 		keys.setKey("Left", 37);
 		keys.setKey("Right", 39);
 		keys.setKey("Esc", 27);
+		keys.setKey("Jump", 38);
 	}
 	public KeyMapping getKeyMapping()
 	{

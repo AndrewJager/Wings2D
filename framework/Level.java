@@ -2,6 +2,7 @@ package framework;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import entities.KeyState;
 public class Level {
 	private List<GameObject> objects;
 	private List<Button> ui;
+	private List<Wall> walls;
 	private GameLevels thisLevel;
 	private LevelManager manager;
 	
@@ -21,6 +23,7 @@ public class Level {
 		this.thisLevel = thisLevel;
 		objects = new ArrayList<GameObject>();
 		ui = new ArrayList<Button>();
+		walls = new ArrayList<Wall>();
 	}
 	public LevelManager getManager()
 	{
@@ -34,6 +37,10 @@ public class Level {
 	{
 		return this.thisLevel;
 	}
+	public List<Wall> getWalls()
+	{
+		return walls;
+	}
 	public void addUI(Button b)
 	{
 		this.ui.add(b);
@@ -41,6 +48,11 @@ public class Level {
 	public void addObject(GameObject newObject)
 	{
 		this.objects.add(newObject);
+	}
+	public void addLine(double x1, double y1, double x2, double y2, WallTypes type)
+	{
+		Wall wall = new Wall(x1, y1, x2, y2, type);
+		walls.add(wall);
 	}
 	public void update(KeyState keys)
 	{
@@ -61,6 +73,11 @@ public class Level {
 		for (int i = 0; i < objects.size(); i++)
 		{
 			objects.get(i).render(g2d, debug);
+		}
+		for (int i = 0; i < walls.size(); i++)
+		{
+			Wall line = walls.get(i);
+			g2d.drawLine((int)line.getLine().getX1(), (int)line.getLine().getY1(), (int)line.getLine().getX2(), (int)line.getLine().getY2());
 		}
 	}
 	public void renderUI(Graphics2D g2d, boolean debug)
