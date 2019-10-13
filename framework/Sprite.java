@@ -3,6 +3,8 @@ package framework;
 import java.util.List;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A collection of joints
@@ -12,13 +14,16 @@ public class Sprite {
 	private int spriteDelay = 0; // If not zero, the time to show this frame before changing to the next
 	private boolean translated = false; // Used to prevent sprite from being moved more than once per update
 	
-	public Sprite(Joint...children)
+	public Sprite(List<Joint> jointList, Joint...children)
 	{
 		joints = new ArrayList<Joint>();
 		for (int i = 0; i < children.length; i++)
 		{
 			joints.add(children[i].copy());
+			jointList.add(children[i]); //Make list of all references to joints
 		}
+		Collections.sort(joints, new JointComparer());
+		Collections.sort(jointList, new JointComparer());
 	}
 	public Sprite(List<Joint> children)
 	{
@@ -70,4 +75,16 @@ public class Sprite {
 	public void setTranslated(boolean translated) {
 		this.translated = translated;
 	}
+	public List<Joint> getJoints() {
+		return joints;
+	}
+}
+
+/**
+ * Used for sorting joints by render order
+ */
+class JointComparer implements Comparator<Joint> {
+    public int compare(Joint j1, Joint j2) {
+        return j1.getRenderOrder() - j2.getRenderOrder();
+    }
 }

@@ -23,7 +23,7 @@ public class Main extends Canvas implements Runnable
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 500;
 	
-	private boolean debug = true;
+	private boolean debug = false;
 	private Thread thread;
 	private boolean running = false;
 	private JFrame frame;

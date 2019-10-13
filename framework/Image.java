@@ -76,14 +76,11 @@ public class Image {
 		transform.rotate(this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(), 
 				this.y + this.ogShape.getBounds2D().getCenterY());
 		Path2D.Double newShape = (Double) this.ogShape.clone();
-		
 		newShape.transform(transform);
-		System.out.println(newShape.getBounds());
 		transform = new AffineTransform();
 		// Rotated shape ends up offset for some reason. I have no idea why I have to do this.
 		transform.translate(-newShape.getBounds2D().getX(), -newShape.getBounds2D().getY());
 		newShape.transform(transform);
-		System.out.println(newShape.getBounds());
 		Image rotated = new Image(newShape, this.color);
 		
 		this.shape = ogShape;
@@ -94,13 +91,6 @@ public class Image {
 		this.y = rotated.getY();
 	}
 	
-	private void getRotatedPoint(Point2D point, Point2D base, double angle)
-	{
-		double x = Math.toRadians(angle);
-		double newX = base.getX() + (point.getX()-base.getX())*Math.cos(x) - (point.getY()-base.getY())*Math.sin(x);
-		double newY = base.getY() + (point.getX()-base.getY())*Math.sin(x) + (point.getY()-base.getY())*Math.cos(x);
-		point.setLocation(newX, newY);
-	}
 	public BufferedImage getImage()
 	{
 		return this.image;

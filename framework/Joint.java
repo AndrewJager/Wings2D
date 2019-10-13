@@ -10,6 +10,7 @@ public class Joint {
 	private List<Joint> children;
 	private List<Image> images;
 	private static int jointCount = 0;
+	private int renderOrder = 1; // Order in which joints get rendered, highest first
 	
 	public Joint(double x, double y)
 	{
@@ -23,6 +24,7 @@ public class Joint {
 	{
 		this(parent.getX() + xOffset, parent.getY() + yOffset);
 		parent.addChild(this);
+		this.setRenderOrder(parent.getRenderOrder());
 	}
 	public void translate(int x, int y)
 	{
@@ -39,6 +41,7 @@ public class Joint {
 	public Joint copy()
 	{
 		Joint newJoint = new Joint(this.x, this.y);
+		newJoint.setRenderOrder(this.getRenderOrder());
 		for (int i = 0; i < this.children.size(); i++)
 		{
 			newJoint.children.add(this.children.get(i).copy());
@@ -85,7 +88,7 @@ public class Joint {
 	}
 	public void render(Graphics2D g2d, boolean debug)
 	{
-		int WIDTH = 6, HEIGHT = 6; //size of debug circles
+		int WIDTH = 3, HEIGHT = 3; //size of debug circles
 		for (int i = 0; i < images.size(); i++)
 		{
 			Image img = images.get(i);
@@ -126,5 +129,15 @@ public class Joint {
 	}
 	public static int getJointCount() {
 		return jointCount;
+	}
+	public int getRenderOrder() {
+		return renderOrder;
+	}
+	public void setRenderOrder(int renderOrder) {
+		this.renderOrder = renderOrder;
+	}
+	public String toString()
+	{
+		return Math.round(this.x) + " " + Math.round(this.y);
 	}
 }

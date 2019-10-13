@@ -32,14 +32,16 @@ public class Player extends GameObject{
 	//private Shape myShape;
 	private Image img, img2, img3, eye_img;
 	private Joint body, head, eye, r_shoulder, l_shoulder, r_elbow, l_elbow, r_upper_arm, l_upper_arm,
-		r_hip, l_hip, r_upper_leg, l_lower_leg;
+		r_lower_arm, l_lower_arm, r_hand, l_hand, r_hip, l_hip, r_upper_leg, l_upper_leg, r_knee, l_knee,
+		r_lower_leg, l_lower_leg, r_foot, l_foot;
+	private List<Joint> joints;
 	private Sprite one, two, three, four, five;
 	private SpriteSheet sheet;
 	private Rectangle floorCheck, r_check, l_check; 
 	private List<Integer> jumpMotion; // List of y velocities for jumping
 	
 	private int x, y;
-	private int SPEED = 3, CLIMBSPEED = 2, GRAVITY = 3;
+	private int SPEED = 3, CLIMBSPEED = 2, GRAVITY = 5;
 	private boolean onGround, onRamp, canJump = false, jumping;
 	private int jumpCount;
 	
@@ -61,24 +63,47 @@ public class Player extends GameObject{
 		int w = 40;
 		int h = 8;
 		int xOffset = 0;
-		int yOffset = 10;
+		int yOffset = 25;
 		floorCheck = new Rectangle(x - (w / 2), y + yOffset - (h / 2), w, h);
 		
-		xOffset = 15;
-		yOffset = -10;
+		xOffset = 4;
+		yOffset = 2;
 		w = 10;
 		h = 15;
 		r_check = new Rectangle(x + xOffset - (w / 2), y + yOffset - (h / 2), w, h);
 		l_check = new Rectangle(x - xOffset - (w / 2), y + yOffset - (h / 2), w, h);
 		
+		//Idle
 		one = setToBaseSprite();
-		sheet = new SpriteSheet(one);
+		
+		// Walking
+		r_shoulder.rotate(35);
+		l_shoulder.rotate(-30);
+		r_elbow.rotate(-34);
+		l_elbow.rotate(-45);
+		head.rotate(5);
+		r_hip.rotate(-5);
+		r_knee.rotate(5);
+		l_hip.rotate(10);
+		l_knee.rotate(20);
+		two = new Sprite(joints);
+		
+		r_shoulder.rotate(-80);
+		l_shoulder.rotate(60);
+		head.rotate(-5);
+		r_hip.rotate(16);
+		r_knee.rotate(20);
+		l_hip.rotate(-26);
+		l_knee.rotate(-22);
+		three = new Sprite(joints);
+		
+		sheet = new SpriteSheet(two, three);
 		
 		animations.put(PlayerStates.WALK_R, sheet);
 		
-		sheet = new SpriteSheet(one);
+//		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.WALK_L, sheet);
-		sheet = new SpriteSheet(one);
+//		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.IDLE_R, sheet);
 		animations.put(PlayerStates.IDLE_L, sheet);
 		state = PlayerStates.WALK_R;
@@ -93,22 +118,79 @@ public class Player extends GameObject{
 		// create the joints
 		body = new Joint(this.x, this.y);
 		head = new Joint(body, 0, -15);
+		r_shoulder = new Joint(body, 0, -10);
+		l_shoulder = new Joint(body, 0, -10);
+		l_shoulder.setRenderOrder(-1);
+		r_upper_arm = new Joint(r_shoulder, 0, 3);
+		l_upper_arm = new Joint(l_shoulder, 0, 3);
+		r_elbow = new Joint(r_shoulder, 0, 6);
+		l_elbow = new Joint(l_shoulder, 0, 6);
+		r_lower_arm = new Joint(r_elbow, 0, 3);
+		l_lower_arm = new Joint(l_elbow, 0 ,3);
+		r_hand = new Joint(r_elbow, 0, 6);
+		l_hand = new Joint(l_elbow, 0 ,6);
+		r_hip = new Joint(body, 0, 10);
+		l_hip = new Joint(body, 0, 10);
+		l_hip.setRenderOrder(-1);
+		r_upper_leg = new Joint(r_hip, 0, 4);
+		l_upper_leg = new Joint(l_hip, 0, 4);
+		r_knee = new Joint(r_hip, 0, 8);
+		l_knee = new Joint(l_hip, 0, 8);
+		r_lower_leg = new Joint(r_knee, 0, 4);
+		l_lower_leg = new Joint(l_knee, 0 ,4);
+		r_foot = new Joint(r_knee, 0, 8);
+		l_foot = new Joint(l_knee, 0, 8);
 		
-		// create shapes and images
+		// images
 		Path2D myShape = new Path2D.Double();
-		myShape.append(new Rectangle2D.Double(0, 0, 10, 20), true);
+		myShape.append(new Rectangle2D.Double(0, 0, 4, 20), true);
 		img = new Image(myShape, Color.BLACK);
 		body.addImage(img);
-		body.rotate(135);
 		
-//		myShape = new Outline();
-//		myShape.addPoint(0, 0);  
-//		myShape.addPoint(10, 5);
-//		myShape.addPoint(0, 10);
-//		img = new Image(myShape, Color.BLACK);
-//		head.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,5,8), true);
+		img = new Image(myShape, Color.BLACK);
+		head.addImage(img);
 		
-		Sprite BaseSprite = new Sprite(body, head);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.BLUE);
+		r_upper_arm.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.GREEN);
+		l_upper_arm.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.BLUE);
+		r_lower_arm.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.GREEN);
+		l_lower_arm.addImage(img);
+		
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,4,8), true);
+		img = new Image(myShape, Color.BLUE);
+		r_upper_leg.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,4,8), true);
+		img = new Image(myShape, Color.GREEN);
+		l_upper_leg.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.BLUE);
+		r_lower_leg.addImage(img);
+		myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
+		img = new Image(myShape, Color.GREEN);
+		l_lower_leg.addImage(img);
+		
+		
+		joints = new ArrayList<Joint>();
+		Sprite BaseSprite = new Sprite(joints, body, head, r_shoulder, l_shoulder, r_upper_arm, l_upper_arm, 
+				r_elbow, l_elbow, r_lower_arm, l_lower_arm, r_hand, l_hand, r_hip, l_hip, r_upper_leg,
+				l_upper_leg, r_knee, l_knee, r_lower_leg, l_lower_leg, r_foot, l_foot);
 		return BaseSprite;
 	}
 	
@@ -275,9 +357,9 @@ public class Player extends GameObject{
 		if (debug)
 		{
 			g2d.setColor(Color.GREEN);
-//			g2d.fillRect(floorCheck.x, floorCheck.y, floorCheck.width, floorCheck.height);
-//			g2d.fillRect(r_check.x, r_check.y, r_check.width, r_check.height);
-//			g2d.fillRect(l_check.x, l_check.y, l_check.width, l_check.height);
+			g2d.fillRect(floorCheck.x, floorCheck.y, floorCheck.width, floorCheck.height);
+			g2d.fillRect(r_check.x, r_check.y, r_check.width, r_check.height);
+			g2d.fillRect(l_check.x, l_check.y, l_check.width, l_check.height);
 		}
 	}
 
