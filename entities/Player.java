@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Line2D.Double;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +18,6 @@ import framework.Image;
 import framework.Joint;
 import framework.KeyMapping;
 import framework.Level;
-import framework.Shape;
 import framework.Sprite;
 import framework.SpriteSheet;
 import framework.Wall;
@@ -28,7 +31,8 @@ public class Player extends GameObject{
 	
 	//private Shape myShape;
 	private Image img, img2, img3, eye_img;
-	private Joint body, head, shoulder, elbow, r_eye, l_eye, arm, face;
+	private Joint body, head, eye, r_shoulder, l_shoulder, r_elbow, l_elbow, r_upper_arm, l_upper_arm,
+		r_hip, l_hip, r_upper_leg, l_lower_leg;
 	private Sprite one, two, three, four, five;
 	private SpriteSheet sheet;
 	private Rectangle floorCheck, r_check, l_check; 
@@ -54,7 +58,7 @@ public class Player extends GameObject{
 		jumpMotion.add(3);
 		jumpMotion.add(1);
 		
-		int w = 50;
+		int w = 40;
 		int h = 8;
 		int xOffset = 0;
 		int yOffset = 10;
@@ -68,25 +72,11 @@ public class Player extends GameObject{
 		l_check = new Rectangle(x - xOffset - (w / 2), y + yOffset - (h / 2), w, h);
 		
 		one = setToBaseSprite();
-		shoulder.rotate(-45);
-		head.rotate(-45);
-		two = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		head.rotate(-45);
-		shoulder.rotate(20);
-		head.rotate(-45);
-		three = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		sheet = new SpriteSheet(one, two, three);
+		sheet = new SpriteSheet(one);
 		
 		animations.put(PlayerStates.WALK_R, sheet);
 		
-		shoulder.rotate(20);
-		head.rotate(-45);
-		four = setToBaseSprite();
-		shoulder.rotate(20);
-		head.rotate(90);
-		five = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
-		
-		sheet = new SpriteSheet(four, five);
+		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.WALK_L, sheet);
 		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.IDLE_R, sheet);
@@ -102,53 +92,23 @@ public class Player extends GameObject{
 	{
 		// create the joints
 		body = new Joint(this.x, this.y);
-		head = new Joint(body, 0, -20);
-		shoulder = new Joint(body, 30, 0);
-		elbow = new Joint(shoulder, 0, 40);
-		arm = new Joint(shoulder, 0, 20);
-		face = new Joint(head, 0, 10);
-		r_eye = new Joint(head, 5, 2);
-		l_eye = new Joint(head, -5, 2);
+		head = new Joint(body, 0, -15);
 		
 		// create shapes and images
-		Shape myShape = new Shape();
-		myShape.addPoint(0, 10);  
-		myShape.addPoint(10, 0);
-		myShape.addPoint(20, 10);
-		myShape.addPoint(10, 40);
+		Path2D myShape = new Path2D.Double();
+		myShape.append(new Rectangle2D.Double(0, 0, 10, 20), true);
 		img = new Image(myShape, Color.BLACK);
-		face.addImage(img);
+		body.addImage(img);
+		body.rotate(135);
 		
-		myShape = new Shape();
-		myShape.addPoint(0, 0);
-		myShape.addPoint(8, 0);
-		myShape.addPoint(8, 40);
-		myShape.addPoint(0, 40);
-		img3 = new Image(myShape, Color.BLACK);
-		arm.addImage(img3);
+//		myShape = new Outline();
+//		myShape.addPoint(0, 0);  
+//		myShape.addPoint(10, 5);
+//		myShape.addPoint(0, 10);
+//		img = new Image(myShape, Color.BLACK);
+//		head.addImage(img);
 		
-		myShape = new Shape();
-		myShape.addPoint(0, 5);
-		myShape.addPoint(2, 3);
-		myShape.addPoint(5, 0);
-		myShape.addPoint(7, 3);
-		myShape.addPoint(9, 5);
-		myShape.addPoint(7, 8);
-		myShape.addPoint(5, 10);
-		myShape.addPoint(2, 8);
-		img2 = new Image(myShape, Color.BLUE);
-		elbow.addImage(img2);
-		
-		myShape = new Shape();
-		myShape.addPoint(0, 3);
-		myShape.addPoint(3, 0);
-		myShape.addPoint(6, 3);
-		myShape.addPoint(3, 6);
-		eye_img = new Image(myShape,Color.GREEN);
-		r_eye.addImage(eye_img);
-		l_eye.addImage(eye_img);
-		
-		Sprite BaseSprite = new Sprite(body, head, shoulder, elbow, arm, face, r_eye, l_eye);
+		Sprite BaseSprite = new Sprite(body, head);
 		return BaseSprite;
 	}
 	
@@ -312,10 +272,13 @@ public class Player extends GameObject{
 	@Override
 	public void render(Graphics2D g2d, boolean debug) {
 		animations.get(state).render(g2d, debug);
-		g2d.setColor(Color.GREEN);
-		g2d.fillRect(floorCheck.x, floorCheck.y, floorCheck.width, floorCheck.height);
-		g2d.fillRect(r_check.x, r_check.y, r_check.width, r_check.height);
-		g2d.fillRect(l_check.x, l_check.y, l_check.width, l_check.height);
+		if (debug)
+		{
+			g2d.setColor(Color.GREEN);
+//			g2d.fillRect(floorCheck.x, floorCheck.y, floorCheck.width, floorCheck.height);
+//			g2d.fillRect(r_check.x, r_check.y, r_check.width, r_check.height);
+//			g2d.fillRect(l_check.x, l_check.y, l_check.width, l_check.height);
+		}
 	}
 
 }

@@ -5,10 +5,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.Path2D.Double;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class Image {
-	private Shape shape, ogShape;
+	private Path2D shape, ogShape;
 	private BufferedImage image;
 	private int width, height;
 	private double x, y;
@@ -16,15 +21,15 @@ public class Image {
 	private double rotation = 0;
 	private static int imageCount = 0;
 
-	public Image(Shape shape, Color color)
+	public Image(Path2D shape, Color color)
 	{
 		imageCount = getImageCount() + 1;
 		this.x = 0;
 		this.y = 0;
 		this.shape = shape;
 		this.ogShape = shape;
-		this.width = shape.getBounds().width ;
-		this.height = shape.getBounds().height ;
+		this.width = (int)Math.ceil(shape.getBounds2D().getWidth());
+		this.height = (int)Math.ceil(shape.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.color = color;
 		for(int x = 0; x < width; x++) {
@@ -60,44 +65,31 @@ public class Image {
 				newImage.image.setRGB(x, y, this.image.getRGB(x, y));
 			}
 		}
+		newImage.shape = this.shape;
 		return newImage;
 	}
 
 	public void rotate(double angle) {
 		this.image = null;
-		this.rotation += angle;
-		Shape newShape = new Shape();
-		for (int i = 0; i < this.ogShape.npoints; i++)
-		{
-			int x = this.ogShape.xpoints[i];
-			int y = this.ogShape.ypoints[i];
-			newShape.addPoint(x, y);
-		}
-		Point2D center = new Point2D.Double(this.getCenterX(), this.getCenterY());
+		this.rotation += Math.toRadians(angle);
+		AffineTransform transform = new AffineTransform();
+		transform.rotate(this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(), 
+				this.y + this.ogShape.getBounds2D().getCenterY());
+		Path2D.Double newShape = (Double) this.ogShape.clone();
 		
-		for (int i = 0; i < newShape.npoints; i++)
-		{
-			Point2D point = new Point2D.Double(newShape.xpoints[i], newShape.ypoints[i]);
-			getRotatedPoint(point, center, this.rotation);
-			newShape.xpoints[i] = (int)point.getX();
-			newShape.ypoints[i] = (int)point.getY();
-		}
-		newShape.invalidate(); //Refreshes the object cache, or something. IDK, but I need it here
-		
+		newShape.transform(transform);
+		System.out.println(newShape.getBounds());
+		transform = new AffineTransform();
 		// Rotated shape ends up offset for some reason. I have no idea why I have to do this.
-		int xOff = (int)newShape.getBounds().getX();
-		int yOff = (int)newShape.getBounds().getY();
-		for (int i = 0; i < newShape.npoints; i++)
-		{
-			newShape.xpoints[i] = newShape.xpoints[i] - xOff;
-			newShape.ypoints[i] = newShape.ypoints[i] - yOff;
-		}
-		newShape.invalidate();
+		transform.translate(-newShape.getBounds2D().getX(), -newShape.getBounds2D().getY());
+		newShape.transform(transform);
+		System.out.println(newShape.getBounds());
 		Image rotated = new Image(newShape, this.color);
-		this.shape = newShape;
+		
+		this.shape = ogShape;
 		this.image = rotated.getImage();
-		this.width = rotated.getShape().getBounds().width;
-		this.height = rotated.getShape().getBounds().height;
+		this.width = (int)Math.ceil(rotated.getShape().getBounds2D().getWidth());
+		this.height = (int)Math.ceil(rotated.getShape().getBounds2D().getHeight());
 		this.x = rotated.getX();
 		this.y = rotated.getY();
 	}
@@ -113,15 +105,17 @@ public class Image {
 	{
 		return this.image;
 	}
-	public Polygon getShape() {
+	public Path2D getShape() {
 		return shape;
 	}
-	public void setShape(Shape shape) {
+	public void setShape(Path2D shape) {
 		this.shape = shape;
 	}
 	
 	public void render(Graphics2D g2d, boolean debug)
 	{
+//		g2d.drawRect((int)this.getShape().getBounds2D().getX(), (int)this.getShape().getBounds2D().getY(),
+//				(int)this.getShape().getBounds2D().getWidth(), (int)this.getShape().getBounds2D().getHeight());
 		g2d.drawImage(this.image, (int)x, (int)y, this.width, this.height, null);
 	}
 	public double getCenterX()

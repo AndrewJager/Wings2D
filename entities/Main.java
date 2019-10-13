@@ -23,10 +23,9 @@ public class Main extends Canvas implements Runnable
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 500;
 	
-	private boolean debug = false;
+	private boolean debug = true;
 	private Thread thread;
 	private boolean running = false;
-	private CustomWindow win;
 	private JFrame frame;
 	private boolean mouseDown = false;
 	
@@ -81,7 +80,7 @@ public class Main extends Canvas implements Runnable
 	
 	public Main()
 	{
-		this.win = new CustomWindow(WIDTH, HEIGHT, "title", this);
+		new CustomWindow(WIDTH, HEIGHT, "title", this);
 		this.addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {

@@ -1,5 +1,6 @@
 package framework;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
@@ -77,6 +78,7 @@ public class Level {
 		for (int i = 0; i < walls.size(); i++)
 		{
 			Wall line = walls.get(i);
+			g2d.setColor(Color.GREEN);
 			g2d.drawLine((int)line.getLine().getX1(), (int)line.getLine().getY1(), (int)line.getLine().getX2(), (int)line.getLine().getY2());
 		}
 	}
