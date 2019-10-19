@@ -101,7 +101,18 @@ public class Image {
 		this.x = rotated.getX();
 		this.y = rotated.getY();
 	}
-	
+	public void flip()
+	{
+	    for (int i=0;i<image.getWidth();i++)
+	    {
+	        for (int j=0;j<image.getHeight()/2;j++)
+	        {
+	            int tmp = image.getRGB(i, j);
+	            image.setRGB(i, j, image.getRGB(i, image.getHeight()-j-1));
+	            image.setRGB(i, image.getHeight()-j-1, tmp);
+	        }
+	    }
+	}
 	public BufferedImage getImage()
 	{
 		return this.image;

@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Joint {
-	private double x, y;
+	private double x, y, offsetX;
 	private List<Joint> children;
 	private List<Image> images;
 	private static int jointCount = 0;
 	private int renderOrder = 1; // Order in which joints get rendered, highest first
 	private Level level;
+	private Joint parent;
 	
 	public Joint(double x, double y, Level level)
 	{
@@ -22,6 +23,7 @@ public class Joint {
 		this.images = new ArrayList<Image>();
 		this.level = level;
 		jointCount = getJointCount() + 1;
+		offsetX = 0;
 	}
 	public Joint(Joint parent, double xOffset, double yOffset)
 	{
@@ -29,6 +31,31 @@ public class Joint {
 				parent.getY() + (yOffset * parent.level.getManager().getScale()), parent.getLevel());
 		parent.addChild(this);
 		this.setRenderOrder(parent.getRenderOrder());
+		this.offsetX = xOffset;
+		this.parent = parent;
+	}
+	private double getBaseX()
+	{
+		Joint parent = this.parent;
+		if (parent == null)
+		{
+			return 0;
+		}
+		else {
+		boolean keepLooking = true;
+			while (keepLooking)
+			{
+				if (parent.parent != null)
+				{
+					parent = parent.parent;
+				}
+				else
+				{
+					keepLooking = false;
+				}
+			}
+			return parent.getX();
+		}
 	}
 	public void translate(int x, int y)
 	{
@@ -108,6 +135,15 @@ public class Joint {
 			g2d.setColor(c);
 		}
 	}
+	public void flip(double xPos)
+	{
+		double offset = getX() - getBaseX();
+		this.x = (this.x - (offset * 2)) + xPos * 2;
+		for (int i = 0; i < images.size(); i++)
+		{
+			images.get(i).flip();
+		}
+	}
 	public void addImage(Image image)
 	{
 		images.add(image);
@@ -128,6 +164,8 @@ public class Joint {
 	public void setY(double y) {
 		this.y = y;
 	}
+	public double getOffsetX()
+	{ return offsetX; }
 	public List<Image> getImages() {
 		return images;
 	}

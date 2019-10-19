@@ -50,19 +50,22 @@ public class Player extends GameObject{
 	{
 		this.level = level;
 		double s = level.getManager().getScale();
+		SPEED *= s;
+		CLIMBSPEED *= s;
+		GRAVITY *= s;
 		animations = new HashMap<PlayerStates, SpriteSheet>();
-		this.x = 100;
+		this.x = 250;
 		this.y = 300;
 		
 		jumpMotion = new ArrayList<Integer>();
-		jumpMotion.add(8);
-		jumpMotion.add(9);
-		jumpMotion.add(6);
-		jumpMotion.add(4);
-		jumpMotion.add(3);
-		jumpMotion.add(1);
+		jumpMotion.add((int)(8 * s));
+		jumpMotion.add((int)(9 * s));
+		jumpMotion.add((int)(6 * s));
+		jumpMotion.add((int)(4 * s));
+		jumpMotion.add((int)(2 * s));
+		jumpMotion.add((int)(1 * s));
 		
-		double w = 40 * s;
+		double w = 10 * s;
 		double h = 8 * s;
 		double xOffset = 0 * s;
 		double yOffset = 22 * s;
@@ -99,11 +102,13 @@ public class Player extends GameObject{
 		l_knee.rotate(-22);
 		three = new Sprite(joints);
 		
+		four = two.getFlipped(this.x);
+		five = three.getFlipped(this.x);
 		sheet = new SpriteSheet(two, three);
 		
 		animations.put(PlayerStates.WALK_R, sheet);
 		
-		sheet = new SpriteSheet(one);
+		sheet = new SpriteSheet(four, five);
 		animations.put(PlayerStates.WALK_L, sheet);
 		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.IDLE_R, sheet);

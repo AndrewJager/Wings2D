@@ -33,6 +33,16 @@ public class Sprite {
 			this.joints.add(children.get(i).copy());
 		}
 	}
+	public Sprite getFlipped(double xPos)
+	{
+		Sprite newSprite = new Sprite(joints);
+		for (int i = 0; i < newSprite.getJoints().size(); i++)
+		{
+			newSprite.getJoints().get(i).flip(xPos);
+		}
+		Collections.sort(joints, new InvertJointComparer());
+		return newSprite;
+	}
 	public void translate(int x, int y)
 	{
 		for (int i = 0; i < joints.size(); i++)
@@ -86,5 +96,10 @@ public class Sprite {
 class JointComparer implements Comparator<Joint> {
     public int compare(Joint j1, Joint j2) {
         return j1.getRenderOrder() - j2.getRenderOrder();
+    }
+}
+class InvertJointComparer implements Comparator<Joint> {
+    public int compare(Joint j1, Joint j2) {
+        return j2.getRenderOrder() - j1.getRenderOrder();
     }
 }
