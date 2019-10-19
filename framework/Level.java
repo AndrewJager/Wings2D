@@ -3,6 +3,7 @@ package framework;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +20,19 @@ public class Level {
 	private GameLevels thisLevel;
 	private LevelManager manager;
 	
-	public Level(GameLevels thisLevel, JFrame frame)
+	public Level(LevelManager manager, GameLevels thisLevel)
 	{
 		this.thisLevel = thisLevel;
+		this.manager = manager;
 		objects = new ArrayList<GameObject>();
 		ui = new ArrayList<Button>();
 		walls = new ArrayList<Wall>();
+		
+		manager.addLevel(this);
 	}
 	public LevelManager getManager()
 	{
 		return this.manager;
-	}
-	public void setManager(LevelManager manager)
-	{
-		this.manager = manager;
 	}
 	public GameLevels getLevel()
 	{
@@ -52,7 +52,7 @@ public class Level {
 	}
 	public void addLine(double x1, double y1, double x2, double y2, WallTypes type)
 	{
-		Wall wall = new Wall(x1, y1, x2, y2, type);
+		Wall wall = new Wall(this, x1, y1, x2, y2, type);
 		walls.add(wall);
 	}
 	public void update(KeyState keys)

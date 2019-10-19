@@ -6,6 +6,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D.Double;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -37,10 +38,10 @@ public class Player extends GameObject{
 	private List<Joint> joints;
 	private Sprite one, two, three, four, five;
 	private SpriteSheet sheet;
-	private Rectangle floorCheck, r_check, l_check; 
+	private Rectangle2D floorCheck, rCheck, lCheck; 
 	private List<Integer> jumpMotion; // List of y velocities for jumping
 	
-	private int x, y;
+	private double x, y;
 	private int SPEED = 3, CLIMBSPEED = 2, GRAVITY = 5;
 	private boolean onGround, onRamp, canJump = false, jumping;
 	private int jumpCount;
@@ -48,6 +49,7 @@ public class Player extends GameObject{
 	public Player(Level level)
 	{
 		this.level = level;
+		double s = level.getManager().getScale();
 		animations = new HashMap<PlayerStates, SpriteSheet>();
 		this.x = 100;
 		this.y = 300;
@@ -60,18 +62,18 @@ public class Player extends GameObject{
 		jumpMotion.add(3);
 		jumpMotion.add(1);
 		
-		int w = 40;
-		int h = 8;
-		int xOffset = 0;
-		int yOffset = 25;
-		floorCheck = new Rectangle(x - (w / 2), y + yOffset - (h / 2), w, h);
+		double w = 40 * s;
+		double h = 8 * s;
+		double xOffset = 0 * s;
+		double yOffset = 22 * s;
+		floorCheck = new Rectangle2D.Double(x - (w / 2), y + yOffset - (h / 2), w, h);
 		
-		xOffset = 4;
-		yOffset = 2;
-		w = 10;
-		h = 15;
-		r_check = new Rectangle(x + xOffset - (w / 2), y + yOffset - (h / 2), w, h);
-		l_check = new Rectangle(x - xOffset - (w / 2), y + yOffset - (h / 2), w, h);
+		xOffset = 8 * s;
+		yOffset = 12 * s;
+		w = 5 * s;
+		h = 10 * s;
+		rCheck = new Rectangle2D.Double(x + xOffset - (w / 2), y + yOffset - (h / 2), w, h);
+		lCheck = new Rectangle2D.Double(x - xOffset - (w / 2), y + yOffset - (h / 2), w, h);
 		
 		//Idle
 		one = setToBaseSprite();
@@ -101,9 +103,9 @@ public class Player extends GameObject{
 		
 		animations.put(PlayerStates.WALK_R, sheet);
 		
-//		sheet = new SpriteSheet(one);
+		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.WALK_L, sheet);
-//		sheet = new SpriteSheet(one);
+		sheet = new SpriteSheet(one);
 		animations.put(PlayerStates.IDLE_R, sheet);
 		animations.put(PlayerStates.IDLE_L, sheet);
 		state = PlayerStates.WALK_R;
@@ -116,7 +118,7 @@ public class Player extends GameObject{
 	public Sprite setToBaseSprite()
 	{
 		// create the joints
-		body = new Joint(this.x, this.y);
+		body = new Joint(this.x, this.y, level);
 		head = new Joint(body, 0, -15);
 		r_shoulder = new Joint(body, 0, -10);
 		l_shoulder = new Joint(body, 0, -10);
@@ -144,46 +146,46 @@ public class Player extends GameObject{
 		// images
 		Path2D myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0, 0, 4, 20), true);
-		img = new Image(myShape, Color.BLACK);
+		img = new Image(myShape, Color.BLACK, level);
 		body.addImage(img);
 		
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,5,8), true);
-		img = new Image(myShape, Color.BLACK);
+		img = new Image(myShape, Color.BLACK, level);
 		head.addImage(img);
 		
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.BLUE);
+		img = new Image(myShape, Color.BLUE, level);
 		r_upper_arm.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.GREEN);
+		img = new Image(myShape, Color.GREEN, level);
 		l_upper_arm.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.BLUE);
+		img = new Image(myShape, Color.BLUE, level);
 		r_lower_arm.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.GREEN);
+		img = new Image(myShape, Color.GREEN, level);
 		l_lower_arm.addImage(img);
 		
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,4,8), true);
-		img = new Image(myShape, Color.BLUE);
+		img = new Image(myShape, Color.BLUE, level);
 		r_upper_leg.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,4,8), true);
-		img = new Image(myShape, Color.GREEN);
+		img = new Image(myShape, Color.GREEN, level);
 		l_upper_leg.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.BLUE);
+		img = new Image(myShape, Color.BLUE, level);
 		r_lower_leg.addImage(img);
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,3,6), true);
-		img = new Image(myShape, Color.GREEN);
+		img = new Image(myShape, Color.GREEN, level);
 		l_lower_leg.addImage(img);
 		
 		
@@ -194,6 +196,10 @@ public class Player extends GameObject{
 		return BaseSprite;
 	}
 	
+	public double getX()
+	{ return x; }
+	public double getY()
+	{ return y; }
 	@Override
 	public void update(KeyState keys) {
 		int xVel = 0;
@@ -276,7 +282,7 @@ public class Player extends GameObject{
 					canJump = true;
 				}
 			}
-			if (r_check.intersectsLine(wall.getLine()))
+			if (rCheck.intersectsLine(wall.getLine()))
 			{
 				if (wall.getType() == WallTypes.RAMP)
 				{
@@ -296,7 +302,7 @@ public class Player extends GameObject{
 					}
 				}
 			}
-			if (l_check.intersectsLine(wall.getLine()))
+			if (lCheck.intersectsLine(wall.getLine()))
 			{
 				if (wall.getType() == WallTypes.RAMP)
 				{
@@ -337,30 +343,35 @@ public class Player extends GameObject{
 		}
 		this.y += yVel;
 		this.x += xVel;
+		translate(xVel, yVel);
+	}
+
+	@Override
+	public void render(Graphics2D g2d, boolean debug) {
+		animations.get(state).render(g2d, debug);
+		if (!debug)
+		{
+			g2d.setColor(new Color(155, 155, 155, 155));
+			g2d.fillRect((int)floorCheck.getX(), (int)floorCheck.getY(), (int)floorCheck.getWidth(), (int)floorCheck.getHeight());
+			g2d.fillRect((int)rCheck.getX(), (int)rCheck.getY(), (int)rCheck.getWidth(), (int)rCheck.getHeight());
+			g2d.fillRect((int)lCheck.getX(), (int)lCheck.getY(), (int)lCheck.getWidth(), (int)lCheck.getHeight());
+		}
+	}
+	public void translate(double xVel, double yVel)
+	{
+		this.x += xVel;
+		this.y += yVel;
 		for (SpriteSheet sheet : animations.values()) {
 			sheet.setTranslated(false);
 		}
 		for (SpriteSheet sheet : animations.values()) {
 			if (!sheet.getTranslated())
 			{
-				sheet.translate(xVel, yVel);
+				sheet.translate((int)xVel, (int)yVel);
 			}
 		}
-		floorCheck.translate(xVel, yVel);
-		r_check.translate(xVel, yVel);
-		l_check.translate(xVel, yVel);
+		floorCheck = new Rectangle2D.Double(floorCheck.getX() + xVel, floorCheck.getY() + yVel, floorCheck.getWidth(), floorCheck.getHeight());
+		rCheck = new Rectangle2D.Double(rCheck.getX() + xVel, rCheck.getY() + yVel, rCheck.getWidth(), rCheck.getHeight());
+		lCheck = new Rectangle2D.Double(lCheck.getX() + xVel, lCheck.getY() + yVel, lCheck.getWidth(), lCheck.getHeight());
 	}
-
-	@Override
-	public void render(Graphics2D g2d, boolean debug) {
-		animations.get(state).render(g2d, debug);
-		if (debug)
-		{
-			g2d.setColor(Color.GREEN);
-			g2d.fillRect(floorCheck.x, floorCheck.y, floorCheck.width, floorCheck.height);
-			g2d.fillRect(r_check.x, r_check.y, r_check.width, r_check.height);
-			g2d.fillRect(l_check.x, l_check.y, l_check.width, l_check.height);
-		}
-	}
-
 }

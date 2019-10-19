@@ -1,14 +1,18 @@
 package framework;
 
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
 public class Wall{
 	private Line2D line;
 	private WallTypes type;
+	private Level level;
 	
-	public Wall(double x1, double y1, double x2, double y2, WallTypes type)
+	public Wall(Level level, double x1, double y1, double x2, double y2, WallTypes type)
 	{
-		line = new Line2D.Double(x1, y1, x2, y2);
+		this.level = level;
+		double scale = level.getManager().getScale();
+		line = new Line2D.Double(x1 * scale, y1 * scale, x2 * scale, y2 * scale);
 		this.type = type;
 	}
 	
@@ -19,5 +23,13 @@ public class Wall{
 	public Line2D getLine()
 	{
 		return this.line;
+	}
+	public double getX()
+	{ return line.getX1(); }
+	public double getY()
+	{ return line.getY1(); }
+	public void translate(double xVel, double yVel)
+	{
+		line.setLine(line.getX1() + xVel, line.getY1() + yVel, line.getX2() + xVel, line.getY2() + yVel);
 	}
 }

@@ -7,11 +7,12 @@ import javax.swing.JFrame;
 import framework.Button;
 import framework.Image;
 import framework.Level;
+import framework.LevelManager;
 
 public class Menu extends Level{
 	private Button b;
-	public Menu(GameLevels thisLevel, JFrame frame) {
-		super(thisLevel, frame);
+	public Menu(LevelManager manager, GameLevels thisLevel) {
+		super(manager, thisLevel);
 		b = new Button(100, 20, 80, 25, Color.GREEN);
 //		Outline arrow = new Outline();
 //		arrow.addPoint(0, 0);

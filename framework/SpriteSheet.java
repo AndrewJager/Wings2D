@@ -88,5 +88,9 @@ public class SpriteSheet extends GameObject{
 	{
 		this.sprites.get(frame).render(g2d, debug);
 	}
-
+	
+	// Functions to comply with GameObject requirements
+	public double getX(){ return 0 ;}
+	public double getY(){ return 0; }
+	public void translate(double xVel, double yVel) {};
 }

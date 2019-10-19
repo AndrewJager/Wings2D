@@ -1,15 +1,16 @@
 package entities;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -17,16 +18,18 @@ import framework.*;
 import entities.*;
 
 
+
 public class Main extends Canvas implements Runnable
 {
 	private static final long serialVersionUID = 1L;
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 500;
+	private static int WIDTH = (int)(768 * 1.2);
+	private static int HEIGHT = (int)(432 * 1.2);
+	private double scale;
+	
 	
 	private boolean debug = false;
 	private Thread thread;
 	private boolean running = false;
-	private JFrame frame;
 	private boolean mouseDown = false;
 	
 	private LevelManager manager;
@@ -42,12 +45,10 @@ public class Main extends Canvas implements Runnable
 		keys = new KeyState();
 		
 		manager = new LevelManager();
+		manager.setScale(scale);
 		
-		menu = new Menu(GameLevels.MENU, this.frame);
-		manager.addLevel(menu);
-		
-		levelA = new TestLevel(GameLevels.TEST, this.frame);
-		manager.addLevel(levelA);	
+		menu = new Menu(manager, GameLevels.MENU);
+		levelA = new TestLevel(manager, GameLevels.TEST);
 		
 		manager.setLevel(GameLevels.TEST);
 	}
@@ -80,6 +81,11 @@ public class Main extends Canvas implements Runnable
 	
 	public Main()
 	{
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		scale = screenSize.getWidth() / WIDTH;
+//		scale = 1.0;
+		WIDTH = (int)(WIDTH * scale);
+		HEIGHT = (int)(HEIGHT * scale);
 		new CustomWindow(WIDTH, HEIGHT, "title", this);
 		this.addKeyListener(new KeyListener() {
 	        @Override

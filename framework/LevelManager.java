@@ -11,6 +11,7 @@ public class LevelManager {
 	ArrayList<Level> levels = new ArrayList<Level>();
 	private GameLevels curLevel;
 	private KeyMapping keys;
+	private double scale;
 	
 	public LevelManager()
 	{
@@ -35,7 +36,12 @@ public class LevelManager {
 	{
 		levels.add(newLevel);
 		levels.set(newLevel.getLevel().ordinal(), newLevel);
-		newLevel.setManager(this);
+	}
+	public double getScale() {
+		return scale;
+	}
+	public void setScale(double scale) {
+		this.scale = scale;
 	}
 	public void update(KeyState keys, boolean mouseDown)
 	{

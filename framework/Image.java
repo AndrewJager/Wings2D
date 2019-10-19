@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Path2D.Double;
@@ -13,28 +14,35 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class Image {
-	private Path2D shape, ogShape;
+	private Shape shape, ogShape;
 	private BufferedImage image;
 	private int width, height;
+
 	private double x, y;
 	private Color color;
 	private double rotation = 0;
 	private static int imageCount = 0;
+	private Level level;
 
-	public Image(Path2D shape, Color color)
+	public Image(Shape shape, Color color, Level level)
 	{
 		imageCount = getImageCount() + 1;
+		this.level = level;
 		this.x = 0;
 		this.y = 0;
 		this.shape = shape;
 		this.ogShape = shape;
-		this.width = (int)Math.ceil(shape.getBounds2D().getWidth());
-		this.height = (int)Math.ceil(shape.getBounds2D().getHeight());
+		double scale = level.getManager().getScale();
+		AffineTransform transform = new AffineTransform();
+		transform.scale(scale, scale);
+		Shape scaled = transform.createTransformedShape(this.shape);
+		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
+		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.color = color;
 		for(int x = 0; x < width; x++) {
 		    for(int y = 0; y < height; y++) {
-		    	if (shape.contains(new Point(x, y)))
+		    	if (scaled.contains(new Point(x, y)))
 		    	{
 		    		image.setRGB(x, y, this.color.getRGB());
 		    	}
@@ -59,6 +67,7 @@ public class Image {
 		newImage.x = this.x;
 		newImage.y = this.y;
 		newImage.rotation = this.rotation;
+		newImage.level = this.level;
 		for (int x = 0; x < width; x++) 
 		{
 			for(int y = 0; y < height; y++) {
@@ -72,21 +81,23 @@ public class Image {
 	public void rotate(double angle) {
 		this.image = null;
 		this.rotation += Math.toRadians(angle);
+		double scale = level.getManager().getScale();
+		
 		AffineTransform transform = new AffineTransform();
 		transform.rotate(this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(), 
 				this.y + this.ogShape.getBounds2D().getCenterY());
-		Path2D.Double newShape = (Double) this.ogShape.clone();
-		newShape.transform(transform);
+		Shape newShape = transform.createTransformedShape(this.ogShape);
+		
 		transform = new AffineTransform();
 		// Rotated shape ends up offset for some reason. I have no idea why I have to do this.
 		transform.translate(-newShape.getBounds2D().getX(), -newShape.getBounds2D().getY());
-		newShape.transform(transform);
-		Image rotated = new Image(newShape, this.color);
+		newShape = transform.createTransformedShape(newShape);
+		Image rotated = new Image(newShape, this.color, this.level);
 		
 		this.shape = ogShape;
 		this.image = rotated.getImage();
-		this.width = (int)Math.ceil(rotated.getShape().getBounds2D().getWidth());
-		this.height = (int)Math.ceil(rotated.getShape().getBounds2D().getHeight());
+		this.width = (int)Math.ceil(rotated.getShape().getBounds2D().getWidth() * scale);
+		this.height = (int)Math.ceil(rotated.getShape().getBounds2D().getHeight() * scale);
 		this.x = rotated.getX();
 		this.y = rotated.getY();
 	}
@@ -95,7 +106,7 @@ public class Image {
 	{
 		return this.image;
 	}
-	public Path2D getShape() {
+	public Shape getShape() {
 		return shape;
 	}
 	public void setShape(Path2D shape) {
@@ -104,8 +115,6 @@ public class Image {
 	
 	public void render(Graphics2D g2d, boolean debug)
 	{
-//		g2d.drawRect((int)this.getShape().getBounds2D().getX(), (int)this.getShape().getBounds2D().getY(),
-//				(int)this.getShape().getBounds2D().getWidth(), (int)this.getShape().getBounds2D().getHeight());
 		g2d.drawImage(this.image, (int)x, (int)y, this.width, this.height, null);
 	}
 	public double getCenterX()
@@ -127,6 +136,13 @@ public class Image {
 	}
 	public void setY(double y) {
 		this.y = y - (this.height / 2);
+	}
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 	public void setImage(BufferedImage image)
 	{

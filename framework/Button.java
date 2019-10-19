@@ -52,4 +52,14 @@ public class Button{
 			img.render(g2d, debug);
 		}
 	}
+	
+	public double getX()
+	{ return x; }
+	public double getY()
+	{ return y; }
+	public void translate(double xVel, double yVel)
+	{
+		x += xVel;
+		y += yVel;
+	}
 }

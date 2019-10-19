@@ -11,18 +11,22 @@ public class Joint {
 	private List<Image> images;
 	private static int jointCount = 0;
 	private int renderOrder = 1; // Order in which joints get rendered, highest first
+	private Level level;
 	
-	public Joint(double x, double y)
+	public Joint(double x, double y, Level level)
 	{
+		double scale = level.getManager().getScale();
 		this.x = x;
 		this.y = y;
 		this.children = new ArrayList<Joint>();
 		this.images = new ArrayList<Image>();
+		this.level = level;
 		jointCount = getJointCount() + 1;
 	}
 	public Joint(Joint parent, double xOffset, double yOffset)
 	{
-		this(parent.getX() + xOffset, parent.getY() + yOffset);
+		this(parent.getX() + (xOffset * parent.level.getManager().getScale()), 
+				parent.getY() + (yOffset * parent.level.getManager().getScale()), parent.getLevel());
 		parent.addChild(this);
 		this.setRenderOrder(parent.getRenderOrder());
 	}
@@ -40,7 +44,7 @@ public class Joint {
 	
 	public Joint copy()
 	{
-		Joint newJoint = new Joint(this.x, this.y);
+		Joint newJoint = new Joint(this.x, this.y, this.level);
 		newJoint.setRenderOrder(this.getRenderOrder());
 		for (int i = 0; i < this.children.size(); i++)
 		{
@@ -135,6 +139,10 @@ public class Joint {
 	}
 	public void setRenderOrder(int renderOrder) {
 		this.renderOrder = renderOrder;
+	}
+	public Level getLevel()
+	{
+		return level;
 	}
 	public String toString()
 	{
