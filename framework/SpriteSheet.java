@@ -8,12 +8,18 @@ import java.util.List;
 
 import entities.KeyState;
 
+/**
+ * A list of Sprites played in sequence to make an animation
+ */
 public class SpriteSheet extends GameObject{
 	private List<Sprite> sprites;
 	private int frame = 0;
 	private int length, counter = 0, delay = 30;
 	private boolean translated = false; // Used to prevent sprite from being moved more than once per update
-	
+	/**
+	 * SpriteSheet constructor with default delay
+	 * @param frames Indeterminate amount of sprites to add to spritesheet
+	 */
 	public SpriteSheet(Sprite...frames)
 	{
 		sprites = new ArrayList<Sprite>();
@@ -23,7 +29,11 @@ public class SpriteSheet extends GameObject{
 		}
 		length = sprites.size();
 	}
-	
+	/**
+	 * SpriteSheet constructor with custom delay.
+	 * @param delay Time to wait between frames. Overridden to any custom time in sprites
+	 * @param frames Indeterminate amount of Sprites to add to SpriteSheet
+	 */
 	public SpriteSheet(int delay, Sprite...frames)
 	{
 		this(frames);

@@ -5,18 +5,31 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A piece of the rig that makes up a sprite
+ */
 public class Joint {
 	private double x, y, offsetX;
+	/** Joints that will be moved relative to this joint */
 	private List<Joint> children;
+	/** Images to be draw at the location of this joint */
 	private List<Image> images;
+	/** Counter of how many joints currently exist */
 	private static int jointCount = 0;
-	private int renderOrder = 1; // Order in which joints get rendered, highest first
+	/** Order in which joints are rendered, highest first */
+	private int renderOrder = 1; 
 	private Level level;
+	/** This joint's parent */
 	private Joint parent;
 	
+	/**
+	 * Constructor for the "body" or main piece of the rig, all other joints are parented to this joint, directly or indirectly
+	 * @param x X location of this joint
+	 * @param y Y location of this joint
+	 * @param level Level that this joint belongs to
+	 */
 	public Joint(double x, double y, Level level)
 	{
-		double scale = level.getManager().getScale();
 		this.x = x;
 		this.y = y;
 		this.children = new ArrayList<Joint>();
@@ -25,6 +38,12 @@ public class Joint {
 		jointCount = getJointCount() + 1;
 		offsetX = 0;
 	}
+	/**
+	 * Constructor for a joint parented to another joint
+	 * @param parent Parent of this joint
+	 * @param xOffset Distance on x-axis between this joint and it's parent
+	 * @param yOffset Distance on y-axis between this joint and it's parent
+	 */
 	public Joint(Joint parent, double xOffset, double yOffset)
 	{
 		this(parent.getX() + (xOffset * parent.level.getManager().getScale()), 
@@ -34,6 +53,10 @@ public class Joint {
 		this.offsetX = xOffset;
 		this.parent = parent;
 	}
+	/** 
+	 * Recursively searches for the highest level parent of this joint, and returns the x position of that joint
+	 * @return X position the base joint of this joints rig.
+	 */
 	private double getBaseX()
 	{
 		Joint parent = this.parent;
@@ -57,6 +80,11 @@ public class Joint {
 			return parent.getX();
 		}
 	}
+	/** 
+	 *  Move this joint the specified distance
+	 * @param x Distance to move along the x-axis
+	 * @param y Distance to move along the y-axis
+	 */
 	public void translate(int x, int y)
 	{
 		this.x = this.x + x;
@@ -68,7 +96,10 @@ public class Joint {
 			img.setY(img.getY() + y);
 		}
 	}
-	
+	/**  
+	 * Creates an copy of this joint, also copying the child joints and images
+	 * @return A copy of this joint
+	 */
 	public Joint copy()
 	{
 		Joint newJoint = new Joint(this.x, this.y, this.level);
@@ -83,7 +114,10 @@ public class Joint {
 		}
 		return newJoint;
 	}
-	
+	/**  
+	 * Top-level function to rotate this joint and all of its children
+	 * @param angle Degrees to rotate
+	 */
 	public void rotate(double angle)
 	{
 		rotateJoint(this, this, angle);
@@ -93,7 +127,11 @@ public class Joint {
 			children.get(i).rotateChildren(this, angle);
 		}
 	}
-	
+	/**  
+	 * private function to rotate this joints children
+	 * @param base Joint to rotate around
+	 * @param angle Degrees to rotate
+	 */
 	private void rotateChildren(Joint base, double angle)
 	{
 		for (int i = 0; i < children.size(); i++)
@@ -102,6 +140,12 @@ public class Joint {
 			children.get(i).rotateChildren(base, angle);
 		}
 	}
+	/** 
+	 * private function to handle the rotation of this joint. Could probably refactor joint rotation, as it currently uses three functions
+	 * @param joint Joint to rotate
+	 * @param base Joint to rotate around
+	 * @param angle Degrees to rotate this joint
+	 */
 	
 	private void rotateJoint(Joint joint, Joint base, double angle)
 	{
@@ -135,6 +179,10 @@ public class Joint {
 			g2d.setColor(c);
 		}
 	}
+	/**
+	 * "Mirror" this joint along the x-axis of the rig
+	 * @param xPos X position of the sprite
+	 */
 	public void flip(double xPos)
 	{
 		double offset = getX() - getBaseX();

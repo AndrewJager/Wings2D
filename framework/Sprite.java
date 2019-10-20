@@ -11,28 +11,46 @@ import java.util.Comparator;
  */
 public class Sprite {
 	private List<Joint> joints;
+	/**
+	 * The time this sprite will display for before going onto the next sprite.
+	 * If 0 (the default) it will use the default time in the spritesheet
+	 */
 	private int spriteDelay = 0; // If not zero, the time to show this frame before changing to the next
 	private boolean translated = false; // Used to prevent sprite from being moved more than once per update
 	
-	public Sprite(List<Joint> jointList, Joint...children)
-	{
-		joints = new ArrayList<Joint>();
-		for (int i = 0; i < children.length; i++)
-		{
-			joints.add(children[i].copy());
-			jointList.add(children[i]); //Make list of all references to joints
-		}
-		Collections.sort(joints, new JointComparer());
-		Collections.sort(jointList, new JointComparer());
-	}
-	public Sprite(List<Joint> children)
+	/**
+	 * Create a sprite from an indeterminate number of joints, and export those joints to the list parameter 
+	 * @param jointList Pass in as an empty list. The constructor will export all joints added here to this list.
+	 * @param joints Joints to copy into sprite
+	 */
+	public Sprite(List<Joint> jointList, Joint...joints)
 	{
 		this.joints = new ArrayList<Joint>();
-		for (int i = 0; i < children.size(); i++)
+		for (int i = 0; i < joints.length; i++)
 		{
-			this.joints.add(children.get(i).copy());
+			this.joints.add(joints[i].copy());
+			jointList.add(joints[i]); //Make list of all references to joints
+		}
+		Collections.sort(this.joints, new JointComparer());
+		Collections.sort(jointList, new JointComparer());
+	}
+	/**
+	 * Create sprite from a list of joints
+	 * @param joints Joints to copy into sprite
+	 */
+	public Sprite(List<Joint> joints)
+	{
+		this.joints = new ArrayList<Joint>();
+		for (int i = 0; i < joints.size(); i++)
+		{
+			this.joints.add(joints.get(i).copy());
 		}
 	}
+	/**
+	 * Returns a new copy of this sprite mirrored along the x-axis
+	 * @param xPos the current x location of the sprite
+	 * @return A flipped version of this sprite
+	 */
 	public Sprite getFlipped(double xPos)
 	{
 		Sprite newSprite = new Sprite(joints);
@@ -43,6 +61,11 @@ public class Sprite {
 		Collections.sort(joints, new InvertJointComparer());
 		return newSprite;
 	}
+	/**
+	 * Move this sprite by the desired distances
+	 * @param x Distance to move sprite along x-axis
+	 * @param y Distance to move sprite along y-axis
+	 */
 	public void translate(int x, int y)
 	{
 		for (int i = 0; i < joints.size(); i++)

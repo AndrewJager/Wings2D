@@ -4,12 +4,23 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+/**
+ * Custom GUI button
+ */
 public class Button{
 	private int x, y, width, height;
 	private Color backgroundColor;
 	private Image img;
 	private boolean isClicked = false;
 	
+	/**
+	 * Constructor for button class
+	 * @param x X position of top-right corner of button
+	 * @param y Y Position of top-right corner of button
+	 * @param width Width of button
+	 * @param height Height of button
+	 * @param backgroundColor Background color of button
+	 */
 	public Button (int x, int y, int width, int height, Color backgroundColor)
 	{
 		this.x = x;
@@ -22,13 +33,20 @@ public class Button{
 	{
 		return isClicked;
 	}
+	/**
+	 * Add an image to the center of the button
+	 * @param img Image to place in center of button
+	 */
 	public void setImage(Image img)
 	{
 		this.img = img;
 		this.img.setX(x + (width / 2));
 		this.img.setY(y + (height / 2));
 	}
-	
+	/**
+	 * Update function for button
+	 * @param mouseClick Location of mouse click, null if not clicked
+	 */
 	public void updateUI(Point mouseClick)
 	{
 		isClicked = false;
@@ -57,9 +75,4 @@ public class Button{
 	{ return x; }
 	public double getY()
 	{ return y; }
-	public void translate(double xVel, double yVel)
-	{
-		x += xVel;
-		y += yVel;
-	}
 }

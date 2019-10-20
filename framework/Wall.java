@@ -1,16 +1,24 @@
 package framework;
 
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
+/** 
+ * A static component of the level, eg. wall/floor/ramp. Represented as a line.
+ */
 public class Wall{
 	private Line2D line;
 	private WallTypes type;
-	private Level level;
-	
+	/**
+	 * Constructor for WallTypes
+	 * @param level Level this wall belongs to
+	 * @param x1 X location of first point
+	 * @param y1 Y location of first point
+	 * @param x2 X location of second point
+	 * @param y2 Y location of second point
+	 * @param type Type of wall 
+	 */
 	public Wall(Level level, double x1, double y1, double x2, double y2, WallTypes type)
 	{
-		this.level = level;
 		double scale = level.getManager().getScale();
 		line = new Line2D.Double(x1 * scale, y1 * scale, x2 * scale, y2 * scale);
 		this.type = type;
@@ -23,13 +31,5 @@ public class Wall{
 	public Line2D getLine()
 	{
 		return this.line;
-	}
-	public double getX()
-	{ return line.getX1(); }
-	public double getY()
-	{ return line.getY1(); }
-	public void translate(double xVel, double yVel)
-	{
-		line.setLine(line.getX1() + xVel, line.getY1() + yVel, line.getX2() + xVel, line.getY2() + yVel);
 	}
 }
