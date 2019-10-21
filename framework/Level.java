@@ -3,29 +3,33 @@ package framework;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import entities.GameLevels;
 import entities.KeyState;
 
 public class Level {
+	/** List of objects that descend from GameObject */
 	private List<GameObject> objects;
-	private List<Button> ui;
+	/** List of UI elements */
+	private List<UIElement> ui;
+	/** List of static level components */
 	private List<Wall> walls;
+	/** Identifier for this level */
 	private GameLevels thisLevel;
 	private LevelManager manager;
-	
+	/**
+	 * Class constructor
+	 * @param manager Level Manager object
+	 * @param thisLevel Identifier for this level
+	 */
 	public Level(LevelManager manager, GameLevels thisLevel)
 	{
 		this.thisLevel = thisLevel;
 		this.manager = manager;
 		objects = new ArrayList<GameObject>();
-		ui = new ArrayList<Button>();
+		ui = new ArrayList<UIElement>();
 		walls = new ArrayList<Wall>();
 		
 		manager.addLevel(this);
@@ -42,9 +46,9 @@ public class Level {
 	{
 		return walls;
 	}
-	public void addUI(Button b)
+	public void addUI(UIElement ui)
 	{
-		this.ui.add(b);
+		this.ui.add(ui);
 	}
 	public void addObject(GameObject newObject)
 	{

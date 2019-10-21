@@ -13,6 +13,7 @@ import java.awt.geom.Line2D;
 
 public class GodRay extends GameObject{
 	class Line extends Line2D.Double{
+		private static final long serialVersionUID = 1L;
 		private boolean direction;
 		public Line(double x1, double y1, double x2, double y2, boolean dir)
 		{

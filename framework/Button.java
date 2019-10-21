@@ -7,8 +7,8 @@ import java.awt.Point;
 /**
  * Custom GUI button
  */
-public class Button{
-	private int x, y, width, height;
+public class Button extends UIElement{
+	private double x, y, width, height;
 	private Color backgroundColor;
 	private Image img;
 	private boolean isClicked = false;
@@ -21,12 +21,13 @@ public class Button{
 	 * @param height Height of button
 	 * @param backgroundColor Background color of button
 	 */
-	public Button (int x, int y, int width, int height, Color backgroundColor)
+	public Button (int x, int y, int width, int height, Color backgroundColor, Level level)
 	{
-		this.x = x;
-		this.y = y; 
-		this.width = width;
-		this.height = height;
+		double scale = level.getManager().getScale();
+		this.x = x * scale;
+		this.y = y * scale; 
+		this.width = width * scale;
+		this.height = height * scale;
 		this.backgroundColor = backgroundColor;
 	}
 	public boolean getClicked()
@@ -64,7 +65,7 @@ public class Button{
 
 	public void renderUI(Graphics2D g2d, boolean debug) {
 		g2d.setColor(backgroundColor);
-		g2d.fillRect(x, y, width, height);
+		g2d.fillRect((int)x, (int)y, (int)width, (int)height);
 		if (img != null)
 		{
 			img.render(g2d, debug);
