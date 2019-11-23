@@ -54,6 +54,10 @@ public class Level {
 	{
 		this.objects.add(newObject);
 	}
+	public void addWall(Wall wall)
+	{
+		walls.add(wall);
+	}
 	public void addLine(double x1, double y1, double x2, double y2, WallTypes type)
 	{
 		Wall wall = new Wall(this, x1, y1, x2, y2, type);
@@ -81,9 +85,8 @@ public class Level {
 		}
 		for (int i = 0; i < walls.size(); i++)
 		{
-			Wall line = walls.get(i);
-			g2d.setColor(Color.GREEN);
-			g2d.drawLine((int)line.getLine().getX1(), (int)line.getLine().getY1(), (int)line.getLine().getX2(), (int)line.getLine().getY2());
+			Wall wall = walls.get(i);
+			wall.render(g2d, debug);
 		}
 	}
 	public void renderUI(Graphics2D g2d, boolean debug)

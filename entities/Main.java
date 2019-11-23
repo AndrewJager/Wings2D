@@ -18,14 +18,12 @@ import framework.*;
 import entities.*;
 
 
-
 public class Main extends Canvas implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 	private static int WIDTH = (int)(768 * 1.2);
 	private static int HEIGHT = (int)(432 * 1.2);
 	private double scale;
-	
 	
 	private boolean debug = false;
 	private Thread thread;
@@ -191,7 +189,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+//				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
