@@ -120,9 +120,6 @@ public class Wall{
 				
 				double pointOffset = (rect.getBounds2D().getWidth() * level.getManager().getScale()) - (line.getBounds2D().getWidth());
 				drawPoint = new Point2D.Double(line.getX1() - pointOffset, line.getY1());
-				System.out.println(line.getBounds2D().getWidth());
-				System.out.println(rect.getBounds2D().getWidth());
-				System.out.println(pointOffset);
 			}
 			else // Ascending
 			{
@@ -152,5 +149,9 @@ public class Wall{
 	public Line2D getLine()
 	{
 		return this.line;
+	}
+	public Image getBackground()
+	{
+		return this.background;
 	}
 }

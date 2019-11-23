@@ -16,6 +16,7 @@ import java.util.Map;
 
 import framework.GameObject;
 import framework.Image;
+import framework.ImageFilter;
 import framework.Joint;
 import framework.KeyMapping;
 import framework.Level;

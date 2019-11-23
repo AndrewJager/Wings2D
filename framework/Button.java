@@ -20,6 +20,7 @@ public class Button extends UIElement{
 	 * @param width Width of button
 	 * @param height Height of button
 	 * @param backgroundColor Background color of button
+	 * @param level Level the Button is assocated with
 	 */
 	public Button (int x, int y, int width, int height, Color backgroundColor, Level level)
 	{
