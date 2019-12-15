@@ -1,14 +1,8 @@
 package entities;
 
 import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-
-import javax.swing.JFrame;
 
 import framework.GodRay;
-import framework.Image;
 import framework.ImageFilter;
 import framework.Level;
 import framework.LevelManager;
@@ -23,7 +17,8 @@ public class TestLevel extends Level{
 		player = new Player(this);
 		this.addObject(player);
 		
-		GodRay ray = new GodRay(0, 200, 0, 210, (768 * 1.2), 300, (768 * 1.2), 350, this, 30, new Color(240, 232, 14, 25));
+		GodRay ray = new GodRay(40, 0, 55, 0,
+				500, 230, 500, 280, this, 30, new Color(240, 232, 14, 25));
 		this.addObject(ray);
 		
 		Wall floor = new Wall(this, 10, 400, 400, 400, WallTypes.FLOOR);
@@ -36,7 +31,9 @@ public class TestLevel extends Level{
 		
 		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
 		lRamp.setBackground(10, Color.BLUE, false);
-		ImageFilter.blurEdges(lRamp.getBackground());
+		ImageFilter.basicVariance(lRamp.getBackground(), 50);
+		ImageFilter.lightenFrom(lRamp.getBackground(), ImageFilter.ShadeDir.LEFT, 0.8);
+		ImageFilter.darkenFrom(lRamp.getBackground(), ImageFilter.ShadeDir.RIGHT, 0.8);
 		this.addWall(lRamp);
 		
 		Wall rWall = new Wall(this, 500, 100, 500, 300, WallTypes.WALL);

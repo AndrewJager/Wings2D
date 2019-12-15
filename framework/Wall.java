@@ -13,10 +13,14 @@ import java.util.List;
 
 /** 
  * A static component of the level, eg. wall/floor/ramp. Represented as a line.
+ * Includes a rectangle image for display purposes only, the line is the only thing that collides.
  */
 public class Wall{
+	/** Level that this Wall is associated with */
 	private Level level;
+	/** Line that defines the collisions of the Wall */
 	private Line2D line;
+	/** Type of wall (wall, floor, ramp) */
 	private WallTypes type;
 	/** Images to render with the wall */
 	private List<Image> images;
@@ -24,11 +28,14 @@ public class Wall{
 	private Image background;
 	/** Background color of the background rectangle */
 	private Color backgroundColor;
+	/** The dimension of the rectangle not determined by the length of the line */
 	private double length;
+	/** If true, draw the image on the other side of the line. Not possible for ramps */
 	private boolean flip;
+	/** Point to draw the image at for ramps */
 	private Point2D drawPoint;
 	/**
-	 * Constructor for WallTypes. The points MUST be left to right in floors and ramps, and top to bottom in walls.
+	 * Constructor for Wall. The points MUST be left to right in floors and ramps, and top to bottom in walls.
 	 * @param level Level this wall belongs to
 	 * @param x1 X location of first point
 	 * @param y1 Y location of first point
@@ -83,8 +90,11 @@ public class Wall{
 		{
 			images.get(i).render(g2d, debug);
 		}
-		g2d.setColor(Color.GREEN);
-		g2d.drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
+		if (debug)
+		{
+			g2d.setColor(Color.GREEN);
+			g2d.drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
+		}
 	}
 	/**
 	 * Create a rectanglar background for the wall

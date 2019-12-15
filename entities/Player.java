@@ -64,7 +64,12 @@ public class Player extends GameObject{
 		jumpMotion.add((int)(6 * s));
 		jumpMotion.add((int)(4 * s));
 		jumpMotion.add((int)(2 * s));
+		jumpMotion.add((int)(2 * s));
 		jumpMotion.add((int)(1 * s));
+		jumpMotion.add(0);
+		jumpMotion.add((int)(-1 * s));
+		jumpMotion.add((int)(-2 * s));
+		jumpMotion.add((int)(-3 * s));
 		
 		double w = 10 * s;
 		double h = 8 * s;

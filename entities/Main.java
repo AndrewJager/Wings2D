@@ -67,7 +67,7 @@ public class Main extends Canvas implements Runnable
 		
 		Graphics g = strat.getDrawGraphics();
 		Graphics2D g2d = (Graphics2D)g;
-		g.setColor(Color.WHITE);
+		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		manager.render(g2d, debug);

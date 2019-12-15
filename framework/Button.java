@@ -63,7 +63,6 @@ public class Button extends UIElement{
 			}
 		}
 	}
-
 	public void renderUI(Graphics2D g2d, boolean debug) {
 		g2d.setColor(backgroundColor);
 		g2d.fillRect((int)x, (int)y, (int)width, (int)height);
