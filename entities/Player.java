@@ -16,7 +16,6 @@ import java.util.Map;
 
 import framework.GameObject;
 import framework.Image;
-import framework.ImageFilter;
 import framework.Joint;
 import framework.KeyMapping;
 import framework.Level;
@@ -24,6 +23,9 @@ import framework.Sprite;
 import framework.SpriteSheet;
 import framework.Wall;
 import framework.WallTypes;
+import imageFilters.ImageFilter;
+import imageFilters.LightenFrom;
+import imageFilters.ShadeDir;
 
 public class Player extends GameObject{
 	private PlayerStates state, targetState;
@@ -163,6 +165,7 @@ public class Player extends GameObject{
 		myShape = new Path2D.Double();
 		myShape.append(new Rectangle2D.Double(0,0,5,8), true);
 		img = new Image(myShape, Color.BLACK, level);
+		img.addFilter(new LightenFrom(ShadeDir.TOP, 6));
 		head.addImage(img);
 		
 		myShape = new Path2D.Double();

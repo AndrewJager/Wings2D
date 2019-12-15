@@ -3,11 +3,15 @@ package entities;
 import java.awt.Color;
 
 import framework.GodRay;
-import framework.ImageFilter;
 import framework.Level;
 import framework.LevelManager;
 import framework.Wall;
 import framework.WallTypes;
+import imageFilters.BasicVariance;
+import imageFilters.ImageFilter;
+import imageFilters.LightenFrom;
+import imageFilters.Outline;
+import imageFilters.ShadeDir;
 
 public class TestLevel extends Level{
 	private Player player;
@@ -31,9 +35,10 @@ public class TestLevel extends Level{
 		
 		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
 		lRamp.setBackground(10, Color.BLUE, false);
-		ImageFilter.basicVariance(lRamp.getBackground(), 50);
-		ImageFilter.lightenFrom(lRamp.getBackground(), ImageFilter.ShadeDir.LEFT, 0.8);
-		ImageFilter.darkenFrom(lRamp.getBackground(), ImageFilter.ShadeDir.RIGHT, 0.8);
+		
+		lRamp.getBackground().addFilter(new BasicVariance(90));
+		lRamp.getBackground().addFilter(new Outline(Color.GREEN));
+		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
 		this.addWall(lRamp);
 		
 		Wall rWall = new Wall(this, 500, 100, 500, 300, WallTypes.WALL);

@@ -2,6 +2,10 @@ package framework;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
+
+import imageFilters.ImageFilter;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -13,6 +17,7 @@ import java.awt.geom.Point2D;
 public class Image {
 	private Shape shape, ogShape;
 	private BufferedImage image;
+	private List<ImageFilter> filters;
 	private int width, height;
 
 	private double x, y;
@@ -37,6 +42,7 @@ public class Image {
 		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.color = color;
+		this.filters = new ArrayList<ImageFilter>();
 		for(int x = 0; x < width; x++) {
 		    for(int y = 0; y < height; y++) {
 		    	if (scaled.contains(new Point(x, y)))
@@ -69,6 +75,11 @@ public class Image {
 			for(int y = 0; y < height; y++) {
 				newImage.image.setRGB(x, y, this.image.getRGB(x, y));
 			}
+		}
+		newImage.filters = new ArrayList<ImageFilter>();
+		for (int i = 0; i < this.filters.size(); i++)
+		{
+			newImage.addFilter(this.filters.get(i));
 		}
 		newImage.shape = this.shape;
 		return newImage;
@@ -109,6 +120,12 @@ public class Image {
 	        }
 	    }
 	}
+	public void addFilter(ImageFilter filter)
+	{
+		filters.add(filter);
+		filter.filter(this);
+	}
+	
 	public BufferedImage getImage()
 	{
 		return this.image;

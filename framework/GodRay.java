@@ -9,6 +9,7 @@ import entities.KeyState;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 
 public class GodRay extends GameObject{
