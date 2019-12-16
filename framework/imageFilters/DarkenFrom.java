@@ -1,4 +1,4 @@
-package imageFilters;
+package framework.imageFilters;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -7,21 +7,20 @@ import framework.Image;
 import framework.Utils;
 
 /**
- * Lighten the RGB values of the pixels in the image, in an increasing amount from the given direction.
- * @see DarkenFrom
+ * Darken the RGB values of the pixels in the image, in an increasing amount from the given direction.
+ * @see LightenFrom
  */
-public class LightenFrom implements ImageFilter{
-	/** Direction from which to shade the image. Lighter in the indicated direction **/
+public class DarkenFrom implements ImageFilter{
+	/** Direction from which to shade the image. Darker in the indicated direction **/
 	private ShadeDir dir;
-	/** Amount in which to lighten the pixels **/
+	/** Amount in which to darken the pixels **/
 	private double varAmount;
 	
 	/**
-	 * 
-	 * @param dir Direction to use when lightening the pixels
-	 * @param varAmount Amount to lighten the pixels
+	 * @param dir Direction to use when darkening the pixels
+	 * @param varAmount Amount to darken the pixels
 	 */
-	public LightenFrom(ShadeDir dir, double varAmount)
+	public DarkenFrom(ShadeDir dir, double varAmount)
 	{
 		this.dir = dir;
 		this.varAmount = varAmount;
@@ -36,19 +35,19 @@ public class LightenFrom implements ImageFilter{
 			{
 				if (dir == ShadeDir.RIGHT)
 				{
-					colorIncrease = (int) (x * varAmount);
+					colorIncrease = (int) (x * -varAmount);
 				}
 				else if (dir == ShadeDir.LEFT)
 				{
-					colorIncrease = (int) ((image.getWidth() - x) * varAmount);
+					colorIncrease = (int) ((image.getWidth() - x) * -varAmount);
 				}
 				else if (dir == ShadeDir.TOP)
 				{
-					colorIncrease = (int) ((image.getHeight() - y) * varAmount);
+					colorIncrease = (int) ((image.getHeight() - y) * -varAmount);
 				}
 				else if (dir == ShadeDir.BOTTOM)
 				{
-					colorIncrease = (int) (y * varAmount);
+					colorIncrease = (int) (y * -varAmount);
 				}
 				
 				Color color = new Color(image.getRGB(x, y), true); 

@@ -1,4 +1,4 @@
-package imageFilters;
+package framework.imageFilters;
 
 /**
  * Enum of directions that shading functions will use to determine how to shade the image

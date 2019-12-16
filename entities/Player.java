@@ -23,9 +23,9 @@ import framework.Sprite;
 import framework.SpriteSheet;
 import framework.Wall;
 import framework.WallTypes;
-import imageFilters.ImageFilter;
-import imageFilters.LightenFrom;
-import imageFilters.ShadeDir;
+import framework.imageFilters.ImageFilter;
+import framework.imageFilters.LightenFrom;
+import framework.imageFilters.ShadeDir;
 
 public class Player extends GameObject{
 	private PlayerStates state, targetState;
@@ -363,7 +363,7 @@ public class Player extends GameObject{
 	@Override
 	public void render(Graphics2D g2d, boolean debug) {
 		animations.get(state).render(g2d, debug);
-		if (!debug)
+		if (debug)
 		{
 			g2d.setColor(new Color(155, 155, 155, 155));
 			g2d.fillRect((int)floorCheck.getX(), (int)floorCheck.getY(), (int)floorCheck.getWidth(), (int)floorCheck.getHeight());

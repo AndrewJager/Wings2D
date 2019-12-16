@@ -1,4 +1,4 @@
-package imageFilters;
+package framework.imageFilters;
 
 import framework.Image;
 

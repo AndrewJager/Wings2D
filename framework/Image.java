@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import imageFilters.ImageFilter;
+import framework.imageFilters.ImageFilter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
