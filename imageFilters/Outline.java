@@ -7,9 +7,16 @@ import java.util.ArrayList;
 
 import framework.Image;
 
+/**
+ * Create an solid-color outline around the shape inside an Image. 
+ */
 public class Outline implements ImageFilter{
+	/** Color of the outline **/
 	private Color color;
-	
+	/**
+	 * 
+	 * @param color Color to outline the shape with
+	 */
 	public Outline (Color color)
 	{
 		this.color = color;

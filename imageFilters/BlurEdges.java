@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 import framework.Image;
 
+/**
+ * Add some pixels around the edges of the shape to create a "blurred" effect.
+ */
 public class BlurEdges implements ImageFilter{
 	public void filter(Image img)
 	{

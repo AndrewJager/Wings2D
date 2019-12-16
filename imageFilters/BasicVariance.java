@@ -7,7 +7,11 @@ import java.util.Random;
 import framework.Image;
 import framework.Utils;
 
+/**
+ * Randomly modify the RGB values of the image pixels to create a distorted effect.
+ */
 public class BasicVariance implements ImageFilter{
+	/** Maximum amount to change the pixels (min is 0) **/
 	private int varAmount;
 	
 	public BasicVariance(int varAmount)

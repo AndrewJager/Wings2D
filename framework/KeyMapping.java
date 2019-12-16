@@ -7,6 +7,7 @@ import java.util.Map;
  * Map of keys, used to make remappable key controls
  */
 public class KeyMapping {
+	/** Map linking keycodes to names **/
 	private Map<String, Integer> keys;
 	
 	public KeyMapping()

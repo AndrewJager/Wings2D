@@ -6,10 +6,21 @@ import java.awt.image.BufferedImage;
 import framework.Image;
 import framework.Utils;
 
+/**
+ * Lighten the RGB values of the pixels in the image, in an increasing amount from the given direction.
+ * @see DarkenFrom
+ */
 public class LightenFrom implements ImageFilter{
+	/** Direction from which to shade the image. Lighter in the indicated direction **/
 	private ShadeDir dir;
+	/** Amount in which to lighten the pixels **/
 	private double varAmount;
 	
+	/**
+	 * 
+	 * @param dir Direction to use when lightening the pixels
+	 * @param varAmount Amount to lighten the pixels
+	 */
 	public LightenFrom(ShadeDir dir, double varAmount)
 	{
 		this.dir = dir;

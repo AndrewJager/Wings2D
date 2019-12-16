@@ -6,10 +6,20 @@ import java.awt.image.BufferedImage;
 import framework.Image;
 import framework.Utils;
 
+/**
+ * Darken the RGB values of the pixels in the image, in an increasing amount from the given direction.
+ * @see LightenFrom
+ */
 public class DarkenFrom implements ImageFilter{
+	/** Direction from which to shade the image. Darker in the indicated direction **/
 	private ShadeDir dir;
+	/** Amount in which to darken the pixels **/
 	private double varAmount;
 	
+	/**
+	 * @param dir Direction to use when darkening the pixels
+	 * @param varAmount Amount to darken the pixels
+	 */
 	public DarkenFrom(ShadeDir dir, double varAmount)
 	{
 		this.dir = dir;
