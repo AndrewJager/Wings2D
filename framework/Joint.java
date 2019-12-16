@@ -189,7 +189,7 @@ public class Joint {
 		this.x = (this.x - (offset * 2)) + xPos * 2;
 		for (int i = 0; i < images.size(); i++)
 		{
-			images.get(i).flip();
+			images.get(i).flipX();
 		}
 	}
 	public void addImage(Image image)

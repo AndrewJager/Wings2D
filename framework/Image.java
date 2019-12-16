@@ -1,5 +1,6 @@
 package framework;
 
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,17 +150,32 @@ public class Image {
 		this.y = rotated.getY();
 	}
 	/** 
-	 * Flip the image around the x-axis.
+	 * Flip the image around the Y axis
 	 */
-	public void flip()
+	public void flipY()
 	{
-	    for (int i=0;i<image.getWidth();i++)
+	    for (int x=0; x < image.getWidth(); x++)
 	    {
-	        for (int j=0;j<image.getHeight()/2;j++)
+	        for (int y=0; y < image.getHeight() / 2; y++)
 	        {
-	            int tmp = image.getRGB(i, j);
-	            image.setRGB(i, j, image.getRGB(i, image.getHeight()-j-1));
-	            image.setRGB(i, image.getHeight()-j-1, tmp);
+	            int tmp = image.getRGB(x, y);
+	            image.setRGB(x, y, image.getRGB(x, image.getHeight()-y-1));
+	            image.setRGB(x, image.getHeight()-y-1, tmp);
+	        }
+	    }
+	}
+	/**
+	 * Flip the image around the X axis
+	 */
+	public void flipX()
+	{
+	    for (int y=0; y < image.getHeight(); y++)
+	    {
+	        for (int x=0; x < image.getWidth() / 2; x++)
+	        {
+	            int tmp = image.getRGB(x, y);
+	            image.setRGB(x, y, image.getRGB(image.getWidth()-x-1, y));
+	            image.setRGB(image.getWidth()-x-1, y, tmp);
 	        }
 	    }
 	}
