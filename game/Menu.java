@@ -1,4 +1,4 @@
-package entities;
+package game;
 
 import java.awt.Color;
 import java.awt.geom.Path2D;

@@ -1,4 +1,4 @@
-package entities;
+package game;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,7 +15,7 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import framework.*;
-import entities.*;
+import game.*;
 
 
 public class Main extends Canvas implements Runnable

@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.KeyState;
+import game.KeyState;
 
 /**
  * A list of Sprites played in sequence to make an animation

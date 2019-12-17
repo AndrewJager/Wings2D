@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import entities.KeyState;
+import game.KeyState;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

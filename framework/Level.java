@@ -5,8 +5,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.GameLevels;
-import entities.KeyState;
+import game.GameLevels;
+import game.KeyState;
 
 public class Level {
 	/** List of objects that descend from GameObject */

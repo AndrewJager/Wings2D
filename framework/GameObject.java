@@ -2,7 +2,7 @@ package framework;
 
 import java.awt.Graphics2D;
 
-import entities.KeyState;
+import game.KeyState;
 
 /**
  * Abstract base class for all game entities

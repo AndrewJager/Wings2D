@@ -1,4 +1,4 @@
-package entities;
+package game;
 
 public enum PlayerStates {
 	IDLE_R,

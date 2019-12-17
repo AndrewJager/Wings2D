@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import entities.GameLevels;
-import entities.KeyState;
+import game.GameLevels;
+import game.KeyState;
 
 public class LevelManager {
 	ArrayList<Level> levels = new ArrayList<Level>();

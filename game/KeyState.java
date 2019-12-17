@@ -1,4 +1,4 @@
-package entities;
+package game;
 
 public class KeyState {
 	public boolean
