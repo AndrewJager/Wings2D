@@ -57,4 +57,30 @@ public final class Utils {
 		int blue = (base.getBlue() + highlight.getBlue()) / 2;
 		return new Color(red, green, blue, base.getAlpha());
 	}
+	
+	/**
+	 * Returns a substring, but won't fail if start or end is out of bounds
+	 * @param str
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static String safeSubstring(String str, int start, int end)
+	{
+		int strEnd = str.length();
+		String subStr;
+		if (start > strEnd)
+		{
+			subStr = "";
+		}
+		else if (end > strEnd)
+		{
+			subStr = str.substring(start, strEnd);
+		}
+		else
+		{
+			subStr = str.substring(start, end);
+		}
+		return subStr;
+	}
 }

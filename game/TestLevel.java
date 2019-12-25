@@ -5,6 +5,7 @@ import java.awt.Color;
 import framework.GodRay;
 import framework.Level;
 import framework.LevelManager;
+import framework.TextBox;
 import framework.Wall;
 import framework.WallTypes;
 import framework.imageFilters.BasicVariance;
@@ -27,7 +28,7 @@ public class TestLevel extends Level{
 		
 		Wall floor = new Wall(this, 10, 400, 400, 400, WallTypes.FLOOR);
 		floor.setBackground(10, Color.DARK_GRAY, false);
-		floor.getBackground().addFilter(new BasicVariance(45));
+		floor.getBackground().addFilter(new BasicVariance(25));
 		floor.getBackground().addFilter(new LightenFrom(ShadeDir.TOP, 3));
 		this.addWall(floor);
 		
@@ -37,7 +38,7 @@ public class TestLevel extends Level{
 		
 		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
 		lRamp.setBackground(10, Color.BLUE, false);
-		lRamp.getBackground().addFilter(new BasicVariance(90));
+		lRamp.getBackground().addFilter(new BasicVariance(20));
 		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
 		this.addWall(lRamp);
 		
@@ -49,6 +50,10 @@ public class TestLevel extends Level{
 		Wall lWall = new Wall(this, 10, 100, 10, 350, WallTypes.WALL);
 		lWall.setBackground(15, Color.BLUE, true);
 		this.addWall(lWall);
+		
+		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
+				+ " instead of overflowing, which is a bad thing.", this);
+		this.addUI(text);
 	}
 	@Override
 	public void update(KeyState keys)

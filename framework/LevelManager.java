@@ -12,6 +12,7 @@ public class LevelManager {
 	private GameLevels curLevel;
 	private KeyMapping keys;
 	private double scale;
+	private TextBox textBox;
 	
 	public LevelManager()
 	{
@@ -58,5 +59,11 @@ public class LevelManager {
 	public void renderUI(Graphics2D g2d, boolean debug)
 	{
 		this.levels.get(curLevel.ordinal()).renderUI(g2d, debug);
+	}
+	public TextBox getTextBox() {
+		return textBox;
+	}
+	public void setTextBox(TextBox textBox) {
+		this.textBox = textBox;
 	}
 }

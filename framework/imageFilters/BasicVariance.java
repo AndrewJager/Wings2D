@@ -14,6 +14,10 @@ public class BasicVariance implements ImageFilter{
 	/** Maximum amount to change the pixels (min is 0) **/
 	private int varAmount;
 	
+	public BasicVariance()
+	{
+		this.varAmount = 25;
+	}
 	public BasicVariance(int varAmount)
 	{
 		this.varAmount = varAmount;

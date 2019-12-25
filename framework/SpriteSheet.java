@@ -98,7 +98,7 @@ public class SpriteSheet extends GameObject{
 	}
 	
 	// Functions to comply with GameObject requirements
-	public double getX(){ return 0 ;}
+	public double getX(){ return 0; }
 	public double getY(){ return 0; }
 	public void translate(double xVel, double yVel) {};
 }
