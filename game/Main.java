@@ -11,6 +11,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 
 import javax.swing.JFrame;
 
@@ -38,6 +40,13 @@ public class Main extends Canvas implements Runnable
 	
 	private Point mouseClick;
 	
+	private VolatileImage canvas;
+	private Graphics g;
+	/** Used only to draw the canvas **/
+	private Graphics2D g2d;
+	/** Used to draw to the canvas **/
+	private Graphics2D canvasGraphics;
+	
 	private void init()
 	{
 		keys = new KeyState();
@@ -49,6 +58,7 @@ public class Main extends Canvas implements Runnable
 		levelA = new TestLevel(manager, GameLevels.TEST);
 		
 		manager.setLevel(GameLevels.TEST);
+		canvas = createVolatileImage(WIDTH, HEIGHT);
 	}
 	private void update()
 	{
@@ -65,14 +75,21 @@ public class Main extends Canvas implements Runnable
 			return;
 		}
 		
-		Graphics g = strat.getDrawGraphics();
-		Graphics2D g2d = (Graphics2D)g;
+		g = strat.getDrawGraphics();
+		g2d = (Graphics2D)g;
+
+		canvasGraphics = (Graphics2D)canvas.getGraphics();
+		canvasGraphics.setColor(Color.DARK_GRAY);
+		canvasGraphics.fillRect(0, 0, WIDTH, HEIGHT);
+
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		manager.render(g2d, debug);
-		manager.renderUI(g2d, debug);
-
+		manager.render(canvasGraphics, debug);
+		manager.renderUI(canvasGraphics, debug);
+		g2d.drawImage(canvas, 0, 0, null);
+		
+		g2d.dispose();
 		g.dispose();
 		strat.show();
 	}
@@ -84,6 +101,7 @@ public class Main extends Canvas implements Runnable
 //		scale = 1.0;
 		WIDTH = (int)(WIDTH * scale);
 		HEIGHT = (int)(HEIGHT * scale);
+		
 		new CustomWindow(WIDTH, HEIGHT, "title", this);
 		this.addKeyListener(new KeyListener() {
 	        @Override
@@ -189,7 +207,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-//				System.out.println("FPS: " + frames);
+				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
