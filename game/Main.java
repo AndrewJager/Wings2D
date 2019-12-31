@@ -4,20 +4,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 
-import javax.swing.JFrame;
 
 import framework.*;
-import game.*;
 
 
 public class Main extends Canvas implements Runnable
@@ -47,6 +48,9 @@ public class Main extends Canvas implements Runnable
 	/** Used to draw to the canvas **/
 	private Graphics2D canvasGraphics;
 	
+	private GraphicsConfiguration gc;
+	
+	
 	private void init()
 	{
 		keys = new KeyState();
@@ -58,7 +62,11 @@ public class Main extends Canvas implements Runnable
 		levelA = new TestLevel(manager, GameLevels.TEST);
 		
 		manager.setLevel(GameLevels.TEST);
-		canvas = createVolatileImage(WIDTH, HEIGHT);
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getScreenDevices()[0];
+		gc = gd.getConfigurations()[0];
+		canvas = gc.createCompatibleVolatileImage(WIDTH, HEIGHT);
 	}
 	private void update()
 	{
@@ -78,7 +86,7 @@ public class Main extends Canvas implements Runnable
 		g = strat.getDrawGraphics();
 		g2d = (Graphics2D)g;
 
-		canvasGraphics = (Graphics2D)canvas.getGraphics();
+		canvasGraphics = canvas.createGraphics();
 		canvasGraphics.setColor(Color.DARK_GRAY);
 		canvasGraphics.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -87,6 +95,7 @@ public class Main extends Canvas implements Runnable
 		
 		manager.render(canvasGraphics, debug);
 		manager.renderUI(canvasGraphics, debug);
+
 		g2d.drawImage(canvas, 0, 0, null);
 		
 		g2d.dispose();
@@ -207,7 +216,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+//				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}

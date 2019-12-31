@@ -42,8 +42,8 @@ public class Button extends UIElement{
 	public void setImage(Image img)
 	{
 		this.img = img;
-		this.img.setX(x + (width / 2));
-		this.img.setY(y + (height / 2));
+		this.img.setCenterX(x + (width / 2));
+		this.img.setCenterY(y + (height / 2));
 	}
 	/**
 	 * Update function for button

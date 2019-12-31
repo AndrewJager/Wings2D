@@ -1,14 +1,19 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Shape;
 
 import framework.GodRay;
+import framework.Image;
 import framework.Level;
 import framework.LevelManager;
+import framework.ShapeFactory;
+import framework.ShapeUtils;
 import framework.TextBox;
 import framework.Wall;
 import framework.WallTypes;
 import framework.imageFilters.BasicVariance;
+import framework.imageFilters.DarkenFrom;
 import framework.imageFilters.ImageFilter;
 import framework.imageFilters.LightenFrom;
 import framework.imageFilters.Outline;
@@ -51,8 +56,18 @@ public class TestLevel extends Level{
 		lWall.setBackground(15, Color.BLUE, true);
 		this.addWall(lWall);
 		
+		
+		Shape testIcon = ShapeFactory.triangle();
+		testIcon = ShapeUtils.scale(testIcon, 4);
+		Image icon = new Image(testIcon, Color.GREEN, this);
+		icon.addFilter(new DarkenFrom(ShadeDir.TOP, 5));
+		icon.addFilter(new DarkenFrom(ShadeDir.LEFT, 5));
+		testIcon = ShapeFactory.triangle();
+		testIcon = ShapeUtils.scale(testIcon, 2);
+		icon.addShape(testIcon, Color.RED, -50, 45);
 		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
-				+ " instead of overflowing, which is a bad thing.", this);
+				+ " instead of overflowing, which is a bad thing.", icon, this);
+		
 		this.addUI(text);
 	}
 	@Override

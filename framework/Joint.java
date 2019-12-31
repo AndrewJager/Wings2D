@@ -92,8 +92,8 @@ public class Joint {
 		for (int i = 0; i < images.size(); i++)
 		{
 			Image img = images.get(i);
-			img.setX(img.getX() + x);
-			img.setY(img.getY() + y);
+			img.setCenterX(img.getX() + x);
+			img.setCenterY(img.getY() + y);
 		}
 	}
 	/**  
@@ -167,8 +167,8 @@ public class Joint {
 		for (int i = 0; i < images.size(); i++)
 		{
 			Image img = images.get(i);
-			img.setX(this.getX());
-			img.setY(this.getY());
+			img.setCenterX(this.getX());
+			img.setCenterY(this.getY());
 			img.render(g2d, debug);
 		}
 		if (debug)

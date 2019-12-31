@@ -11,6 +11,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 /**
  * Custom Image class, based off a BufferedImage and a Shape. 
@@ -67,13 +69,14 @@ public class Image {
 		this.filters = new ArrayList<ImageFilter>();
 		for(int x = 0; x < width; x++) {
 		    for(int y = 0; y < height; y++) {
-		    	if (scaled.contains(new Point(x, y)))
+		    	if (scaled.contains(x, y))
 		    	{
 		    		image.setRGB(x, y, this.color.getRGB());
 		    	}
 		    	else
 		    	{
 		    		image.setRGB(x, y, Color.TRANSLUCENT);
+//		    		image.setRGB(x, y, Color.BLUE.getRGB());
 		    	}
 		    }
 		}
@@ -185,6 +188,61 @@ public class Image {
 		filters.add(filter);
 		filter.filter(this);
 	}
+	
+	public void addShape(Shape newShape, Color color, int xLoc, int yLoc)
+	{
+		newShape = ShapeUtils.translate(newShape, xLoc, yLoc); 
+		Rectangle2D imageRect = new Rectangle2D.Double(0, 0, this.width, this.height);
+		Rectangle2D newImageRect = new Rectangle2D.Double(xLoc, yLoc, newShape.getBounds2D().getWidth(), newShape.getBounds2D().getHeight());
+		
+		if (imageRect.contains(newImageRect))
+		{
+			for (int x = 0; x < this.getImage().getWidth(); x++)
+			{
+				for (int y = 0; y < this.getImage().getHeight(); y++)
+				{
+					if (newShape.contains(x, y))
+					{
+						this.getImage().setRGB(x, y, color.getRGB());
+					}
+				}
+			}
+		}
+		else
+		{
+			Rectangle2D fullRect = imageRect.createUnion(newImageRect);
+			BufferedImage newImage = new BufferedImage((int)fullRect.getWidth(), (int)fullRect.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			int imgOneXOffset = 0;
+			int imgOneYOffset = 0;
+			if (xLoc < 0)
+			{
+				imgOneXOffset = -xLoc;
+				newShape = ShapeUtils.translate(newShape, -xLoc, 0); 
+			}
+			if (yLoc < 0)
+			{
+				imgOneYOffset = -yLoc;
+				newShape = ShapeUtils.translate(newShape, 0, -yLoc); 
+			}
+			
+			
+			Graphics2D g2d = (Graphics2D)newImage.getGraphics();
+			g2d.drawImage(this.image, imgOneXOffset, imgOneYOffset, null);
+			
+			for (int x = 0; x < fullRect.getWidth(); x++)
+			{
+				for (int y = 0; y < fullRect.getHeight(); y++)
+				{
+					if (newShape.contains(x, y))
+					{
+						newImage.setRGB(x, y, color.getRGB());
+					}
+				}
+			}
+			
+			this.setImage(newImage);
+		}
+	}
 	/**
 	 * Returns the image data of this Image
 	 * @return BufferedImage that contains the pixel data
@@ -211,7 +269,7 @@ public class Image {
 	 */
 	public void render(Graphics2D g2d, boolean debug)
 	{
-		g2d.drawImage(this.image, (int)x, (int)y, this.width, this.height, null);
+		g2d.drawImage(this.image, (int)x, (int)y, this.image.getWidth(), this.image.getHeight(), null);
 	}
 	/** 
 	 * Get the X coordinate of the center of this image
@@ -232,13 +290,21 @@ public class Image {
 	public double getX() {
 		return x;
 	}
-	public void setX(double x) {
+	public void setX(double x)
+	{
+		this.x = x;
+	}
+	public void setCenterX(double x) {
 		this.x = x - (this.width / 2);
 	}
 	public double getY() {
 		return y;
 	}
-	public void setY(double y) {
+	public void setY(double y)
+	{
+		this.y = y;
+	}
+	public void setCenterY(double y) {
 		this.y = y - (this.height / 2);
 	}
 	public int getWidth() {
