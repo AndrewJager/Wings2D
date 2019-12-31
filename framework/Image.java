@@ -8,11 +8,8 @@ import framework.imageFilters.ImageFilter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 
 /**
  * Custom Image class, based off a BufferedImage and a Shape. 
@@ -59,9 +56,7 @@ public class Image {
 		this.shape = shape;
 		this.ogShape = shape;
 		double scale = level.getManager().getScale();
-		AffineTransform transform = new AffineTransform();
-		transform.scale(scale, scale);
-		Shape scaled = transform.createTransformedShape(this.shape);
+		Shape scaled = ShapeUtils.scale(this.shape, scale);
 		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
 		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
@@ -126,15 +121,11 @@ public class Image {
 		this.rotation += Math.toRadians(angle);
 		double scale = level.getManager().getScale();
 		
-		AffineTransform transform = new AffineTransform();
-		transform.rotate(this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(), 
+		Shape newShape = ShapeUtils.rotateAround(this.ogShape, this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(),
 				this.y + this.ogShape.getBounds2D().getCenterY());
-		Shape newShape = transform.createTransformedShape(this.ogShape);
 		
-		transform = new AffineTransform();
 		// Rotated shape ends up offset for some reason. I have no idea why I have to do this.
-		transform.translate(-newShape.getBounds2D().getX(), -newShape.getBounds2D().getY());
-		newShape = transform.createTransformedShape(newShape);
+		newShape = ShapeUtils.translate(newShape, -newShape.getBounds2D().getX(), -newShape.getBounds2D().getY());
 		Image rotated = new Image(newShape, this.color, this.level);
 		
 		this.shape = ogShape;
@@ -189,6 +180,14 @@ public class Image {
 		filter.filter(this);
 	}
 	
+	/**
+	 * Add a shape to the image. After this, rotation of the image will not work do to the new shapes not being saved.
+	 * Previously applied filters are not run when this operation is done, be design.
+	 * @param newShape Shape which will be added to the image
+	 * @param color Color to fill the new shape with. The rest of the image will be the same color.
+	 * @param xLoc X location to draw new shape at, relative to the top-left corner of the image.
+	 * @param yLoc Y location to draw new shape at, relative to the top-left corner of the image.	
+	 */
 	public void addShape(Shape newShape, Color color, int xLoc, int yLoc)
 	{
 		newShape = ShapeUtils.translate(newShape, xLoc, yLoc); 
