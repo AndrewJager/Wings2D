@@ -57,14 +57,13 @@ public class TestLevel extends Level{
 		this.addWall(lWall);
 		
 		
-		Shape testIcon = ShapeFactory.triangle();
-		testIcon = ShapeUtils.scale(testIcon, 4);
+		Shape testIcon = ShapeFactory.solIconBar();
+		testIcon = ShapeUtils.scale(testIcon, 3.3);
 		Image icon = new Image(testIcon, Color.GREEN, this);
-		icon.addFilter(new DarkenFrom(ShadeDir.TOP, 5));
-		icon.addFilter(new DarkenFrom(ShadeDir.LEFT, 5));
-		testIcon = ShapeFactory.triangle();
-		testIcon = ShapeUtils.scale(testIcon, 2);
-		icon.addShape(testIcon, Color.RED, -50, 45);
+		testIcon = ShapeFactory.solIconBar();
+		testIcon = ShapeUtils.scale(testIcon, 3.3);
+		testIcon = ShapeUtils.flipX(testIcon);
+		icon.addShape(testIcon, Color.RED, 60, 0);
 		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
 				+ " instead of overflowing, which is a bad thing.", icon, this);
 		

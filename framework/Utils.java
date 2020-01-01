@@ -60,10 +60,10 @@ public final class Utils {
 	
 	/**
 	 * Returns a substring, but won't fail if start or end is out of bounds
-	 * @param str
-	 * @param start
-	 * @param end
-	 * @return
+	 * @param str String to get substring from.
+	 * @param start Starting character of substring.
+	 * @param end Ending character of substring. Substring can end earlier if end is outside length of str.
+	 * @return Requested substring, or as close as can be done with the given positions in the string.
 	 */
 	public static String safeSubstring(String str, int start, int end)
 	{

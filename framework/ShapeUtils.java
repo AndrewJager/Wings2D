@@ -59,4 +59,27 @@ public class ShapeUtils {
 				anchorY);
 		return transform.createTransformedShape(shape);
 	}
+	/**
+	 * Flip a Shape around the X-axis
+	 * @param shape Shape to be flipped.
+	 * @return A new Shape, use this instead of the Shape passed to this function.
+	 */
+	public static Shape flipX(Shape shape)
+	{
+		AffineTransform transform = new AffineTransform();
+		transform.scale(-1, 1);
+		Shape newShape =  transform.createTransformedShape(shape);
+		return ShapeUtils.translate(newShape, -newShape.getBounds2D().getX(), 0);
+	}
+	/**
+	 * Flip a Shape around the Y-axis
+	 * @param shape Shape to be flipped.
+	 * @return A new Shape, use this instead of the Shape passed to this function.
+	 */
+	public static Shape flipY(Shape shape)
+	{
+		AffineTransform transform = new AffineTransform();
+		transform.scale(0, -1);
+		return transform.createTransformedShape(shape);
+	}
 }

@@ -40,6 +40,7 @@ public class TextBox extends UIElement{
 		double scale = level.getManager().getScale();
 		this.backgroundColor = Color.BLACK;
 		this.textColor = Color.WHITE;
+		this.borderColor = Color.BLUE;
 		x = (int)(x * scale);
 		y = (int)(y * scale);
 		height = (int)(height * scale);
@@ -51,7 +52,7 @@ public class TextBox extends UIElement{
 		this.font = new Font("TimesRoman", Font.ITALIC, fontSize);
 		
 		textDrawPoint = new Point2D.Double(x + (x * 0.5), y + (y * 0.05));
-		imageDrawPoint = new Point2D.Double(x + (width * 0.05), y + (height * 0.1));
+		imageDrawPoint = new Point2D.Double(x + (width * 0.02), y + (height * 0.1));
 		
 		lines = new ArrayList<String>();
 		int charactersIndexed = 0;
@@ -74,6 +75,8 @@ public class TextBox extends UIElement{
 		g2d.fillRect(x - borderWidth, y - borderWidth, width + (borderWidth * 2), height + (borderWidth * 2));
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(x, y, width, height);
+		g2d.setColor(borderColor);
+		g2d.fillRect((int)(textDrawPoint.getX() - (width * 0.03)), y - borderWidth, borderWidth, height + borderWidth);
 		g2d.setColor(textColor);
 		if (!g2d.getFont().equals(font))
 		{

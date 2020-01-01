@@ -190,12 +190,14 @@ public class Image {
 	 */
 	public void addShape(Shape newShape, Color color, int xLoc, int yLoc)
 	{
-		newShape = ShapeUtils.translate(newShape, xLoc, yLoc); 
+		newShape = ShapeUtils.scale(newShape, level.getManager().getScale());
+		newShape = ShapeUtils.translate(newShape, -(newShape.getBounds2D().getX() - xLoc), newShape.getBounds2D().getY() - yLoc);
 		Rectangle2D imageRect = new Rectangle2D.Double(0, 0, this.width, this.height);
 		Rectangle2D newImageRect = new Rectangle2D.Double(xLoc, yLoc, newShape.getBounds2D().getWidth(), newShape.getBounds2D().getHeight());
-		
+
 		if (imageRect.contains(newImageRect))
 		{
+			
 			for (int x = 0; x < this.getImage().getWidth(); x++)
 			{
 				for (int y = 0; y < this.getImage().getHeight(); y++)
@@ -228,9 +230,9 @@ public class Image {
 			Graphics2D g2d = (Graphics2D)newImage.getGraphics();
 			g2d.drawImage(this.image, imgOneXOffset, imgOneYOffset, null);
 			
-			for (int x = 0; x < fullRect.getWidth(); x++)
+			for (int x = 0; x < (int)fullRect.getWidth(); x++)
 			{
-				for (int y = 0; y < fullRect.getHeight(); y++)
+				for (int y = 0; y < (int)fullRect.getHeight(); y++)
 				{
 					if (newShape.contains(x, y))
 					{
