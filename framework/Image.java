@@ -47,7 +47,7 @@ public class Image {
 	 * @param color Color that the the shape will be filled with
 	 * @param level Level that the Image is associated with
 	 */
-	public Image(Shape shape, Color color, Level level)
+	public Image(Shape shape, Color color, Level level, boolean scaleImg)
 	{
 		imageCount = getImageCount() + 1;
 		this.level = level;
@@ -56,7 +56,11 @@ public class Image {
 		this.shape = shape;
 		this.ogShape = shape;
 		double scale = level.getManager().getScale();
-		Shape scaled = ShapeUtils.scale(this.shape, scale);
+		Shape scaled = this.shape;
+		if (scaleImg)
+		{
+			scaled = ShapeUtils.scale(this.shape, scale);
+		}
 		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
 		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
@@ -75,6 +79,10 @@ public class Image {
 		    	}
 		    }
 		}
+	}
+	public Image(Shape shape, Color color, Level level)
+	{
+		this(shape, color, level, true);
 	}
 	/**
 	 * Private constructor with the bare minimum of info needed to make a BufferedImage. Used when making a copy.

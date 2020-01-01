@@ -9,8 +9,10 @@ import game.KeyState;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 public class GodRay extends GameObject{
 	class Line extends Line2D.Double{
@@ -30,6 +32,8 @@ public class GodRay extends GameObject{
 	private Line2D start, end;
 	private List<Line> rays;
 	private Color color;
+	private Image background;
+	private Point2D imageDrawPoint;
 	private boolean vertical;
 	
 	/**
@@ -66,10 +70,21 @@ public class GodRay extends GameObject{
 		}
 		this.color = color;
 		vertical = true;
+		
+		GeneralPath path = new GeneralPath();
+		path.moveTo(start.getX1(), start.getY1());
+		path.lineTo(start.getX2(), start.getY2());
+		path.lineTo(end.getX1(), end.getY1());
+		path.lineTo(end.getX2(), end.getY2());
+
+		Shape path2 = ShapeUtils.translate(path, -path.getBounds2D().getX(), -path.getBounds2D().getY());
+		background = new Image(path2, color, level, false);
+		imageDrawPoint = new Point2D.Double(path.getBounds2D().getX(), path.getBounds2D().getY());
 	}
 	
 	public void render(Graphics2D g2d, boolean debug)
 	{
+		g2d.drawImage(background.getImage(), (int)imageDrawPoint.getX(), (int)imageDrawPoint.getY(), null);
 		g2d.setColor(color);
 		g2d.setStroke(new BasicStroke(4));
 		for (int i = 0; i < rays.size(); i++)

@@ -79,7 +79,8 @@ public class ShapeUtils {
 	public static Shape flipY(Shape shape)
 	{
 		AffineTransform transform = new AffineTransform();
-		transform.scale(0, -1);
-		return transform.createTransformedShape(shape);
+		transform.scale(1, -1);
+		Shape newShape = transform.createTransformedShape(shape);
+		return ShapeUtils.translate(newShape, 0, -newShape.getBounds2D().getY());
 	}
 }

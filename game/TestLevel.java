@@ -64,6 +64,7 @@ public class TestLevel extends Level{
 		testIcon = ShapeUtils.scale(testIcon, 3.3);
 		testIcon = ShapeUtils.flipX(testIcon);
 		icon.addShape(testIcon, Color.RED, 60, 0);
+		icon.addFilter(new DarkenFrom(ShadeDir.BOTTOM, 4));
 		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
 				+ " instead of overflowing, which is a bad thing.", icon, this);
 		
