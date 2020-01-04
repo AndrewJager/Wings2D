@@ -107,11 +107,12 @@ public class Main extends Canvas implements Runnable
 	{
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		scale = screenSize.getWidth() / WIDTH;
-//		scale = 1.0;
+		scale = 1.0;
 		WIDTH = (int)(WIDTH * scale);
 		HEIGHT = (int)(HEIGHT * scale);
 		
-		new CustomWindow(WIDTH, HEIGHT, "title", this);
+		CustomWindow win = new CustomWindow(WIDTH, HEIGHT, "title", this);
+		System.out.println(win.getFrame().getHeight());
 		this.addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {

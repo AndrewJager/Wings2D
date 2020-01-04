@@ -38,47 +38,9 @@ public class BlurEdges implements ImageFilter{
 			long avgR, totR = 0, avgB, totB = 0, avgG, totG = 0, avgA, totA = 0;
 			int count = 0;
 			Point2D point = edges.get(i);
-			Color color = new Color(image.getRGB((int)point.getX() - 1, (int)point.getY()), true);
-			if (color.getAlpha() > 0)
-			{
-				totR += color.getRed();
-				totG += color.getGreen();
-				totB += color.getBlue();
-				totA += color.getAlpha();
-				count++;
-			}
-			color = new Color(image.getRGB((int)point.getX() + 1, (int)point.getY()), true);
-			if (color.getAlpha() > 0)
-			{
-				totR += color.getRed();
-				totG += color.getGreen();
-				totB += color.getBlue();
-				totA += color.getAlpha();
-				count++;
-			}
-			color = new Color(image.getRGB((int)point.getX(), (int)point.getY() - 1), true);
-			if (color.getAlpha() > 0)
-			{
-				totR += color.getRed();
-				totG += color.getGreen();
-				totB += color.getBlue();
-				totA += color.getAlpha();
-				count++;
-			}
-			color = new Color(image.getRGB((int)point.getX(), (int)point.getY() + 1), true);
-			if (color.getAlpha() > 0)
-			{
-				totR += color.getRed();
-				totG += color.getGreen();
-				totB += color.getBlue();
-				totA += color.getAlpha();
-				count++;
-			}
-			avgR = totR / count;
-			avgG = totG / count;
-			avgB = totB / count;
-			avgA = totA / count;
-			image.setRGB((int)point.getX(), (int)point.getY(), new Color((int)avgR / 2, (int)avgG / 2, (int)avgB / 2, (int)avgA / 2).getRGB());
+			Color color = new Color(image.getRGB((int)point.getX(), (int)point.getY()), true);
+			color = new Color(color.getRed(), color.getBlue(), color.getGreen(), color.getAlpha() / 2);
+			image.setRGB((int)point.getX(), (int)point.getY(), color.getRGB());
 		}
 	}
 }

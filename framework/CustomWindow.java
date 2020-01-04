@@ -17,6 +17,7 @@ public class CustomWindow extends JPanel{
 		frame.setMaximumSize(new Dimension(width, height));
 		frame.setMinimumSize(new Dimension(width, height));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.add(game);

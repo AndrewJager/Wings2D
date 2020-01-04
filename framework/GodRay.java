@@ -125,6 +125,10 @@ public class GodRay extends GameObject{
 		}
 	}
 
+	public Image getBackground()
+	{
+		return background;
+	}
 	@Override
 	public void translate(double xVel, double yVel) {
 		

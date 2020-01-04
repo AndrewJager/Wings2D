@@ -13,6 +13,7 @@ import framework.TextBox;
 import framework.Wall;
 import framework.WallTypes;
 import framework.imageFilters.BasicVariance;
+import framework.imageFilters.BlurEdges;
 import framework.imageFilters.DarkenFrom;
 import framework.imageFilters.ImageFilter;
 import framework.imageFilters.LightenFrom;
@@ -57,14 +58,20 @@ public class TestLevel extends Level{
 		this.addWall(lWall);
 		
 		
-		Shape testIcon = ShapeFactory.solIconBar();
-		testIcon = ShapeUtils.scale(testIcon, 3.3);
-		Image icon = new Image(testIcon, Color.GREEN, this);
-		testIcon = ShapeFactory.solIconBar();
-		testIcon = ShapeUtils.scale(testIcon, 3.3);
-		testIcon = ShapeUtils.flipX(testIcon);
-		icon.addShape(testIcon, Color.RED, 60, 0);
-		icon.addFilter(new DarkenFrom(ShadeDir.BOTTOM, 4));
+//		Shape testIcon = ShapeFactory.solIconBar();
+//		testIcon = ShapeUtils.scale(testIcon, 3.3);
+//		Image icon = new Image(testIcon, Color.GREEN, this);
+//		testIcon = ShapeFactory.solIconBar();
+//		testIcon = ShapeUtils.scale(testIcon, 3.3);
+//		testIcon = ShapeUtils.flipX(testIcon);
+//		icon.addShape(testIcon, Color.RED, 60, 0);
+//		icon.addFilter(new DarkenFrom(ShadeDir.BOTTOM, 4));
+		
+		Shape testIcon = ShapeFactory.squareCutCornors(4, 1);
+		testIcon = ShapeUtils.scale(testIcon, 6);
+		Image icon = new Image(testIcon, Color.RED, this);
+		icon.addFilter(new DarkenFrom(ShadeDir.TOP, 2));
+		icon.addFilter(new LightenFrom(ShadeDir.BOTTOM, 2));
 		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
 				+ " instead of overflowing, which is a bad thing.", icon, this);
 		
