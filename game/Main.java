@@ -22,6 +22,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.VolatileImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -39,6 +44,8 @@ public class Main extends Canvas implements Runnable
 	private static int WIDTH = (int)(768 * 1.2);
 	private static int HEIGHT = (int)(432 * 1.2);
 	private double scale;
+	
+	private UserPrefs preferences; 
 	
 	private boolean debug = false;
 	private Thread thread;
@@ -80,7 +87,7 @@ public class Main extends Canvas implements Runnable
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getScreenDevices()[0];
 		gc = gd.getConfigurations()[0];
-		canvas = gc.createCompatibleVolatileImage(WIDTH, HEIGHT);
+		canvas = gc.createCompatibleVolatileImage(preferences.getScreenWidth(), preferences.getScreenHeight());
 	}
 	private void update()
 	{
@@ -102,10 +109,10 @@ public class Main extends Canvas implements Runnable
 
 		canvasGraphics = canvas.createGraphics();
 		canvasGraphics.setColor(Color.DARK_GRAY);
-		canvasGraphics.fillRect(0, 0, WIDTH, HEIGHT);
+		canvasGraphics.fillRect(0, 0, preferences.getScreenWidth(), preferences.getScreenHeight());
 
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.fillRect(0, 0, preferences.getScreenWidth(), preferences.getScreenHeight());
 		
 		manager.render(canvasGraphics, debug);
 		manager.renderUI(canvasGraphics, debug);
@@ -117,96 +124,31 @@ public class Main extends Canvas implements Runnable
 		strat.show();
 	}
 	
-	private void setupGrapics() 
-	{
-		JFrame frame = new JFrame("test");
-		int localWidth = 800;
-		int localHeight = 700;
-		frame.setPreferredSize(new Dimension(localWidth, localHeight));
-		frame.setMaximumSize(new Dimension(localWidth + 50, localHeight + 50));
-		frame.setMinimumSize(new Dimension(localWidth, localHeight));
-		
-		JPanel panel = new JPanel();
-		panel.setBounds((int)(frame.getWidth() * 0.05), (int)(frame.getHeight() * 0.02), (int)(frame.getWidth() * 0.9), (int)(frame.getHeight() * 0.9));
-		panel.setBackground(Color.LIGHT_GRAY);
-
-		JButton readyButton = new JButton("Begin!");
-		readyButton.setLocation(new Point(150, (int)(panel.getHeight() * 0.90)));
-		readyButton.setSize(80, 25);
-	    readyButton.addActionListener(new ActionListener(){  
-	    	public void actionPerformed(ActionEvent e){  
-	    	            initReady = true;
-	    	        }  
-	    	    });  
-		JCheckBox isFullscreen = new JCheckBox("Fullscreen");
-		isFullscreen.setBounds(25, 30, 100, 25);
-		JLabel sizingText = new JLabel("Change the size of the screen to the desired size.");
-		sizingText.setHorizontalAlignment(JLabel.CENTER);
-		sizingText.setBounds(25,  70,  400, 25);
-		JLabel sizingText2 = new JLabel("You will not be able to change it while the game is running.");
-		sizingText2.setHorizontalAlignment(JLabel.CENTER);
-		sizingText2.setBounds(25,  100, 400, 25);
-		JTextField inputWidth = new JTextField();
-		inputWidth.setBounds(25, 130, 50, 25);
-		JTextField inputHeight = new JTextField();
-		inputHeight.setBounds(75, 160, 50, 25);
-		
-		frame.addComponentListener(new ComponentAdapter() 
-		{  
-		        public void componentResized(ComponentEvent evt) {
-		            Component c = (Component)evt.getSource();
-		            inputWidth.setText(Integer.toString(c.getWidth()));
-		            inputHeight.setText(Integer.toString(c.getHeight()));
-		            
-		            panel.setBounds((int)(frame.getWidth() * 0.05), (int)(frame.getHeight() * 0.02), (int)(frame.getWidth() * 0.9), (int)(frame.getHeight() * 0.9));
-		            isFullscreen.setLocation((panel.getWidth() / 2) - (isFullscreen.getWidth() / 2), isFullscreen.getY());
-		            sizingText.setLocation((panel.getWidth() / 2) - (sizingText.getWidth() / 2), sizingText.getY());
-		            sizingText2.setLocation((panel.getWidth() / 2) - (sizingText2.getWidth() / 2), sizingText2.getY());
-		            inputWidth.setLocation((panel.getWidth() / 2) - (inputWidth.getWidth() / 2), inputWidth.getY());
-		            inputHeight.setLocation((panel.getWidth() / 2) - (inputHeight.getWidth() / 2), inputHeight.getY());
-		            readyButton.setLocation((panel.getWidth() / 2) - (readyButton.getWidth() / 2), (int)(panel.getHeight() * 0.90));
-		        }
-		});
-		frame.getContentPane().setLayout(null);
-		panel.setLayout(null);
-		frame.add(panel);
-		panel.add(readyButton);
-		panel.add(isFullscreen);
-		panel.add(sizingText);
-		panel.add(sizingText2);
-		panel.add(inputWidth);
-		panel.add(inputHeight);
-		
-		frame.setVisible(true);
-		
-		
-		while (!initReady)
-		{
-			try //Don't run as fast as possible
-			{
-			    Thread.sleep(50);
-			}
-			catch(InterruptedException ex)
-			{
-			    Thread.currentThread().interrupt();
-			}
-		}
-		
-		frame.setVisible(false);
-		frame.dispose();
-	}
-	
 	public Main()
 	{
-		setupGrapics();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		scale = screenSize.getWidth() / WIDTH;
-		scale = 1.0;
-		WIDTH = (int)(WIDTH * scale);
-		HEIGHT = (int)(HEIGHT * scale);
+		File prefFile = new File("preferences.txt");
+		if (prefFile.exists())
+		{
+			try {
+				FileInputStream fileInStream = new FileInputStream("preferences.txt");
+				ObjectInputStream prefStream = new ObjectInputStream(fileInStream);
+		        preferences = (UserPrefs) prefStream.readObject();
+		        prefStream.close();
+		        prefStream.close();
+			} 
+			catch (ClassNotFoundException | IOException e1) {
+				System.out.println("What should never have happened, happened");
+			}
+		}
+		else
+		{
+			preferences = new UserPrefs();
+		}
 		
-		CustomWindow win = new CustomWindow(WIDTH, HEIGHT, "title", this);
-		System.out.println(win.getFrame().getHeight());
+		SettingsScreen.runSettingsScreen(preferences);
+		scale = Double.valueOf(preferences.getScreenWidth()) / WIDTH; // Need to cast to double here, or it will round
+		
+		CustomWindow win = new CustomWindow("title", this, preferences);
 		this.addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {
@@ -311,7 +253,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+//				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
