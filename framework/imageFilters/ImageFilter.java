@@ -12,4 +12,5 @@ public interface ImageFilter
 	 * @param img Image to run the filter over
 	 */
 	public abstract void filter(Image img);
+	public abstract String getFilterName();
 }

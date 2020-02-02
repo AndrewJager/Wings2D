@@ -23,6 +23,15 @@ public class BasicVariance implements ImageFilter{
 		this.varAmount = varAmount;
 	}
 	
+	public String getFilterName()
+	{
+		return "Basic Variance";
+	}
+	public int getVarAmt()
+	{
+		return this.varAmount;
+	}
+	
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

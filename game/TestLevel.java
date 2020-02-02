@@ -23,7 +23,7 @@ import framework.imageFilters.ShadeDir;
 public class TestLevel extends Level{
 	private Player player;
 	public TestLevel(LevelManager manager, GameLevels thisLevel) {
-		super(manager, thisLevel);
+		super(manager, thisLevel.ordinal());
 
 		player = new Player(this);
 		this.addObject(player);

@@ -36,7 +36,7 @@ public class LevelManager {
 	public void addLevel(Level newLevel)
 	{
 		levels.add(newLevel);
-		levels.set(newLevel.getLevel().ordinal(), newLevel);
+		levels.set(newLevel.getIdentifer(), newLevel);
 	}
 	public double getScale() {
 		return scale;

@@ -25,6 +25,18 @@ public class DarkenFrom implements ImageFilter{
 		this.dir = dir;
 		this.varAmount = varAmount;
 	}
+	public String getFilterName()
+	{
+		return "Darken From";
+	}
+	public ShadeDir getDirection()
+	{
+		return dir;
+	}
+	public double getAmt()
+	{
+		return varAmount;
+	}
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

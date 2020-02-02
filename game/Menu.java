@@ -12,7 +12,7 @@ import framework.LevelManager;
 public class Menu extends Level{
 	private Button b;
 	public Menu(LevelManager manager, GameLevels thisLevel) {
-		super(manager, thisLevel);
+		super(manager, thisLevel.ordinal());
 		b = new Button(100, 20, 80, 25, Color.GREEN, this);
 		Path2D shape = new Path2D.Double();
 		shape.append(new RoundRectangle2D.Double(0, 0, 10, 5, 3, 3), true);

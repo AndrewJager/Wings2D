@@ -11,6 +11,11 @@ import framework.Image;
  * Add some pixels around the edges of the shape to create a "blurred" effect.
  */
 public class BlurEdges implements ImageFilter{
+	public String getFilterName()
+	{
+		return "Blur Edges";
+	}
+	
 	public void filter(Image img)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();

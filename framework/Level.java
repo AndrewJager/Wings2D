@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import game.GameLevels;
 import game.KeyState;
 
 public class Level {
@@ -16,14 +15,14 @@ public class Level {
 	/** List of static level components */
 	private List<Wall> walls;
 	/** Identifier for this level */
-	private GameLevels thisLevel;
+	private int thisLevel;
 	private LevelManager manager;
 	/**
 	 * Class constructor
 	 * @param manager Level Manager object
 	 * @param thisLevel Identifier for this level
 	 */
-	public Level(LevelManager manager, GameLevels thisLevel)
+	public Level(LevelManager manager, int thisLevel)
 	{
 		this.thisLevel = thisLevel;
 		this.manager = manager;
@@ -37,7 +36,7 @@ public class Level {
 	{
 		return this.manager;
 	}
-	public GameLevels getLevel()
+	public int getIdentifer()
 	{
 		return this.thisLevel;
 	}
