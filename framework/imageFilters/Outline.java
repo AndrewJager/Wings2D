@@ -26,6 +26,10 @@ public class Outline implements ImageFilter{
 	{
 		return "Outline";
 	}
+	public Color getColor()
+	{
+		return color;
+	}
 	public void filter(Image img)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();
