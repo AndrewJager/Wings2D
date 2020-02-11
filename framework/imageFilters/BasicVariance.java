@@ -13,6 +13,8 @@ import framework.Utils;
 public class BasicVariance implements ImageFilter{
 	/** Maximum amount to change the pixels (min is 0) **/
 	private int varAmount;
+	/** Used when saving to a file */
+	public final static String fileTitle = "BasicVariance";
 	
 	public BasicVariance()
 	{
@@ -31,7 +33,10 @@ public class BasicVariance implements ImageFilter{
 	{
 		return this.varAmount;
 	}
-	
+	public String toString()
+	{
+		return fileTitle + ImageFilter.delimiter + varAmount;
+	}
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

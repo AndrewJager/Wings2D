@@ -11,6 +11,8 @@ import framework.Utils;
  * @see DarkenFrom
  */
 public class LightenFrom implements ImageFilter{
+	/** Used when saving to a file */
+	public final static String fileTitle = "LightenFrom";
 	/** Direction from which to shade the image. Lighter in the indicated direction **/
 	private ShadeDir dir;
 	/** Amount in which to lighten the pixels **/
@@ -38,6 +40,10 @@ public class LightenFrom implements ImageFilter{
 	public double getAmt()
 	{
 		return varAmount;
+	}
+	public String toString()
+	{
+		return fileTitle + ImageFilter.delimiter + dir + ImageFilter.delimiter + varAmount;
 	}
 	public void filter(Image img)
 	{

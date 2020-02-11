@@ -11,11 +11,16 @@ import framework.Image;
  * Add some pixels around the edges of the shape to create a "blurred" effect.
  */
 public class BlurEdges implements ImageFilter{
+	/** Used when saving to a file */
+	public final static String fileTitle = "BlurEdges";
 	public String getFilterName()
 	{
 		return "Blur Edges";
 	}
-	
+	public String toString()
+	{
+		return fileTitle;
+	}
 	public void filter(Image img)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();
@@ -40,8 +45,6 @@ public class BlurEdges implements ImageFilter{
 		
 		for (int i = 0; i < edges.size(); i++)
 		{
-			long avgR, totR = 0, avgB, totB = 0, avgG, totG = 0, avgA, totA = 0;
-			int count = 0;
 			Point2D point = edges.get(i);
 			Color color = new Color(image.getRGB((int)point.getX(), (int)point.getY()), true);
 			color = new Color(color.getRed(), color.getBlue(), color.getGreen(), color.getAlpha() / 2);

@@ -83,4 +83,48 @@ public final class Utils {
 		}
 		return subStr;
 	}
+	
+	/**
+	 * Returns a string containing the RGBA values of the color, separated by the delimiter string
+	 * @param color Color to get string values from
+	 * @param delimiter Used to separate each value
+	 * @return "Red(delimiter)Green(delimiter)Blue(delimiter)Alpha"
+	 */
+	public static String colorToString(Color color, String delimiter)
+	{
+		return color.getRed() + delimiter + color.getGreen() + delimiter + color.getBlue() + delimiter + color.getAlpha();
+	}
+	
+	/**
+	 * Returns a string containing the RGBA values of the color, using ", " as the delimiter
+	 * @param color Color to get values from
+	 * @return "Red, Green, Blue, Alpha"
+	 */
+	public static String colorToString(Color color)
+	{
+		return colorToString(color, ", ");
+	}
+	
+	/**
+	 * Creates a Color object from a string containing RGBA values
+	 * @param str Expected in format of Red(delimiter)Green(delimiter)Blue(delimiter)Alpha
+	 * @param delimiter Used to separate each value
+	 * @return Color object created from string
+	 */
+	public static Color stringToColor(String str, String delimiter)
+	{
+		String[] strCol = str.split(delimiter);
+		Color newColor = new Color(Integer.parseInt(strCol[0]), Integer.parseInt(strCol[1]), Integer.parseInt(strCol[2]), Integer.parseInt(strCol[3]));
+		return newColor;
+	}
+	
+	/**
+	 * Creates a Color object from a string containing RGBA values, using ", " as a delimiter
+	 * @param str Expected in format of Red, Green, Blue, Alpha
+	 * @return Color object created from string
+	 */
+	public static Color stringToColor(String str)
+	{
+		return stringToColor(str, ", ");
+	}
 }

@@ -6,11 +6,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import framework.Image;
+import framework.Utils;
 
 /**
  * Create an solid-color outline around the shape inside an Image. 
  */
 public class Outline implements ImageFilter{
+	/** Used when saving to a file */
+	public final static String fileTitle = "Outline";
 	/** Color of the outline **/
 	private Color color;
 	/**
@@ -29,6 +32,10 @@ public class Outline implements ImageFilter{
 	public Color getColor()
 	{
 		return color;
+	}
+	public String toString()
+	{
+		return fileTitle + ImageFilter.delimiter + Utils.colorToString(color, ",");
 	}
 	public void filter(Image img)
 	{
