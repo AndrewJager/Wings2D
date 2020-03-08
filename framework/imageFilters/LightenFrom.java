@@ -10,7 +10,7 @@ import framework.Utils;
  * Lighten the RGB values of the pixels in the image, in an increasing amount from the given direction.
  * @see DarkenFrom
  */
-public class LightenFrom implements ImageFilter{
+public class LightenFrom implements ImageFilter, ShadeFrom {
 	/** Used when saving to a file */
 	public final static String fileTitle = "LightenFrom";
 	/** Direction from which to shade the image. Lighter in the indicated direction **/
@@ -19,7 +19,6 @@ public class LightenFrom implements ImageFilter{
 	private double varAmount;
 	
 	/**
-	 * 
 	 * @param dir Direction to use when lightening the pixels
 	 * @param varAmount Amount to lighten the pixels
 	 */

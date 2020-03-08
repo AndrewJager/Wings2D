@@ -10,6 +10,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -106,6 +107,8 @@ public class Main extends Canvas implements Runnable
 		
 		g = strat.getDrawGraphics();
 		g2d = (Graphics2D)g;
+//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
 		canvasGraphics = canvas.createGraphics();
 		canvasGraphics.setColor(Color.DARK_GRAY);
@@ -253,7 +256,7 @@ public class Main extends Canvas implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-//				System.out.println("FPS: " + frames);
+				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}

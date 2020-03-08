@@ -42,7 +42,7 @@ public final class Utils {
 		{
 			value = min;
 		}
-		return min;
+		return value;
 	}
 	/**
 	 * Mix two colors by averaging their red, green, and blue values
@@ -58,6 +58,35 @@ public final class Utils {
 		return new Color(red, green, blue, base.getAlpha());
 	}
 	
+	/**
+	 * Increase the base color using the values of the highlight color
+	 * @param base Color will never be darker than this. Alpha value is from this color
+	 * @param highlight Increase the base color with this color's RGB values, never going above 255
+	 * @return Base color increased by the values of the highlight color
+	 */
+	public static Color overlayColor(Color base, Color highlight)
+	{
+		int red = makeInRange(base.getRed() + highlight.getRed(), 0, 255);
+		int green = makeInRange(base.getGreen() + highlight.getGreen(), 0, 255);
+		int blue = makeInRange(base.getBlue() + highlight.getBlue(), 0, 255);
+		return new Color(red, green, blue, base.getAlpha());
+	}
+	
+	/**
+	 * Return a color with the RGB values in the input color multiplied by the percent
+	 * @param color Color to use, value is not modified
+	 * @param percent Can be over 100
+	 * @return A new color, with the RGB values modified
+	 */
+	public static Color modifyColorByPercent(Color color, double percent)
+	{
+		System.out.println("M " + color.getRed() * percent);
+		double red = makeInRange(color.getRed() * percent, 0, 255);
+		System.out.println(red);
+		double green = makeInRange(color.getGreen() * percent, 0, 255);
+		double blue = makeInRange(color.getBlue() * percent, 0, 255);
+		return new Color((int)red, (int)green, (int)blue, color.getAlpha());
+	}
 	/**
 	 * Returns a substring, but won't fail if start or end is out of bounds
 	 * @param str String to get substring from.
@@ -126,5 +155,15 @@ public final class Utils {
 	public static Color stringToColor(String str)
 	{
 		return stringToColor(str, ", ");
+	}
+	
+	/**
+	 * Convert a percentage value to a 0-255 color value
+	 * @param percent 0-100
+	 * @return percent * 2.55
+	 */
+	public static double percentTo255(double percent)
+	{
+		return percent * 2.55;
 	}
 }

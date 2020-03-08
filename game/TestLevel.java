@@ -16,6 +16,7 @@ import framework.imageFilters.BasicVariance;
 import framework.imageFilters.BlurEdges;
 import framework.imageFilters.DarkenFrom;
 import framework.imageFilters.ImageFilter;
+import framework.imageFilters.LightFrom;
 import framework.imageFilters.LightenFrom;
 import framework.imageFilters.Outline;
 import framework.imageFilters.ShadeDir;
@@ -44,8 +45,9 @@ public class TestLevel extends Level{
 		
 		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
 		lRamp.setBackground(10, Color.BLUE, false);
-		lRamp.getBackground().addFilter(new BasicVariance(20));
-		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
+//		lRamp.getBackground().addFilter(new BasicVariance(20));
+//		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
+		lRamp.getBackground().addFilter(new LightFrom(145, 0, 150, 0, 1, Color.WHITE));
 		this.addWall(lRamp);
 		
 		Wall rWall = new Wall(this, 500, 100, 500, 300, WallTypes.WALL);

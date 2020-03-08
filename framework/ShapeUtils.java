@@ -2,6 +2,7 @@ package framework;
 
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 
 /**
  * Static functions to perform operations on Shapes.
@@ -82,5 +83,45 @@ public class ShapeUtils {
 		transform.scale(1, -1);
 		Shape newShape = transform.createTransformedShape(shape);
 		return ShapeUtils.translate(newShape, 0, -newShape.getBounds2D().getY());
+	}
+
+	public static double distanceFromLineToPoint(double pointX, double pointY, double x1, double y1, double x2, double y2)
+	{
+		double xDist = pointX - x1;
+		double yDist = pointY - y1;
+		double lineXDist = x2 - x1;
+		double lineYDist = y2 - y1;
+
+		double dot = (xDist * lineXDist) + (yDist * lineYDist);
+		double len_sq = (lineXDist * lineXDist) + (lineYDist * lineYDist);
+		double param = -1;
+		if (len_sq != 0) 
+		{
+			param = dot / len_sq;
+		}
+
+		double xx, yy;
+
+		if (param < 0) {
+			xx = x1;
+			yy = y1;
+		}
+		else if (param > 1) {
+			xx = x2;
+			yy = y2;
+		}
+		else {
+			xx = x1 + param * lineXDist;
+			yy = y1 + param * lineYDist;
+		}
+
+		double dx = pointX - xx;
+		double dy = pointY - yy;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	public static double distanceFromLineToPoint(double pointX, double pointY, Line2D line)
+	{
+		return distanceFromLineToPoint(pointX, pointY, line.getX1(), line.getY1(), line.getX2(), line.getY2());
 	}
 }
