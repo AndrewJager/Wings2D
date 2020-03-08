@@ -1,4 +1,4 @@
-package game;
+package framework;
 
 public class KeyState {
 	public boolean
