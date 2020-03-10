@@ -18,16 +18,19 @@ import javax.swing.WindowConstants;
 import framework.DrawPanel;
 
 /**
- * Extend this class with your main game class, and override the init/update/render methods
+ * Extend this class with your main game class, and override the init/update/render methods.
+ * super.init() / super.update() / super.render() should be called by your int/update/render functions.
  */
 public abstract class Game extends Thread {
+	/** Frame used to contain the canvas the game will be drawn on **/
+	private JFrame frame;
 	private Graphics2D graphics;
     private boolean isRunning = true;
     private boolean shouldInit = true;
     private DrawPanel draw;
     private BufferStrategy strat;
     private Graphics2D renderer;
-    private JFrame frame;
+    
     private int width = 600;
     private int height = 400;
 
@@ -64,7 +67,18 @@ public abstract class Game extends Thread {
         @Override
         public void windowClosing(final WindowEvent e) {
             isRunning = false;
+            onClose();
         }
+    }
+    
+    public JFrame getFrame()
+    {
+    	return frame;
+    }
+    /** Does nothing, but is called when the frame is closed. Override to do something on close **/
+    public void onClose()
+    {
+    	System.out.println("Closed");
     }
 
     /**

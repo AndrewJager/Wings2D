@@ -80,9 +80,7 @@ public final class Utils {
 	 */
 	public static Color modifyColorByPercent(Color color, double percent)
 	{
-		System.out.println("M " + color.getRed() * percent);
 		double red = makeInRange(color.getRed() * percent, 0, 255);
-		System.out.println(red);
 		double green = makeInRange(color.getGreen() * percent, 0, 255);
 		double blue = makeInRange(color.getBlue() * percent, 0, 255);
 		return new Color((int)red, (int)green, (int)blue, color.getAlpha());
