@@ -1,7 +1,6 @@
 package framework;
 
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
 /**

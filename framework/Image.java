@@ -46,6 +46,7 @@ public class Image {
 	 * @param shape Shape that will be filled in. Can be any class that implements the Shape interface 
 	 * @param color Color that the the shape will be filled with
 	 * @param level Level that the Image is associated with
+	 * @param scaleImg Scale the image by the levelManger scale value
 	 */
 	public Image(Shape shape, Color color, Level level, boolean scaleImg)
 	{
@@ -75,7 +76,6 @@ public class Image {
 		    	else
 		    	{
 		    		image.setRGB(x, y, Color.TRANSLUCENT);
-//		    		image.setRGB(x, y, Color.BLUE.getRGB());
 		    	}
 		    }
 		}
