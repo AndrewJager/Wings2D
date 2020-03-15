@@ -82,7 +82,7 @@ public abstract class Game extends Thread {
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				draw.resizePreview(frame);
-				onResize(frame);
+				onResize(draw);
 			}
 		});
 		
@@ -110,12 +110,9 @@ public abstract class Game extends Thread {
 	 * Called when the frame is resized. Override this to use this event.
 	 * @param frame {@link javax.swing.JFrame JFrame} the game's frame
 	 */
-	public void onResize(JFrame frame)
+	public void onResize(DrawPanel draw)
 	{
-		if (debug)
-		{
-			System.out.println("Width: " + frame.getWidth() + " Height " + frame.getHeight());
-		}
+
 	}
 
 	/**

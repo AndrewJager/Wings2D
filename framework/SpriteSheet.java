@@ -83,10 +83,15 @@ public class SpriteSheet extends GameObject{
 		}
 		translated = true;
 	}
-	
+	@Override
 	public void rescale()
 	{
 		
+	}
+	@Override
+	public PhysicsType getPhysicsType()
+	{
+		return PhysicsType.NONE;
 	}
 	public boolean getTranslated() {
 		return translated;

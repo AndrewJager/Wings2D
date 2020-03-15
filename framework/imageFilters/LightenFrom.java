@@ -13,13 +13,13 @@ import framework.Utils;
 public class LightenFrom implements ImageFilter, ShadeFrom {
 	/** Used when saving to a file */
 	public final static String fileTitle = "LightenFrom";
-	/** Direction from which to shade the image. Lighter in the indicated direction **/
+	/** {@link framework.imageFilters.ShadeDir ShadeDir} - Direction from which to shade the image. Lighter in the indicated direction **/
 	private ShadeDir dir;
 	/** Amount in which to lighten the pixels **/
 	private double varAmount;
 	
 	/**
-	 * @param dir Direction to use when lightening the pixels
+	 * @param dir {@link framework.imageFilters.ShadeDir ShadeDir} - Direction to use when lightening the pixels
 	 * @param varAmount Amount to lighten the pixels
 	 */
 	public LightenFrom(ShadeDir dir, double varAmount)

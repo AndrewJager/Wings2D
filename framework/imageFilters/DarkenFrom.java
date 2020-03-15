@@ -13,13 +13,13 @@ import framework.Utils;
 public class DarkenFrom implements ImageFilter, ShadeFrom {
 	/** Used when saving to a file */
 	public final static String fileTitle = "DarkenFrom";
-	/** Direction from which to shade the image. Darker in the indicated direction **/
+	/** {@link framework.imageFilters.ShadeDir ShadeDir} - Direction from which to shade the image. Darker in the indicated direction **/
 	private ShadeDir dir;
 	/** Amount in which to darken the pixels **/
 	private double varAmount;
 	
 	/**
-	 * @param dir Direction to use when darkening the pixels
+	 * @param dir {@link framework.imageFilters.ShadeDir ShadeDir} - Direction to use when darkening the pixels
 	 * @param varAmount Amount to darken the pixels
 	 */
 	public DarkenFrom(ShadeDir dir, double varAmount)
@@ -31,6 +31,10 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	{
 		return "Darken From";
 	}
+	/**
+	 * Get the shade direction
+	 * @return {@link framework.imageFilters.ShadeDir ShadeDir} to shade from
+	 */
 	public ShadeDir getDirection()
 	{
 		return dir;

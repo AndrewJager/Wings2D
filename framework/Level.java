@@ -10,8 +10,6 @@ public class Level {
 	private List<GameObject> objects;
 	/** List of UI elements */
 	private List<UIElement> ui;
-	/** List of static level components */
-	private List<Wall> walls;
 	/** Identifier for this level */
 	private int thisLevel;
 	private LevelManager manager;
@@ -26,7 +24,6 @@ public class Level {
 		this.manager = manager;
 		objects = new ArrayList<GameObject>();
 		ui = new ArrayList<UIElement>();
-		walls = new ArrayList<Wall>();
 		
 		manager.addLevel(this);
 	}
@@ -45,10 +42,6 @@ public class Level {
 	{
 		return this.thisLevel;
 	}
-	public List<Wall> getWalls()
-	{
-		return walls;
-	}
 	public void addUI(UIElement ui)
 	{
 		this.ui.add(ui);
@@ -56,15 +49,6 @@ public class Level {
 	public void addObject(GameObject newObject)
 	{
 		this.objects.add(newObject);
-	}
-	public void addWall(Wall wall)
-	{
-		walls.add(wall);
-	}
-	public void addLine(double x1, double y1, double x2, double y2, WallTypes type)
-	{
-		Wall wall = new Wall(this, x1, y1, x2, y2, type);
-		walls.add(wall);
 	}
 	public void update(KeyState keys)
 	{

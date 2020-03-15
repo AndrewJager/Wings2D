@@ -7,7 +7,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +36,7 @@ public class Wall extends GameObject{
 	private boolean flip;
 	/** Point to draw the image at for ramps */
 	private Point2D drawPoint;
+	private Shape rect;
 	/**
 	 * Constructor for Wall. The points MUST be left to right in floors and ramps, and top to bottom in walls.
 	 * @param level Level this wall belongs to
@@ -46,13 +46,13 @@ public class Wall extends GameObject{
 	 * @param y2 Y location of second point
 	 * @param type Type of wall 
 	 */
-	public Wall(Level level, double x1, double y1, double x2, double y2, WallTypes type)
+	public Wall(Level level, double x1, double y1, double x2, double y2, double height, WallTypes type)
 	{
-		double scale = level.getManager().getScale();
 		origLine = new Line2D.Double(x1, y1, x2, y2);
 		
 		this.type = type;
 		this.level = level;
+		this.height = height;
 		this.images = new ArrayList<Image>();
 		// Use og numbers instead of scaled coords, because image made from this will be scaled twice otherwise
 		this.length = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
@@ -64,6 +64,46 @@ public class Wall extends GameObject{
 	{
 		double scale = level.getManager().getScale();
 		line = new Line2D.Double(origLine.getX1() * scale, origLine.getY1() * scale, origLine.getX2() * scale, origLine.getY2() * scale);
+		rect = new Rectangle2D.Double(0, 0, length, height);
+		AffineTransform transform = new AffineTransform();
+		if (type == WallTypes.WALL)
+		{
+			rect = new Rectangle2D.Double(0, 0, height, length);
+		}
+		else if (type == WallTypes.FLOOR)
+		{
+			rect = new Rectangle2D.Double(0, 0, length, height);
+		}
+		else if (type == WallTypes.RAMP)
+		{
+			rect = new Rectangle2D.Double(0, 0, length, height);
+			if (line.getY1() < line.getY2()) // Descending
+			{
+				transform.rotate(Math.toRadians(45));
+				rect = transform.createTransformedShape(rect);
+				double offsetX = rect.getBounds2D().getX();
+				double offsetY = rect.getBounds2D().getY();
+				transform = new AffineTransform();
+				transform.translate(-offsetX, -offsetY);
+				rect = transform.createTransformedShape(rect);
+				
+				double pointOffset = (rect.getBounds2D().getWidth() * level.getManager().getScale()) - (line.getBounds2D().getWidth());
+				drawPoint = new Point2D.Double(line.getX1() - pointOffset, line.getY1());
+			}
+			else // Ascending
+			{
+				transform.rotate(Math.toRadians(-45));
+				rect = transform.createTransformedShape(rect);
+				double offsetX = rect.getBounds2D().getX();
+				double offsetY = rect.getBounds2D().getY();
+				transform = new AffineTransform();
+				transform.translate(-offsetX, -offsetY);
+				rect = transform.createTransformedShape(rect);
+				
+				// This case requires a special point to draw the image at
+				drawPoint = new Point2D.Double(line.getX1(), line.getY2()); 
+			}
+		}
 	}
 	public void render(Graphics2D g2d, boolean debug)
 	{
@@ -113,51 +153,11 @@ public class Wall extends GameObject{
 	 * @param color Color of the rectangle
 	 * @param flip Use to change the side of the wall that the rectangle is drawn on. Ramps cannot be flipped. 
 	 */
-	public void setBackground(double height, Color color, boolean flip)
+	public void setBackground(Color color, boolean flip)
 	{
 		this.flip = flip;
 		this.backgroundColor = color;
-		this.height = height;
-		Shape rect = new Rectangle2D.Double(0, 0, length, height);
-		AffineTransform transform = new AffineTransform();
-		if (type == WallTypes.WALL)
-		{
-			rect = new Rectangle2D.Double(0, 0, height, length);
-		}
-		else if (type == WallTypes.FLOOR)
-		{
-			rect = new Rectangle2D.Double(0, 0, length, height);
-		}
-		else if (type == WallTypes.RAMP)
-		{
-			rect = new Rectangle2D.Double(0, 0, length, height);
-			if (line.getY1() < line.getY2()) // Descending
-			{
-				transform.rotate(Math.toRadians(45));
-				rect = transform.createTransformedShape(rect);
-				double offsetX = rect.getBounds2D().getX();
-				double offsetY = rect.getBounds2D().getY();
-				transform = new AffineTransform();
-				transform.translate(-offsetX, -offsetY);
-				rect = transform.createTransformedShape(rect);
-				
-				double pointOffset = (rect.getBounds2D().getWidth() * level.getManager().getScale()) - (line.getBounds2D().getWidth());
-				drawPoint = new Point2D.Double(line.getX1() - pointOffset, line.getY1());
-			}
-			else // Ascending
-			{
-				transform.rotate(Math.toRadians(-45));
-				rect = transform.createTransformedShape(rect);
-				double offsetX = rect.getBounds2D().getX();
-				double offsetY = rect.getBounds2D().getY();
-				transform = new AffineTransform();
-				transform.translate(-offsetX, -offsetY);
-				rect = transform.createTransformedShape(rect);
-				
-				// This case requires a special point to draw the image at
-				drawPoint = new Point2D.Double(line.getX1(), line.getY2()); 
-			}
-		}
+		
 		this.background = new Image(rect, color, level);
 	}
 	public void addImage(Image image)
@@ -184,10 +184,14 @@ public class Wall extends GameObject{
 	@Override
 	public void rescale() {
 		createLine();
-		System.out.println("this");
 		if (this.background != null)
 		{
-			setBackground(this.height, this.backgroundColor, this.flip);
+			this.background.rescale();
 		}
+	}
+	@Override
+	public PhysicsType getPhysicsType()
+	{
+		return PhysicsType.STATIC;
 	}
 }

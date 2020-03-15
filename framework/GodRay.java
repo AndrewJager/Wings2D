@@ -8,11 +8,14 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
+/**
+ * Draws a bunch of lines to resemble a ray of light
+ * 
+ */
 public class GodRay extends GameObject{
 	class Line extends Line2D.Double{
 		private static final long serialVersionUID = 1L;
@@ -136,12 +139,17 @@ public class GodRay extends GameObject{
 			}
 		}
 	}
-	
+	@Override
 	public void rescale()
 	{
 		createRay();
 	}
-
+	@Override
+	public PhysicsType getPhysicsType()
+	{
+		return PhysicsType.NONE;
+	}
+	
 	public Image getBackground()
 	{
 		return background;

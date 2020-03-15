@@ -9,7 +9,7 @@ public interface ImageFilter
 {
 	/**
 	 * Run the filter 
-	 * @param img Image to run the filter over
+	 * @param img {@link framework.Image Image} to run the filter over
 	 */
 	public abstract void filter(Image img);
 	/**

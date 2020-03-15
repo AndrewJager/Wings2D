@@ -14,4 +14,6 @@ public abstract class GameObject {
 	public abstract void render(Graphics2D g2d, boolean debug);
 	/** Change the object's scale */
 	public abstract void rescale();
+	/** Check what the object should do in physics processing */
+	public abstract PhysicsType getPhysicsType();
 }

@@ -270,7 +270,7 @@ public class Image {
 	 */
 	private void applyFilters()
 	{
-		for (int i = 0; i > filters.size(); i++)
+		for (int i = 0; i < filters.size(); i++)
 		{
 			filters.get(i).filter(this);
 		}
@@ -354,6 +354,10 @@ public class Image {
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;
+	}
+	public List<ImageFilter> getFilters()
+	{
+		return filters;
 	}
 
 	public static int getImageCount() {
