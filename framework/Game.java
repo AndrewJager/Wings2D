@@ -2,6 +2,7 @@ package framework;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
@@ -18,158 +19,227 @@ import javax.swing.WindowConstants;
 import framework.DrawPanel;
 
 /**
- * Extend this class with your main game class, and override the init/update/render methods.
- * super.init() / super.update() / super.render() should be called by your int/update/render functions.
+ * Extend this class with your main game class, and override the
+ * init/update/render methods. super.init() / super.update() / super.render()
+ * should be called by your int/update/render functions.
  */
 public abstract class Game extends Thread {
 	/** Frame used to contain the canvas the game will be drawn on **/
 	private JFrame frame;
+	/** Canvas used to draw with **/
+	private Canvas canvas;
 	private Graphics2D graphics;
-    private boolean isRunning = true;
-    private boolean shouldInit = true;
-    private DrawPanel draw;
-    private BufferStrategy strat;
-    private Graphics2D renderer;
-    
-    private int width = 600;
-    private int height = 400;
+	private Graphics2D renderer;
+	/** Used to stop program execution */
+	private boolean isRunning = true;
+	/** Used to run the init() function once */
+	private boolean initalized = false;
+	private DrawPanel draw;
+	private BufferStrategy strat;
+	private double lastFpsTime = 0;
+	private int fps = 0;
+	private boolean debug = false;
 
-    public Game() {
-        frame = new JFrame();
-        frame.addWindowListener(new FrameClose());
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.setSize(width, height);
-        frame.setBackground(Color.WHITE);
-        
-        
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.YELLOW);
-        panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
-        
-        draw = new DrawPanel();
-        panel.add(draw.getCanvas(), BorderLayout.CENTER);
-        frame.add(panel);
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                draw.resizePreview(frame);
-            }
-        });
-        frame.setVisible(true);
+	private int width = 600;
+	private int height = 400;
 
-        draw.getCanvas().createBufferStrategy(3);
-        do {
-            strat = draw.getCanvas().getBufferStrategy();
-        } while (strat == null);
-        start();
-    }
+	/**
+	 * Call super(debug) from your constructor to use this
+	 * @param debug Use debug prints (FPS, ect.)
+	 */
+	public Game(boolean debug) {
+		this.debug = debug;
+		
+		frame = new JFrame();
+		frame.addWindowListener(new FrameClose());
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setSize(width, height);
+		frame.setBackground(Color.WHITE);
 
-    private class FrameClose extends WindowAdapter {
-        @Override
-        public void windowClosing(final WindowEvent e) {
-            isRunning = false;
-            onClose();
-        }
-    }
-    
-    public JFrame getFrame()
-    {
-    	return frame;
-    }
-    /** Does nothing, but is called when the frame is closed. Override to do something on close **/
-    public void onClose()
-    {
-    	System.out.println("Closed");
-    }
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.YELLOW);
+		panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
+		panel.setLayout(null);
 
-    /**
-     * Get the drawing graphics, creating them if null;
-     * @return Graphics2D object to draw with
-     */
-    protected Graphics2D getDrawGraphics() {
-        if (graphics == null) {
-            try {
-                graphics = (Graphics2D) strat.getDrawGraphics();
-            } catch (IllegalStateException e) {
-                return null;
-            }
-        }
-        return graphics;
-    }
-    /**
-     * Handle some possible exceptions from drawing
-     * @return True if any error found
-     */
-    private boolean updateScreen() {
-        graphics.dispose();
-        graphics = null;
-        try {
-            strat.show();
-            return (!strat.contentsLost());
+		draw = new DrawPanel();
+		panel.add(draw.getCanvas(), BorderLayout.CENTER);
+		canvas = draw.getCanvas();
+		frame.add(panel);
+		frame.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				draw.resizePreview(frame);
+			}
+		});
+		
+		frame.setVisible(true);
+		draw.getCanvas().createBufferStrategy(3);
+		do {
+			strat = draw.getCanvas().getBufferStrategy();
+		} while (strat == null);
+		start();
+	}
 
-        } catch (NullPointerException e) {
-            return true;
+	/**
+	 * Used to handle closing events when the frame is closed
+	 */
+	private class FrameClose extends WindowAdapter {
+		@Override
+		/** Calls the onClose function */
+		public void windowClosing(final WindowEvent e) {
+			isRunning = false;
+			onClose();
+		}
+	}
 
-        } catch (IllegalStateException e) {
-            return true;
-        }
-    }
+	/**
+	 * Get the main frame
+	 * @return The {@link javax.swing.JFrame JFrame} used by this game
+	 */
+	public JFrame getFrame() 
+	{
+		return frame;
+	}
+	/**
+	 * Get the drawing canvas
+	 * @return The {@link java.awt.Canvas Canvas} used by the game to draw to
+	 */
+	public Canvas getCanvas()
+	{
+		return canvas;
+	}
 
-    public void run() {
-        long fpsWait = (long) (1.0 / 30 * 1000);
-        main: while (isRunning) {
-            long renderStart = System.nanoTime();
-            if (shouldInit)
-            {
-            	init();
-            	shouldInit = false;
-            }
-            update();
+	/**
+	 * Does nothing, but is called when the frame is closed. Override to do
+	 * something on close
+	 **/
+	public void onClose() {
+		System.out.println("Closed");
+	}
 
-            do {
-                renderer = getDrawGraphics();
-                if (!isRunning) {
-                    break main;
-                }
+	/**
+	 * Get the drawing graphics, creating them if null;
+	 * 
+	 * @return Graphics2D object to draw with
+	 */
+	protected Graphics2D getDrawGraphics() {
+		if (graphics == null) {
+			try {
+				graphics = (Graphics2D) strat.getDrawGraphics();
+			} catch (IllegalStateException e) {
+				return null;
+			}
+		}
+		return graphics;
+	}
 
-                render(renderer);
+	/**
+	 * Handle some possible exceptions from drawing
+	 * 
+	 * @return True if any error found
+	 */
+	private boolean updateScreen() {
+		graphics.dispose();
+		graphics = null;
+		try {
+			strat.show();
+			return (!strat.contentsLost());
 
-                renderer.dispose();
-            } while (!updateScreen());
+		} catch (NullPointerException e) {
+			return true;
 
-            // FPS limiting
-            long renderTime = (System.nanoTime() - renderStart) / 1000000;
-            try {
-                Thread.sleep(Math.max(0, fpsWait - renderTime));
-            } catch (InterruptedException e) {
-                Thread.interrupted();
-                break;
-            }
-            renderTime = (System.nanoTime() - renderStart) / 1000000;
+		} catch (IllegalStateException e) {
+			return true;
+		}
+	}
 
-        }
-        frame.dispose();
-    }
-    /** 
-     * Called once on startup
-     */
-    public void init()
-    {
-    	
-    }
-    /**
-     * Use to update game logic
-     */
-    public void update() {
-    	
-    }
-    /**
-     * Used to draw to screen
-     * @param g2d Passed in by the base class. Don't pass in your own graphics object.
-     */
-    public void render(Graphics2D g2d) {
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.fillRect(0, 0, draw.getCanvas().getWidth(), draw.getCanvas().getHeight());
-    }
+	public void run() {
+		long lastLoopTime = System.nanoTime();
+		final int TARGET_FPS = 60;
+		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;   
 
+		// keep looping round til the game ends
+		while (isRunning)
+		{
+			if (!initalized)
+			{
+				init();
+				initalized = true;
+			}
+			// work out how long its been since the last update, this
+			// will be used to calculate how far the entities should
+			// move this loop
+			long now = System.nanoTime();
+			long updateLength = now - lastLoopTime;
+			lastLoopTime = now;
+			double delta = updateLength / ((double)OPTIMAL_TIME);
+
+			// update the frame counter
+			lastFpsTime += updateLength;
+			fps++;
+
+			// update our FPS counter if a second has passed since
+			// we last recorded
+			if (lastFpsTime >= 1000000000)
+			{
+				if (debug)
+				{
+					System.out.println("(FPS: "+fps+")");
+				}
+				lastFpsTime = 0;
+				fps = 0;
+			}
+
+			// update the game logic
+			//	      doGameUpdates(delta);
+			update(delta);
+
+			// draw everything			
+			renderer = getDrawGraphics();
+			render(renderer);
+			updateScreen();
+
+			// we want each frame to take 10 milliseconds, to do this
+			// we've recorded when we started the frame. We add 10 milliseconds
+			// to this and then factor in the current time to give 
+			// us our final value to wait for
+			// remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
+			try {
+				long time = (lastLoopTime-System.nanoTime() + OPTIMAL_TIME) / 1000000;
+				if (time < 0)
+				{
+					time = 0;
+				}
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * Called once on startup
+	 */
+	public void init() {
+
+	}
+
+	/**
+	 * Use to update game logic
+	 */
+	public void update(double delta) {
+
+	}
+
+	/**
+	 * Used to draw to screen
+	 * 
+	 * @param g2d Passed in by the base class. Don't pass in your own graphics
+	 *            object.
+	 */
+	public void render(Graphics2D g2d) {
+		g2d.setColor(Color.DARK_GRAY);
+		g2d.fillRect(0, 0, draw.getCanvas().getWidth(), draw.getCanvas().getHeight());
+	}
 
 }
