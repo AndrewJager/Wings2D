@@ -24,20 +24,32 @@ import framework.DrawPanel;
  * should be called by your int/update/render functions.
  */
 public abstract class Game extends Thread {
-	/** Frame used to contain the canvas the game will be drawn on **/
+	/** {@link javax.swing.JFrame JFrame} used to contain the canvas the game will be drawn on **/
 	private JFrame frame;
+	/** {@link java.awt.Canvas Canvas} needs to be inside a panel for sizing to work properly. 
+	 * This is not exposed to the user
+	 */
+	private JPanel panel;
 	/** Canvas used to draw with **/
 	private Canvas canvas;
+	/** Used internally by buffer */
 	private Graphics2D graphics;
+	/** Used to draw to canvas */
 	private Graphics2D renderer;
 	/** Used to stop program execution */
 	private boolean isRunning = true;
-	/** Used to run the init() function once */
+	/** Used to run the init() function only once */
 	private boolean initalized = false;
+	/** Handles the drawing canvas */
 	private DrawPanel draw;
+	/** Background {@link java.awt.Color Color} of the canvas */
+	private Color canvasColor;
+	/** Background {@link java.awt.Color Color} of the frame */
+	private Color frameColor;
 	private BufferStrategy strat;
 	private double lastFpsTime = 0;
 	private int fps = 0;
+	/** Control debug prints */
 	private boolean debug = false;
 
 	private int width = 600;
@@ -49,15 +61,17 @@ public abstract class Game extends Thread {
 	 */
 	public Game(boolean debug) {
 		this.debug = debug;
+		canvasColor = Color.DARK_GRAY;
+		frameColor = Color.BLACK;
 		
 		frame = new JFrame();
 		frame.addWindowListener(new FrameClose());
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(width, height);
-		frame.setBackground(Color.WHITE);
+		frame.setBackground(frameColor);
 
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.YELLOW);
+		panel = new JPanel();
+		panel.setBackground(frameColor);
 		panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
 		panel.setLayout(null);
 
@@ -68,6 +82,7 @@ public abstract class Game extends Thread {
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				draw.resizePreview(frame);
+				onResize(frame);
 			}
 		});
 		
@@ -90,22 +105,17 @@ public abstract class Game extends Thread {
 			onClose();
 		}
 	}
-
+	
 	/**
-	 * Get the main frame
-	 * @return The {@link javax.swing.JFrame JFrame} used by this game
+	 * Called when the frame is resized. Override this to use this event.
+	 * @param frame {@link javax.swing.JFrame JFrame} the game's frame
 	 */
-	public JFrame getFrame() 
+	public void onResize(JFrame frame)
 	{
-		return frame;
-	}
-	/**
-	 * Get the drawing canvas
-	 * @return The {@link java.awt.Canvas Canvas} used by the game to draw to
-	 */
-	public Canvas getCanvas()
-	{
-		return canvas;
+		if (debug)
+		{
+			System.out.println("Width: " + frame.getWidth() + " Height " + frame.getHeight());
+		}
 	}
 
 	/**
@@ -157,7 +167,6 @@ public abstract class Game extends Thread {
 		final int TARGET_FPS = 60;
 		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;   
 
-		// keep looping round til the game ends
 		while (isRunning)
 		{
 			if (!initalized)
@@ -189,11 +198,8 @@ public abstract class Game extends Thread {
 				fps = 0;
 			}
 
-			// update the game logic
-			//	      doGameUpdates(delta);
 			update(delta);
-
-			// draw everything			
+		
 			renderer = getDrawGraphics();
 			render(renderer);
 			updateScreen();
@@ -226,6 +232,7 @@ public abstract class Game extends Thread {
 
 	/**
 	 * Use to update game logic
+	 * @param delta Time from last update
 	 */
 	public void update(double delta) {
 
@@ -238,8 +245,55 @@ public abstract class Game extends Thread {
 	 *            object.
 	 */
 	public void render(Graphics2D g2d) {
-		g2d.setColor(Color.DARK_GRAY);
+		g2d.setColor(canvasColor);
 		g2d.fillRect(0, 0, draw.getCanvas().getWidth(), draw.getCanvas().getHeight());
 	}
-
+	
+	/**
+	 * Get the main frame
+	 * @return The {@link javax.swing.JFrame JFrame} used by this game
+	 */
+	public JFrame getFrame() 
+	{
+		return frame;
+	}
+	/**
+	 * Get the drawing canvas
+	 * @return The {@link java.awt.Canvas Canvas} used by the game to draw to
+	 */
+	public Canvas getCanvas()
+	{
+		return canvas;
+	}
+	/**
+	 * Get the background color of the canvas
+	 * @return {@link java.awt.Color Color} of the canvas
+	 */
+	public Color getCanvasColor() {
+		return canvasColor;
+	}
+	/**
+	 * Set the background color of the canvas
+	 * @param color {@link java.awt.Color Color} to set the canvas to
+	 */
+	public void setCanvasColor(Color color) {
+		draw.getCanvas().setBackground(color);
+		this.canvasColor = color;
+	}
+	/**
+	 * Get the background color of the canvas
+	 * @return {@link java.awt.Color Color} of the frame
+	 */
+	public Color getFrameColor() {
+		return frameColor;
+	}
+	/**
+	 * Set the background color of the canvas
+	 * @param color {@link java.awt.Color Color} to set the frame to
+	 */
+	public void setFrameColor(Color color) {
+		this.frame.setBackground(color);
+		this.panel.setBackground(color);
+		this.frameColor = color;
+	}
 }

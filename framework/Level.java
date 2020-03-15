@@ -30,6 +30,13 @@ public class Level {
 		
 		manager.addLevel(this);
 	}
+	public void rescale()
+	{
+		for (int i = 0; i < objects.size(); i++)
+		{
+			objects.get(i).rescale();
+		}
+	}
 	public LevelManager getManager()
 	{
 		return this.manager;
@@ -79,11 +86,11 @@ public class Level {
 		{
 			objects.get(i).render(g2d, debug);
 		}
-		for (int i = 0; i < walls.size(); i++)
-		{
-			Wall wall = walls.get(i);
-			wall.render(g2d, debug);
-		}
+//		for (int i = 0; i < walls.size(); i++)
+//		{
+//			Wall wall = walls.get(i);
+//			wall.render(g2d, debug);
+//		}
 	}
 	public void renderUI(Graphics2D g2d, boolean debug)
 	{

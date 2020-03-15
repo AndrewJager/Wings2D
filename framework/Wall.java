@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,11 @@ import java.util.List;
  * A static component of the level, eg. wall/floor/ramp. Represented as a line.
  * Includes a rectangle image for display purposes only, the line is the only thing that collides.
  */
-public class Wall{
+public class Wall extends GameObject{
 	/** Level that this Wall is associated with */
 	private Level level;
+	/** Line before scaling */
+	private Line2D origLine;
 	/** Line that defines the collisions of the Wall */
 	private Line2D line;
 	/** Type of wall (wall, floor, ramp) */
@@ -29,6 +32,7 @@ public class Wall{
 	private Color backgroundColor;
 	/** The dimension of the rectangle not determined by the length of the line */
 	private double length;
+	private double height;
 	/** If true, draw the image on the other side of the line. Not possible for ramps */
 	private boolean flip;
 	/** Point to draw the image at for ramps */
@@ -45,13 +49,21 @@ public class Wall{
 	public Wall(Level level, double x1, double y1, double x2, double y2, WallTypes type)
 	{
 		double scale = level.getManager().getScale();
-		line = new Line2D.Double(x1 * scale, y1 * scale, x2 * scale, y2 * scale);
+		origLine = new Line2D.Double(x1, y1, x2, y2);
+		
 		this.type = type;
 		this.level = level;
 		this.images = new ArrayList<Image>();
 		// Use og numbers instead of scaled coords, because image made from this will be scaled twice otherwise
 		this.length = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 		this.flip = false;
+		
+		createLine();
+	}
+	private void createLine()
+	{
+		double scale = level.getManager().getScale();
+		line = new Line2D.Double(origLine.getX1() * scale, origLine.getY1() * scale, origLine.getX2() * scale, origLine.getY2() * scale);
 	}
 	public void render(Graphics2D g2d, boolean debug)
 	{
@@ -103,8 +115,10 @@ public class Wall{
 	 */
 	public void setBackground(double height, Color color, boolean flip)
 	{
-		Shape rect = new Rectangle2D.Double(0, 0, length, height);
+		this.flip = flip;
 		this.backgroundColor = color;
+		this.height = height;
+		Shape rect = new Rectangle2D.Double(0, 0, length, height);
 		AffineTransform transform = new AffineTransform();
 		if (type == WallTypes.WALL)
 		{
@@ -145,7 +159,6 @@ public class Wall{
 			}
 		}
 		this.background = new Image(rect, color, level);
-		this.flip = flip;
 	}
 	public void addImage(Image image)
 	{
@@ -162,5 +175,19 @@ public class Wall{
 	public Image getBackground()
 	{
 		return this.background;
+	}
+	
+	@Override
+	public void update(KeyState keys) {
+		
+	}
+	@Override
+	public void rescale() {
+		createLine();
+		System.out.println("this");
+		if (this.background != null)
+		{
+			setBackground(this.height, this.backgroundColor, this.flip);
+		}
 	}
 }

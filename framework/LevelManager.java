@@ -22,6 +22,13 @@ public class LevelManager {
 		keys.setKey("Esc", 27);
 		keys.setKey("Jump", 38);
 	}
+	public void rescale()
+	{
+		for (int i = 0; i < levels.size(); i++)
+		{
+			levels.get(i).rescale();
+		}
+	}
 	public KeyMapping getKeyMapping()
 	{
 		return this.keys;
@@ -40,6 +47,11 @@ public class LevelManager {
 		return scale;
 	}
 	public void setScale(double scale) {
+		if (this.scale != scale)
+		{
+			this.scale = scale;
+			rescale();
+		}
 		this.scale = scale;
 	}
 	public void update(KeyState keys, boolean mouseDown)

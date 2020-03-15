@@ -8,6 +8,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -27,12 +28,15 @@ public class GodRay extends GameObject{
 			direction = !direction;
 		}
 	}
-	private Line2D start, end;
+	private Line2D origStart, origEnd, start, end;
 	private List<Line> rays;
 	private Color color;
 	private Image background;
 	private Point2D imageDrawPoint;
 	private boolean vertical;
+	private int rayCount;
+	
+	private Level level;
 	
 	/**
 	 * Uses two lines to determine the start and end locations of the godray. Each line must be vertical or horizontal
@@ -51,9 +55,20 @@ public class GodRay extends GameObject{
 	public GodRay(double l1x1, double l1y1, double l1x2, double l1y2, double l2x1,
 			double l2y1, double l2x2, double l2y2, Level level, int rayCount, Color color)
 	{
+		this.level = level;
+		this.color = color;
+		this.rayCount = rayCount;
+		
+		origStart = new Line2D.Double(l1x1, l1y1, l1x2, l1y2);
+		origEnd = new Line2D.Double(l2x1, l2y1, l2x2, l2y2);
+		createRay();
+	}
+	
+	private void createRay()
+	{
 		double scale = level.getManager().getScale();
-		start = new Line2D.Double(l1x1 * scale, l1y1 * scale, l1x2 * scale, l1y2 * scale);
-		end = new Line2D.Double(l2x1 * scale, l2y1 * scale, l2x2 * scale, l2y2 * scale);
+		start = new Line2D.Double(origStart.getX1() * scale, origStart.getY1() * scale, origStart.getX2() * scale, origStart.getY2() * scale);
+		end = new Line2D.Double(origEnd.getX1() * scale, origEnd.getY1() * scale, origEnd.getX2() * scale, origEnd.getY2() * scale);
 		
 		rays = new ArrayList<Line>();
 		Random r = new Random();
@@ -66,7 +81,6 @@ public class GodRay extends GameObject{
 			
 			rays.add(new Line(startX, startY, endX, endY, r.nextBoolean()));
 		}
-		this.color = color;
 		vertical = true;
 		
 		GeneralPath path = new GeneralPath();
@@ -122,23 +136,14 @@ public class GodRay extends GameObject{
 			}
 		}
 	}
+	
+	public void rescale()
+	{
+		createRay();
+	}
 
 	public Image getBackground()
 	{
 		return background;
-	}
-	@Override
-	public void translate(double xVel, double yVel) {
-		
-	}
-
-	@Override
-	public double getX() {
-		return 0;
-	}
-
-	@Override
-	public double getY() {
-		return 0;
 	}
 }

@@ -34,6 +34,7 @@ public class DrawPanel {
 	{
 		return canvas;
 	}
+
 	/**
 	 * Resize the canvas to be the largest it can be at a 16:9 display ratio
 	 * @param container The container the canvas is inside. Uses the width and height of this container to 

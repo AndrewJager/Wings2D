@@ -43,9 +43,9 @@ public class Image {
 
 	/**
 	 * Create an image by filling in the provided shape with the provided color
-	 * @param shape Shape that will be filled in. Can be any class that implements the Shape interface 
-	 * @param color Color that the the shape will be filled with
-	 * @param level Level that the Image is associated with
+	 * @param shape {@link java.awt.Shape Shape} that will be filled in. Can be any class that implements the Shape interface 
+	 * @param color {@link java.awt.Color Color} that the the shape will be filled with
+	 * @param level {@link framework.Level Level} that the Image is associated with
 	 * @param scaleImg Scale the image by the levelManger scale value
 	 */
 	public Image(Shape shape, Color color, Level level, boolean scaleImg)
@@ -56,30 +56,18 @@ public class Image {
 		this.y = 0;
 		this.shape = shape;
 		this.ogShape = shape;
-		double scale = level.getManager().getScale();
-		Shape scaled = this.shape;
-		if (scaleImg)
-		{
-			scaled = ShapeUtils.scale(this.shape, scale);
-		}
-		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
-		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
-		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.color = color;
 		this.filters = new ArrayList<ImageFilter>();
-		for(int x = 0; x < width; x++) {
-		    for(int y = 0; y < height; y++) {
-		    	if (scaled.contains(x, y))
-		    	{
-		    		image.setRGB(x, y, this.color.getRGB());
-		    	}
-		    	else
-		    	{
-		    		image.setRGB(x, y, Color.TRANSLUCENT);
-		    	}
-		    }
-		}
+		createImage(scaleImg);
 	}
+	
+
+	/**
+	 * Create an image by filling in the provided shape with the provided color. Calls other constructor with scaleImg = true.
+	 * @param shape {@link java.awt.Shape Shape} that will be filled in. Can be any class that implements the Shape interface 
+	 * @param color {@link java.awt.Color Color} that the the shape will be filled with
+	 * @param level {@link framework.Level Level} that the Image is associated with
+	 */
 	public Image(Shape shape, Color color, Level level)
 	{
 		this(shape, color, level, true);
@@ -96,7 +84,7 @@ public class Image {
 	}
 	/**
 	 * Makes a copy of the Image, including all info such as shape and filters
-	 * @return A new Image object
+	 * @return A new {@link framework.Image Image} object
 	 */
 	public Image copy()
 	{
@@ -180,7 +168,7 @@ public class Image {
 	}
 	/**
 	 * Adds the given filter to the Image's list of filters, and runs the filter.
-	 * @param filter Can be any class the implements the ImageFilter interface
+	 * @param filter {@link framework.imageFilters.ImageFilter ImageFilter} - Can be any class the implements the ImageFilter interface
 	 */
 	public void addFilter(ImageFilter filter)
 	{
@@ -191,8 +179,8 @@ public class Image {
 	/**
 	 * Add a shape to the image. After this, rotation of the image will not work do to the new shapes not being saved.
 	 * Previously applied filters are not run when this operation is done, be design.
-	 * @param newShape Shape which will be added to the image
-	 * @param color Color to fill the new shape with. The rest of the image will be the same color.
+	 * @param newShape {@link java.awt.Shape Shape} which will be added to the image
+	 * @param color {@link java.awt.Color Color} to fill the new shape with. The rest of the image will be the same color.
 	 * @param xLoc X location to draw new shape at, relative to the top-left corner of the image.
 	 * @param yLoc Y location to draw new shape at, relative to the top-left corner of the image.	
 	 */
@@ -252,9 +240,49 @@ public class Image {
 			this.setImage(newImage);
 		}
 	}
+	private void createImage(boolean scaleImg)
+	{
+		double scale = level.getManager().getScale();
+		Shape scaled = this.ogShape;
+		if (scaleImg)
+		{
+			scaled = ShapeUtils.scale(this.shape, scale);
+		}
+		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
+		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
+		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+		for(int x = 0; x < width; x++) {
+		    for(int y = 0; y < height; y++) {
+		    	if (scaled.contains(x, y))
+		    	{
+		    		image.setRGB(x, y, this.color.getRGB());
+		    	}
+		    	else
+		    	{
+		    		image.setRGB(x, y, Color.TRANSLUCENT);
+		    	}
+		    }
+		}
+	}
+	
+	/**
+	 * Runs all filters on the image. Used after recreating the image.
+	 */
+	private void applyFilters()
+	{
+		for (int i = 0; i > filters.size(); i++)
+		{
+			filters.get(i).filter(this);
+		}
+	}
+	public void rescale()
+	{
+		createImage(true);
+		applyFilters();
+	}
 	/**
 	 * Returns the image data of this Image
-	 * @return BufferedImage that contains the pixel data
+	 * @return {@link java.awt.image.BufferedImage BufferedImage} that contains the pixel data
 	 */
 	public BufferedImage getImage()
 	{
@@ -262,7 +290,7 @@ public class Image {
 	}
 	/** 
 	 * Gets the Shape that this Image used to create its BufferedImage.
-	 * @return Shape of the current image, not necessarily the original shape if the image has been rotated 
+	 * @return {@link java.awt.Shape Shape} of the current image, not necessarily the original shape if the image has been rotated 
 	 */
 	public Shape getShape() {
 		return shape;
@@ -273,7 +301,7 @@ public class Image {
 	/**
 	 * Render the Image using the internal coordinates of the Image. 
 	 * Can also render elsewhere using getImage() if desired.
-	 * @param g2d Graphics object to render with
+	 * @param g2d {@link java.awt.Graphics2D Graphics2D} object to render with
 	 * @param debug Can be used to test stuff, doesn't do anything at the moment
 	 */
 	public void render(Graphics2D g2d, boolean debug)
