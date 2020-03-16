@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -67,6 +68,7 @@ public abstract class Game extends Thread {
 		frame = new JFrame();
 		frame.addWindowListener(new FrameClose());
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setMinimumSize(new Dimension(160 * 3, 90 * 3));
 		frame.setSize(width, height);
 		frame.setBackground(frameColor);
 
@@ -108,7 +110,7 @@ public abstract class Game extends Thread {
 	
 	/**
 	 * Called when the frame is resized. Override this to use this event.
-	 * @param frame {@link javax.swing.JFrame JFrame} the game's frame
+	 * @param draw {@link framework.DrawPanel DrawPanel} The game's window
 	 */
 	public void onResize(DrawPanel draw)
 	{
@@ -117,15 +119,14 @@ public abstract class Game extends Thread {
 
 	/**
 	 * Does nothing, but is called when the frame is closed. Override to do
-	 * something on close
+	 * something when the window is closed.
 	 **/
 	public void onClose() {
 		System.out.println("Closed");
 	}
 
 	/**
-	 * Get the drawing graphics, creating them if null;
-	 * 
+	 * Get the drawing graphics, creating them if null.
 	 * @return Graphics2D object to draw with
 	 */
 	protected Graphics2D getDrawGraphics() {

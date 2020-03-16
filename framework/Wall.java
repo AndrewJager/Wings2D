@@ -44,6 +44,7 @@ public class Wall extends GameObject{
 	 * @param y1 Y location of first point
 	 * @param x2 X location of second point
 	 * @param y2 Y location of second point
+	 * @param height Height of the display image. This is width for walls.
 	 * @param type Type of wall 
 	 */
 	public Wall(Level level, double x1, double y1, double x2, double y2, double height, WallTypes type)
@@ -149,7 +150,6 @@ public class Wall extends GameObject{
 	}
 	/**
 	 * Create a rectanglar background for the wall
-	 * @param height How high the rect is for floors/ramps, how wide it is for walls
 	 * @param color Color of the rectangle
 	 * @param flip Use to change the side of the wall that the rectangle is drawn on. Ramps cannot be flipped. 
 	 */
