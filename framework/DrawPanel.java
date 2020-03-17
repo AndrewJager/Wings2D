@@ -3,7 +3,7 @@ package framework;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * Class for the main drawing {@link java.awt.Canvas Canvas}
@@ -40,7 +40,7 @@ public class DrawPanel {
 	 * @param container The container the canvas is inside. Uses the width and height of this container to 
 	 * calculate the size of the canvas
 	 */
-	public void resizePreview(JFrame container) {
+	public void resizePreview(JPanel container) {
 		int width = container.getWidth();
         int height = container.getHeight();
 

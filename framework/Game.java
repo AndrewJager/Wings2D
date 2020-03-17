@@ -71,6 +71,7 @@ public abstract class Game extends Thread {
 		frame.setMinimumSize(new Dimension(160 * 3, 90 * 3));
 		frame.setSize(width, height);
 		frame.setBackground(frameColor);
+//		frame.setLayout(null);
 
 		panel = new JPanel();
 		panel.setBackground(frameColor);
@@ -83,7 +84,7 @@ public abstract class Game extends Thread {
 		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
-				draw.resizePreview(frame);
+				draw.resizePreview(panel);
 				onResize(draw);
 			}
 		});
