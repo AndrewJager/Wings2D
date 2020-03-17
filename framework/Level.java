@@ -33,6 +33,10 @@ public class Level {
 		{
 			objects.get(i).rescale();
 		}
+		for (int i = 0; i < ui.size(); i++)
+		{
+			ui.get(i).rescale();
+		}
 	}
 	public LevelManager getManager()
 	{
@@ -70,11 +74,6 @@ public class Level {
 		{
 			objects.get(i).render(g2d, debug);
 		}
-//		for (int i = 0; i < walls.size(); i++)
-//		{
-//			Wall wall = walls.get(i);
-//			wall.render(g2d, debug);
-//		}
 	}
 	public void renderUI(Graphics2D g2d, boolean debug)
 	{

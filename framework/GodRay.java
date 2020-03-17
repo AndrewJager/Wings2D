@@ -96,7 +96,7 @@ public class GodRay extends GameObject{
 		background = new Image(path2, color, level, false);
 		imageDrawPoint = new Point2D.Double(path.getBounds2D().getX(), path.getBounds2D().getY());
 	}
-	
+	@Override
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		g2d.drawImage(background.getImage(), (int)imageDrawPoint.getX(), (int)imageDrawPoint.getY(), null);
@@ -143,11 +143,6 @@ public class GodRay extends GameObject{
 	public void rescale()
 	{
 		createRay();
-	}
-	@Override
-	public PhysicsType getPhysicsType()
-	{
-		return PhysicsType.NONE;
 	}
 	
 	public Image getBackground()

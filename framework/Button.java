@@ -45,10 +45,7 @@ public class Button extends UIElement{
 		this.img.setCenterX(x + (width / 2));
 		this.img.setCenterY(y + (height / 2));
 	}
-	/**
-	 * Update function for button
-	 * @param mouseClick Location of mouse click, null if not clicked
-	 */
+	@Override
 	public void updateUI(Point mouseClick)
 	{
 		isClicked = false;
@@ -63,6 +60,7 @@ public class Button extends UIElement{
 			}
 		}
 	}
+	@Override
 	public void renderUI(Graphics2D g2d, boolean debug) {
 		g2d.setColor(backgroundColor);
 		g2d.fillRect((int)x, (int)y, (int)width, (int)height);
@@ -70,6 +68,11 @@ public class Button extends UIElement{
 		{
 			img.render(g2d, debug);
 		}
+	}
+	@Override
+	public void rescale()
+	{
+		
 	}
 	
 	public double getX()

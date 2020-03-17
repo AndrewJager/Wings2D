@@ -106,6 +106,36 @@ public class Wall extends GameObject{
 			}
 		}
 	}
+	
+	/**
+	 * Create a rectanglar background for the wall
+	 * @param color Color of the rectangle
+	 * @param flip Use to change the side of the wall that the rectangle is drawn on. Ramps cannot be flipped. 
+	 */
+	public void setBackground(Color color, boolean flip)
+	{
+		this.flip = flip;
+		this.backgroundColor = color;
+		
+		this.background = new Image(rect, color, level);
+	}
+	public void addImage(Image image)
+	{
+		this.images.add(image);
+	}
+	public WallTypes getType()
+	{
+		return this.type;
+	}
+	public Line2D getLine()
+	{
+		return this.line;
+	}
+	public Image getBackground()
+	{
+		return this.background;
+	}
+	@Override
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		if (background != null)
@@ -147,39 +177,6 @@ public class Wall extends GameObject{
 			g2d.setColor(Color.GREEN);
 			g2d.drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
 		}
-	}
-	/**
-	 * Create a rectanglar background for the wall
-	 * @param color Color of the rectangle
-	 * @param flip Use to change the side of the wall that the rectangle is drawn on. Ramps cannot be flipped. 
-	 */
-	public void setBackground(Color color, boolean flip)
-	{
-		this.flip = flip;
-		this.backgroundColor = color;
-		
-		this.background = new Image(rect, color, level);
-	}
-	public void addImage(Image image)
-	{
-		this.images.add(image);
-	}
-	public WallTypes getType()
-	{
-		return this.type;
-	}
-	public Line2D getLine()
-	{
-		return this.line;
-	}
-	public Image getBackground()
-	{
-		return this.background;
-	}
-	
-	@Override
-	public void update(KeyState keys) {
-		
 	}
 	@Override
 	public void rescale() {
