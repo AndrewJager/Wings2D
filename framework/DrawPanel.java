@@ -36,7 +36,7 @@ public class DrawPanel {
 	}
 
 	/**
-	 * Resize the canvas to be the largest it can be at a 16:9 display ratio
+	 * Resize the canvas to be the largest it can be at a 16:9 display ratio. Canvas is positioned in the center of the container.
 	 * @param container The container the canvas is inside. Uses the width and height of this container to 
 	 * calculate the size of the canvas
 	 */
@@ -52,6 +52,9 @@ public class DrawPanel {
     	{
     		canvas.setSize(new Dimension((int)(height * NINE_TO_SIXTEEN), height));
     	}
+    	int xPos = (container.getWidth() - canvas.getWidth()) / 2;
+    	int yPos = (container.getHeight() - canvas.getHeight()) / 2;
+    	canvas.setLocation(xPos, yPos);
         container.revalidate();
     }
 }

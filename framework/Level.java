@@ -27,17 +27,6 @@ public class Level {
 		
 		manager.addLevel(this);
 	}
-	public void rescale()
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			objects.get(i).rescale();
-		}
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).rescale();
-		}
-	}
 	public LevelManager getManager()
 	{
 		return this.manager;
@@ -53,6 +42,21 @@ public class Level {
 	public void addObject(GameObject newObject)
 	{
 		this.objects.add(newObject);
+	}
+	public List<GameObject> getObjects()
+	{
+		return objects;
+	}
+	public void rescale()
+	{
+		for (int i = 0; i < objects.size(); i++)
+		{
+			objects.get(i).rescale();
+		}
+		for (int i = 0; i < ui.size(); i++)
+		{
+			ui.get(i).rescale();
+		}
 	}
 	public void update(KeyState keys)
 	{

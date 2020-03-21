@@ -123,7 +123,10 @@ public abstract class Game extends Thread {
 	 * something when the window is closed.
 	 **/
 	public void onClose() {
-		System.out.println("Closed");
+		if (debug)
+		{
+			System.out.println("Closed");
+		}
 	}
 
 	/**
