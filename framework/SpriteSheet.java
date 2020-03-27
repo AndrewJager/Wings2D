@@ -11,14 +11,17 @@ public class SpriteSheet extends GameObject{
 	private List<Sprite> sprites;
 	private int frame = 0;
 	private int length, counter = 0, delay = 30;
-	private boolean translated = false; // Used to prevent sprite from being moved more than once per update
+	/** Used to prevent sprite from being moved more than once per update */
+	private boolean translated = false; 
+	private String animName;
 	/**
 	 * SpriteSheet constructor with default delay
 	 * @param frames Indeterminate amount of sprites to add to spritesheet
 	 */
-	public SpriteSheet(Sprite...frames)
+	public SpriteSheet(String name, Sprite...frames)
 	{
 		sprites = new ArrayList<Sprite>();
+		this.animName = name;
 		for(int i = 0; i < frames.length; i++)
 		{
 			this.sprites.add(frames[i].copy());
@@ -30,9 +33,9 @@ public class SpriteSheet extends GameObject{
 	 * @param delay Time to wait between frames. Overridden to any custom time in sprites
 	 * @param frames Indeterminate amount of Sprites to add to SpriteSheet
 	 */
-	public SpriteSheet(int delay, Sprite...frames)
+	public SpriteSheet(String name, int delay, Sprite...frames)
 	{
-		this(frames);
+		this(name, frames);
 		this.delay = delay;
 	}
 	
@@ -82,6 +85,18 @@ public class SpriteSheet extends GameObject{
 			}
 		}
 		translated = true;
+	}
+	public void addSprite(Sprite sprite)
+	{
+		this.sprites.add(sprite);
+	}
+	public List<Sprite> getSprites()
+	{
+		return this.sprites;
+	}
+	public String getName()
+	{
+		return animName;
 	}
 	@Override
 	public void rescale()

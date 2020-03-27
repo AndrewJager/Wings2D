@@ -35,7 +35,7 @@ public class Sprite {
 		Collections.sort(jointList, new JointComparer());
 	}
 	/**
-	 * Create sprite from a list of joints
+	 * Create a sprite from a list of joints
 	 * @param joints Joints to copy into sprite
 	 */
 	public Sprite(List<Joint> joints)
@@ -45,6 +45,13 @@ public class Sprite {
 		{
 			this.joints.add(joints.get(i).copy());
 		}
+	}
+	/**
+	 * Create a sprite with no joints
+	 */
+	public Sprite()
+	{
+		this.joints = new ArrayList<Joint>();
 	}
 	/**
 	 * Returns a new copy of this sprite mirrored along the x-axis
