@@ -111,7 +111,7 @@ public class GodRay extends GameObject{
 	}
 
 	@Override
-	public void update(KeyState keys) {
+	public void update(double dt, KeyState keys) {
 		for (int i = 0; i < rays.size(); i++)
 		{
 			Line ray = rays.get(i);

@@ -1,9 +1,11 @@
 package framework.animation;
 
+import java.awt.Graphics2D;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import framework.KeyState;
 import framework.Level;
 
 
@@ -15,6 +17,12 @@ public class Animation {
 	private Level level;
 	/** {@link framework.animRework.Frame Frames} for this Animation */
 	private List<Frame> frames;
+	/** Keep track of the time from last frame change */
+	private double timeCount;
+	/** Current frame */
+	private int curFrame;
+	/** Default time to show frames */
+	private double delay;
 	
 	public Animation(SpriteSheet parent, String name)
 	{
@@ -22,6 +30,9 @@ public class Animation {
 		this.parent = parent;
 		this.level = parent.getLevel();
 		this.frames = new ArrayList<Frame>();
+		this.timeCount = 0;
+		this.curFrame = 0;
+		this.delay = 25;
 	}
 	
 	public void saveToFile(PrintWriter out)
@@ -88,5 +99,48 @@ public class Animation {
 			names[i] = frames.get(i).getName();
 		}
 		return names;
+	}
+	
+	public int getCurrentFrame()
+	{
+		return curFrame;
+	}
+	
+	public void generateImages()
+	{
+		for (int i = 0; i < frames.size(); i++)
+		{
+			frames.get(i).generateImages();
+		}
+	}
+	
+	public void update(double dt, KeyState keys)
+	{
+		timeCount += dt;
+		if (this.frames.get(curFrame).getFrameTime() != 0)
+		{
+			if (timeCount >= this.frames.get(curFrame).getFrameTime())
+			{
+				timeCount = 0;
+				curFrame++;
+			}
+		}
+		else
+		{
+			if (timeCount >= delay)
+			{
+				timeCount = 0;
+				curFrame++;
+			}
+		}
+		if (curFrame >= frames.size())
+		{
+			curFrame = 0;
+		}
+	}
+	
+	public void render(Graphics2D g2d, boolean debug)
+	{
+		frames.get(curFrame).render(g2d, debug);
 	}
 }

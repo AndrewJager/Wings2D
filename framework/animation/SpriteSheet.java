@@ -1,6 +1,7 @@
 package framework.animation;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import framework.GameObject;
+import framework.KeyState;
 import framework.Level;
 import framework.Utils;
 import framework.imageFilters.BasicVariance;
@@ -20,11 +23,14 @@ import framework.imageFilters.Outline;
 import framework.imageFilters.ShadeDir;
 
 
-public class SpriteSheet {
+public class SpriteSheet extends GameObject{
 	/** Level that this SpriteSheet belongs to */
 	private Level level;
 	private List<Animation> animations;
 	private String name;
+	private double x;
+	private double y;
+	private int curAnim = 0;
 	
 	public SpriteSheet(String name, Level level)
 	{
@@ -41,6 +47,8 @@ public class SpriteSheet {
 	{
 		this.animations = new ArrayList<Animation>();
 		this.level = level;
+		x = 100;
+		y = 100;
 		
 		in.useDelimiter(Pattern.compile("(\\n)")); // Regex. IDK
 		
@@ -82,6 +90,13 @@ public class SpriteSheet {
 						frames = animations.get(animations.size() - 1).getFrames();
 						newJoint = new Joint(frames.get(frames.size() - 1), value);
 						frames.get(frames.size() - 1).addJoint(newJoint);
+						break;
+					case "POSITION":
+						String[] loc = value.split(";");
+						frames = animations.get(animations.size() - 1).getFrames();
+						joints = frames.get(frames.size() - 1).getJoints();
+						joints.get(joints.size() - 1).setX(Double.parseDouble(loc[0]));
+						joints.get(joints.size() - 1).setY(Double.parseDouble(loc[1]));
 						break;
 					case "POINTS":
 						String[] points = value.split(";");
@@ -137,6 +152,11 @@ public class SpriteSheet {
 				}
 			}
 		}
+		
+		for(int i = 0; i < animations.size(); i++)
+		{
+			animations.get(i).generateImages();
+		}
 	}
 	
 	public void saveToFile()
@@ -163,6 +183,22 @@ public class SpriteSheet {
 	{
 		return level;
 	}
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
 	public Animation getAnimation(int anim)
 	{
 		return animations.get(anim);
@@ -200,5 +236,23 @@ public class SpriteSheet {
 	public void addNewAnimation(String animName)
 	{
 		animations.add(new Animation(this, animName));
+	}
+	
+	@Override
+	public void render(Graphics2D g2d, boolean debug)
+	{
+		this.animations.get(curAnim).render(g2d, debug);
+	}
+	
+	@Override
+	public void update(double dt, KeyState keys)
+	{
+		this.animations.get(curAnim).update(dt, keys);
+	}
+
+	@Override
+	public void rescale() {
+		// TODO Auto-generated method stub
+		
 	}
 }

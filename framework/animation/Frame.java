@@ -1,5 +1,6 @@
 package framework.animation;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -10,6 +11,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import framework.KeyState;
 import framework.Level;
 
 
@@ -73,6 +75,8 @@ public class Frame {
 	private EditOptions options;
 	/** The joints for this frame */
 	private List<Joint> joints;
+	/** Time this frame will display for */
+	private double frameTime;
 	
 	
 	// Editor stuff
@@ -90,6 +94,7 @@ public class Frame {
 		this.parent = parent;
 		this.level = parent.getLevel();
 		this.joints = new ArrayList<Joint>();
+		this.frameTime = 0; // Use the Animations delay time by default
 		this.editorFrameTime = 100;
 		this.editorTimePassed = 0;
 	}
@@ -170,9 +175,32 @@ public class Frame {
 		}
 		return names;
 	}
+	public double getFrameTime() {
+		return frameTime;
+	}
+
+	public void setFrameTime(double frameTime) {
+		this.frameTime = frameTime;
+	}
+	public void generateImages()
+	{
+		for (int i = 0; i < joints.size(); i++)
+		{
+			joints.get(i).makeImage();
+		}
+	}
+
+
+	public void render(Graphics2D g2d, boolean debug)
+	{
+		for(int i = 0; i < joints.size(); i++)
+		{
+			joints.get(i).render(g2d, debug);
+		}
+	}
 	
 	
-	
+
 	// Editor logic processing
 	public EditOptions getEditOptions()
 	{
@@ -192,10 +220,10 @@ public class Frame {
 	public void setTimePassed(int timePassed) {
 		this.editorTimePassed = timePassed;
 	}
-	public int getFrameTime() {
+	public int getEditorFrameTime() {
 		return editorFrameTime;
 	}
-	public void setFrameTime(int frameTime) {
+	public void setEditorFrameTime(int frameTime) {
 		this.editorFrameTime = frameTime;
 	}
 	public void addDefaultJoint(String jointName)
@@ -238,14 +266,14 @@ public class Frame {
 		}
 		else
 		{
-			Ellipse2D circle = new Ellipse2D.Double(joint.getPath().getBounds2D().getCenterX() - 6,
-					joint.getPath().getBounds2D().getCenterY() - 6, 12, 12);
+			Ellipse2D circle = new Ellipse2D.Double(joint.getPath().getBounds2D().getCenterX() - 6 + joint.getX(),
+					joint.getPath().getBounds2D().getCenterY() - 6 + joint.getY(), 12, 12);
 			
 			if (circle.contains(mouseLoc))
 			{
 				editorIsMoving = true;
-				editorObjLoc = new Point2D.Double(joint.getPath().getBounds2D().getCenterX(), 
-						joint.getPath().getBounds2D().getCenterY());
+				editorObjLoc = new Point2D.Double(joint.getPath().getBounds2D().getCenterX() + joint.getX(),
+						joint.getPath().getBounds2D().getCenterY() + joint.getY());
 			}
 		}
 	}
@@ -307,11 +335,8 @@ public class Frame {
 		{
 			AffineTransform transform = new AffineTransform();
 			transform.translate(xTranslate, yTranslate);
-			for (int i = 0; i < joint.getPoints().size(); i++)
-			{
-				joint.getPoint(i).setLocation(joint.getPoint(i).getX() + xTranslate, joint.getPoint(i).getY() + yTranslate);
-			}
-			joint.getPath().transform(transform);
+			joint.setX(joint.getX() + xTranslate);
+			joint.setY(joint.getY() + yTranslate);
 			if (editorChild != null && options.getCascadeChanges())
 			{
 				editorChild.moveObject(jointName, xTranslate, yTranslate);
@@ -331,6 +356,4 @@ public class Frame {
 			}
 		}
 	}
-
-
 }

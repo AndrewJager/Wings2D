@@ -1,6 +1,7 @@
 package framework.animation;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
@@ -32,9 +33,9 @@ public class Joint {
 	/** Level that this Joint belongs to */
 	private Level level;
 	/** X offset from SpriteSheet position */
-	private double x;
+	private double xOffset;
 	/** Y offset from SpriteSheet position */
-	private double y;
+	private double yOffset;
 	/** Locations for points of shape */
 	private List<Point2D> points;
 	private Path2D path;
@@ -54,6 +55,8 @@ public class Joint {
 		this.name = name;
 		this.points = new ArrayList<Point2D>();
 		this.filters = new ArrayList<ImageFilter>();
+		this.xOffset = 0;
+		this.yOffset = 0;
 	}
 	
 	public Joint copy()
@@ -72,6 +75,7 @@ public class Joint {
 	public void saveToFile(PrintWriter out)
 	{
 		out.write("JOINT:" + name + "\n");
+		out.write("POSITION:" + xOffset + ";" + yOffset + "\n");
 		out.write("POINTS:");
 		for (int i = 0; i < points.size(); i++)
 		{
@@ -122,20 +126,20 @@ public class Joint {
 	 * @return Distance from the SpriteSheet that this joint belongs to
 	 */
 	public double getX() {
-		return x;
+		return xOffset;
 	}
 	public void setX(double x) {
-		this.x = x;
+		this.xOffset = x;
 	}
 	/**
 	 * Get the Y offset from the SpriteSheet position 
 	 * @return Distance from the SpriteSheet that this joint belongs to
 	 */
 	public double getY() {
-		return y;
+		return yOffset;
 	}
 	public void setY(double y) {
-		this.y = y;
+		this.yOffset = y;
 	}
 	public Image getImage() {
 		return img;
@@ -267,5 +271,14 @@ public class Joint {
 		{
 			img.addFilter(filters.get(i));
 		}
+	}
+	
+	public void render(Graphics2D g2d, boolean debug)
+	{
+		double xPos = parent.getAnimation().getSpriteSheet().getX() + xOffset;
+		double yPos = parent.getAnimation().getSpriteSheet().getY() + yOffset;
+		img.setCenterX(xPos);
+		img.setCenterY(yPos);
+		img.render(g2d, debug);
 	}
 }

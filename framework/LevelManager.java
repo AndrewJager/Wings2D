@@ -15,6 +15,7 @@ public class LevelManager {
 	public LevelManager()
 	{
 		curLevel = 0; // First level, probably menu
+		scale = 1;
 		keys = new KeyMapping();
 		keys.setKey("Enter", 10);
 		keys.setKey("Left", 37);
@@ -54,9 +55,9 @@ public class LevelManager {
 		}
 		this.scale = scale;
 	}
-	public void update(KeyState keys, boolean mouseDown)
+	public void update(double dt, KeyState keys, boolean mouseDown)
 	{
-		levels.get(curLevel).update(keys);
+		levels.get(curLevel).update(dt, keys);
 	}
 	public void updateUI(Point mouseClick)
 	{

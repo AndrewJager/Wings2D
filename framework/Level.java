@@ -58,11 +58,11 @@ public class Level {
 			ui.get(i).rescale();
 		}
 	}
-	public void update(KeyState keys)
+	public void update(double dt, KeyState keys)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			objects.get(i).update(keys);
+			objects.get(i).update(dt, keys);
 		}
 	}
 	public void updateUI(Point mouseClick)

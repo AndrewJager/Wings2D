@@ -10,7 +10,7 @@ public abstract class GameObject {
 	 * Update the GameObject. Does nothing unless overridden
 	 * @param keys {@link framework.KeyState KeyState} object containing the current keyboard state
 	 */
-	public void update(KeyState keys)
+	public void update(double dt, KeyState keys)
 	{ /* Do nothing by default */ }
 	/**
 	 * For drawing the object. Does nothing unless overridden
