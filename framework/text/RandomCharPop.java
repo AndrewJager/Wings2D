@@ -2,58 +2,61 @@ package framework.text;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
+/**
+ * Starts off displaying nothing, and randomly chooses a character to start displaying, until the entire text is displaying
+ */
 public class RandomCharPop extends DisplayableText{
 	/** Full text to display */
 	private String text;
-	private char[] chars;
-	/** Display text */
-	private String display;
-	/** Which characters in the string are currently displaying */
+	/** Indexes of characters not currently displaying */
 	private List<Integer> freeChars;
-	private List<Point2D> drawPoints;
-	/** Time to display the string. Char display time = time / num of chars. */
-	private double time;
+	/** List of booleans to control which characters to display */
+	private List<Boolean> charsToDisplay;
+	/** How many characters are not being displayed */
+	private int remainingChars;
+	/** Time between each character being added to the display. Char display time = time / num of chars. */
 	private double charTime;
+	/** Time keeping variable */
 	private double count;
 	
+	/**
+	 * Creates a new RandomCharPop object
+	 * @param text The text to display
+	 * @param time The total time from start to displaying the entire text. 
+	 */
 	public RandomCharPop(String text, double time)
 	{
 		this.text = text;
-		this.time = time;
 		this.charTime = time / text.length();
 		this.count = 0;
 		freeChars = new ArrayList<Integer>();
-		drawPoints = new ArrayList<Point2D>();
-		this.chars = new char[text.length()];
+		charsToDisplay = new ArrayList<Boolean>();
+		remainingChars = text.length();
 		
 		for (int i = 0; i < text.length(); i++)
 		{
-			chars[i] = ' ';
 			freeChars.add(i);
+			charsToDisplay.add(false);
 		}
-		display = new String(chars);
 	}
 
 	@Override
 	public void update(double dt) {
-		if (freeChars.size() > 0)
+		if (remainingChars > 0)
 		{
 			count = count + dt;
 			if (count > charTime)
 			{
-				int newChar;
 				Random rand = new Random();
-				newChar = rand.nextInt(freeChars.size());
-				chars[freeChars.get(newChar)] = text.charAt(freeChars.get(newChar));
-				freeChars.remove(newChar);
-				display = new String(chars);
+				int newCharIndex = rand.nextInt(freeChars.size());
+				int newChar = freeChars.get(newCharIndex);
+				charsToDisplay.set(newChar, true);
+				freeChars.remove(newCharIndex);
+				remainingChars--;
 				count = 0;
 			}
 		}
@@ -61,19 +64,22 @@ public class RandomCharPop extends DisplayableText{
 
 	@Override
 	public void render(Graphics2D g2d) {
-		if (freeChars.size() > 0)
+		if (remainingChars > 0)
 		{
 			for (int i = 0; i < text.length(); i++)
 			{
-				String str = text.substring(0, i);
-				int width = g2d.getFontMetrics().stringWidth(str);
-				Point2D drawPoint = new Point2D.Double(getX() + width, getY());
-				g2d.drawString(String.valueOf(chars[i]), (float)drawPoint.getX(), (float)drawPoint.getY());
+				if (charsToDisplay.get(i) == true)
+				{
+					String str = text.substring(0, i);
+					int width = g2d.getFontMetrics().stringWidth(str);
+					Point2D drawPoint = new Point2D.Double(getX() + width, getY());
+					g2d.drawString(String.valueOf(text.substring(i, i + 1)), (float)drawPoint.getX(), (float)drawPoint.getY());
+				}
 			}
 		}
 		else
 		{
-			g2d.drawString(display, (float)getX(), (float)getY());
+			g2d.drawString(text, (float)getX(), (float)getY());
 		}
 	}
 
