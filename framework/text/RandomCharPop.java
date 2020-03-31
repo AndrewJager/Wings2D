@@ -1,6 +1,8 @@
 package framework.text;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ public class RandomCharPop extends DisplayableText{
 	private String display;
 	/** Which characters in the string are currently displaying */
 	private List<Integer> freeChars;
+	private List<Point2D> drawPoints;
 	/** Time to display the string. Char display time = time / num of chars. */
 	private double time;
 	private double charTime;
@@ -27,6 +30,7 @@ public class RandomCharPop extends DisplayableText{
 		this.charTime = time / text.length();
 		this.count = 0;
 		freeChars = new ArrayList<Integer>();
+		drawPoints = new ArrayList<Point2D>();
 		this.chars = new char[text.length()];
 		
 		for (int i = 0; i < text.length(); i++)
@@ -57,7 +61,20 @@ public class RandomCharPop extends DisplayableText{
 
 	@Override
 	public void render(Graphics2D g2d) {
-		g2d.drawString(display, (float)getX(), (float)getY());		
+		if (freeChars.size() > 0)
+		{
+			for (int i = 0; i < text.length(); i++)
+			{
+				String str = text.substring(0, i);
+				int width = g2d.getFontMetrics().stringWidth(str);
+				Point2D drawPoint = new Point2D.Double(getX() + width, getY());
+				g2d.drawString(String.valueOf(chars[i]), (float)drawPoint.getX(), (float)drawPoint.getY());
+			}
+		}
+		else
+		{
+			g2d.drawString(display, (float)getX(), (float)getY());
+		}
 	}
 
 }
