@@ -64,6 +64,7 @@ public class RandomCharPop extends DisplayableText{
 
 	@Override
 	public void render(Graphics2D g2d) {
+		g2d.setFont(getFont());
 		if (remainingChars > 0)
 		{
 			for (int i = 0; i < text.length(); i++)
@@ -82,5 +83,4 @@ public class RandomCharPop extends DisplayableText{
 			g2d.drawString(text, (float)getX(), (float)getY());
 		}
 	}
-
 }
