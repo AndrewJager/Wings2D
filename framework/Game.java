@@ -49,29 +49,35 @@ public abstract class Game extends Thread {
 	private Color frameColor;
 	private BufferStrategy strat;
 	private double lastFpsTime = 0;
+	/** The current fps */
 	private int fps = 0;
+	/** The width with the game was created. Used to determine scale */
+	private int ogWidth;
 	/** Control debug prints */
 	private boolean debug = false;
-
-	private int width = 600;
-	private int height = 400;
-
+	/** Level manager for this game. Other LevelManagers should not be created */
+	private LevelManager manager;
+	
 	/**
 	 * Call super(debug) from your constructor to use this
 	 * @param debug Use debug prints (FPS, ect.)
 	 */
-	public Game(boolean debug) {
+	public Game(boolean debug, int width, int height) {
 		this.debug = debug;
+		manager = new LevelManager();
+		
+		ogWidth = width;
+		
 		canvasColor = Color.DARK_GRAY;
 		frameColor = Color.BLACK;
 		
 		frame = new JFrame();
 		frame.addWindowListener(new FrameClose());
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(160 * 3, 90 * 3));
+		frame.setMinimumSize(new Dimension(480, 270));
 		frame.setSize(width, height);
+		frame.setLocationRelativeTo(null);
 		frame.setBackground(frameColor);
-//		frame.setLayout(null);
 
 		panel = new JPanel();
 		panel.setBackground(frameColor);
@@ -115,7 +121,8 @@ public abstract class Game extends Thread {
 	 */
 	public void onResize(DrawPanel draw)
 	{
-
+		double scale = Double.valueOf(draw.getCanvas().getWidth()) / ogWidth; 
+		manager.setScale(scale);
 	}
 
 	/**
@@ -297,5 +304,13 @@ public abstract class Game extends Thread {
 		this.frame.setBackground(color);
 		this.panel.setBackground(color);
 		this.frameColor = color;
+	}
+	/**
+	 * Get object to control the levels for the game
+	 * @return {@link framework.LevelManager LevelManager} for this game
+	 */
+	public LevelManager getManager()
+	{
+		return manager;
 	}
 }
