@@ -4,14 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import framework.KeyState;
 import framework.Level;
 
 
@@ -83,7 +81,6 @@ public class Frame {
 	private boolean editorIsMoving;
 	private Point2D editorObjLoc;
 	private int editorSelectedPoint;
-	private Frame editorParent;
 	private Frame editorChild = null;
 	private int editorFrameTime;
 	private int editorTimePassed;
@@ -102,7 +99,6 @@ public class Frame {
 	public Frame (Animation parent, String name, Frame editParent)
 	{
 		this(parent, name);
-		this.editorParent = editParent;
 		editParent.setEditorChild(this);
 		
 		for (int i = 0; i < editParent.getJoints().size(); i++)
@@ -210,7 +206,7 @@ public class Frame {
 	{
 		this.options = options;
 	}
-	private void setEditorChild(Frame child)
+	public void setEditorChild(Frame child)
 	{
 		this.editorChild = child;
 	}
@@ -353,6 +349,41 @@ public class Frame {
 			if (editorChild != null)
 			{
 				editorChild.addVertex(selected);
+			}
+		}
+	}
+	
+	public void addNewJointFilter(String filterName, String jointName)
+	{
+		if (editorChild != null && options.getCascadeChanges())
+		{
+			Joint joint = editorChild.getJointByName(jointName);
+			joint.addNewFilter(filterName); // Will call the child frames addNewJointFillter in a roundabout way
+		}
+	}
+	
+	public void swapJointFilters(String jointName, int a, int b)
+	{
+		if (editorChild != null && options.getCascadeChanges())
+		{
+			Joint thisJoint = getJointByName(jointName); 
+			Joint joint = editorChild.getJointByName(jointName);
+			if (joint.getFilters().size() == thisJoint.getFilters().size()) // Don't swap if filter lists are clearly different. Should probably rework this to actually compare the filter lists.
+			{
+				joint.swapFilters(a, b); // Will call the child frame's swapJointFilters in a roundabout way
+			}
+		}
+	}
+	
+	public void deleteJointFilter(String jointName, int filter)
+	{
+		if (editorChild != null && options.getCascadeChanges())
+		{
+			Joint thisJoint = getJointByName(jointName); 
+			Joint joint = editorChild.getJointByName(jointName);
+			if (joint.getFilters().size() == thisJoint.getFilters().size()) // Don't swap if filter lists are clearly different. Should probably rework this to actually compare the filter lists.
+			{
+				joint.deleteFilter(filter); // Will call the child frame's deleteJointFilter in a roundabout way
 			}
 		}
 	}

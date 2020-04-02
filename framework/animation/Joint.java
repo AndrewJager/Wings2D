@@ -3,10 +3,8 @@ package framework.animation;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Path2D.Double;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -181,6 +179,8 @@ public class Joint {
 		{
 			addFilter(new Outline(Color.BLACK));
 		}
+		
+		getFrame().addNewJointFilter(filterName, this.name);
 	}
 	public void swapFilters(int a, int b)
 	{
@@ -190,6 +190,14 @@ public class Joint {
 			filters.set(a, filters.get(b));
 			filters.set(b, temp);
 		}
+		
+		getFrame().swapJointFilters(this.name, a, b);
+	}
+	
+	public void deleteFilter(int i)
+	{
+		getFrame().deleteJointFilter(this.name, i);
+		filters.remove(i);
 	}
 	
 	public Point2D getPoint(int i)

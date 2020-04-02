@@ -41,10 +41,6 @@ public class SpriteSheet extends GameObject{
 	
 	public SpriteSheet(Scanner in, Level level)
 	{
-		this(in, level, null);
-	}
-	public SpriteSheet(Scanner in, Level level, Frame.EditOptions editOptions)
-	{
 		this.animations = new ArrayList<Animation>();
 		this.level = level;
 		x = 100;
@@ -79,8 +75,12 @@ public class SpriteSheet extends GameObject{
 						break;
 					case "FRAME":
 						newFrame = new Frame(animations.get(animations.size() - 1), value);
-						newFrame.setEditOptions(editOptions);
-						animations.get(animations.size() - 1).getFrames().add(newFrame);
+						frames = animations.get(animations.size() - 1).getFrames();
+						frames.add(newFrame);
+						if (frames.size() > 1)
+						{
+							frames.get(frames.size() - 2).setEditorChild(newFrame);
+						}
 						break;
 					case "TIME":
 						frames = animations.get(animations.size() - 1).getFrames();
