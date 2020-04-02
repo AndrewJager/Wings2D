@@ -8,6 +8,7 @@ import framework.imageFilters.ImageFilter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
@@ -178,7 +179,7 @@ public class Image {
 	
 	/**
 	 * Add a shape to the image. After this, rotation of the image will not work do to the new shapes not being saved.
-	 * Previously applied filters are not run when this operation is done, be design.
+	 * Previously applied filters are not run when this operation is done, by design.
 	 * @param newShape {@link java.awt.Shape Shape} which will be added to the image
 	 * @param color {@link java.awt.Color Color} to fill the new shape with. The rest of the image will be the same color.
 	 * @param xLoc X location to draw new shape at, relative to the top-left corner of the image.
@@ -251,18 +252,10 @@ public class Image {
 		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
 		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
 		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
-		for(int x = 0; x < width; x++) {
-		    for(int y = 0; y < height; y++) {
-		    	if (scaled.contains(x, y))
-		    	{
-		    		image.setRGB(x, y, this.color.getRGB());
-		    	}
-		    	else
-		    	{
-		    		image.setRGB(x, y, Color.TRANSLUCENT);
-		    	}
-		    }
-		}
+		Graphics2D imgGraphics = this.image.createGraphics();
+		imgGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		imgGraphics.setColor(color);
+		imgGraphics.fill(scaled);
 	}
 	
 	/**
