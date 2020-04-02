@@ -21,6 +21,10 @@ public class BlurEdges implements ImageFilter{
 	{
 		return fileTitle;
 	}
+	public String getFilterInfoString()
+	{
+		return "";
+	}
 	public void filter(Image img)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();

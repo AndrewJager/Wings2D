@@ -19,6 +19,12 @@ public interface ImageFilter
 	public abstract String getFilterName();
 	
 	/**
+	 * Get a quick summary of the settings for the filter, for use in the editor's filter list. Not guaranteed to contain all info, as space is limited.
+	 * @return String with a arbitrary amount of info from the filter
+	 */
+	public abstract String getFilterInfoString();
+	
+	/**
 	 * Used to separate parts of the string when saving to a file
 	 */
 	final String delimiter = "~";

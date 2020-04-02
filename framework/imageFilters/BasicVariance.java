@@ -37,6 +37,10 @@ public class BasicVariance implements ImageFilter{
 	{
 		return fileTitle + ImageFilter.delimiter + varAmount;
 	}
+	public String getFilterInfoString()
+	{
+		return "Amount: " + varAmount;
+	}
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

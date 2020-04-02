@@ -47,6 +47,10 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	{
 		return fileTitle + ImageFilter.delimiter + dir + ImageFilter.delimiter + varAmount;
 	}
+	public String getFilterInfoString()
+	{
+		return ShadeDir.getAsString(dir) + " - " + varAmount;
+	}
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

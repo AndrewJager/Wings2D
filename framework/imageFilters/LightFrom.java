@@ -48,7 +48,10 @@ public class LightFrom implements ImageFilter{
 	{
 		return lightColor;
 	}
-	
+	public String getFilterInfoString()
+	{
+		return "NOT WORKING";
+	}
 	public void filter(Image img)
 	{
 		BufferedImage image = img.getImage();

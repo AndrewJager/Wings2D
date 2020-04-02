@@ -37,6 +37,10 @@ public class Outline implements ImageFilter{
 	{
 		return fileTitle + ImageFilter.delimiter + Utils.colorToString(color, ",");
 	}
+	public String getFilterInfoString()
+	{
+		return color.toString();
+	}
 	public void filter(Image img)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();
