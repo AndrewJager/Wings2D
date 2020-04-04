@@ -45,6 +45,8 @@ public class Joint {
 	private Color color;
 	/** Faded color for editor to indicated that this object is not selected */
 	private Color fadedColor;
+	/** Order in which joints are rendered, highest first */
+	private int renderOrder; 
 	
 	public Joint(Frame parent, String name)
 	{
@@ -74,6 +76,7 @@ public class Joint {
 	{
 		out.write("JOINT:" + name + "\n");
 		out.write("POSITION:" + xOffset + ";" + yOffset + "\n");
+		out.write("ORDER" + renderOrder + "\n");
 		out.write("POINTS:");
 		for (int i = 0; i < points.size(); i++)
 		{
@@ -259,6 +262,14 @@ public class Joint {
 		return fadedColor;
 	}
 	
+	public int getRenderOrder() {
+		return renderOrder;
+	}
+
+	public void setRenderOrder(int renderOrder) {
+		this.renderOrder = renderOrder;
+	}
+
 	public void makeImage()
 	{
 		double xPos = path.getBounds2D().getX();

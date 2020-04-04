@@ -98,6 +98,11 @@ public class SpriteSheet extends GameObject{
 						joints.get(joints.size() - 1).setX(Double.parseDouble(loc[0]));
 						joints.get(joints.size() - 1).setY(Double.parseDouble(loc[1]));
 						break;
+					case "ORDER":
+						frames = animations.get(animations.size() - 1).getFrames();
+						joints = frames.get(frames.size() - 1).getJoints();
+						joints.get(joints.size() - 1).setRenderOrder(Integer.parseInt(value));
+						break;
 					case "POINTS":
 						String[] points = value.split(";");
 						for (int i = 0; i < points.length; i++)
