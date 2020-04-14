@@ -57,6 +57,7 @@ public class Joint {
 		this.filters = new ArrayList<ImageFilter>();
 		this.xOffset = 0;
 		this.yOffset = 0;
+		this.setColor(Color.BLACK);
 	}
 	
 	public Joint copy()
