@@ -10,12 +10,22 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Transparency;
 import java.awt.geom.Rectangle2D;
 
 /**
  * Custom Image class, based off a BufferedImage and a Shape. 
  */
 public class Image {
+	/**
+	 * Represents a side of an image
+	 */
+	public enum ImageSide {
+		RIGHT,
+		LEFT,
+		TOP,
+		BOTTOM,
+	}
 	/** Shape used to generate the BufferedImage **/
 	private Shape shape;
 	/** Shape used when the first Image was created, before any rotations. **/
@@ -29,10 +39,6 @@ public class Image {
 	/** Level that the Image is associated with **/
 	private Level level;
 	
-	/** Width of the BufferedImage **/
-	private int width;
-	/** Height of the BufferedImage **/
-	private int height;
 	/** X position to draw image **/
 	private double x;
 	/** Y position to draw image **/
@@ -79,8 +85,6 @@ public class Image {
 	 * @param height Height of new image
 	 */
 	private Image(int width, int height) {
-		this.width = width;
-		this.height = height;
 		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	/**
@@ -89,15 +93,15 @@ public class Image {
 	 */
 	public Image copy()
 	{
-		Image newImage = new Image(this.width, this.height);
+		Image newImage = new Image(this.image.getWidth(), this.image.getHeight());
 		newImage.color = this.color;
 		newImage.x = this.x;
 		newImage.y = this.y;
 		newImage.rotation = this.rotation;
 		newImage.level = this.level;
-		for (int x = 0; x < width; x++) 
+		for (int x = 0; x < this.image.getWidth(); x++) 
 		{
-			for(int y = 0; y < height; y++) {
+			for(int y = 0; y < this.image.getHeight(); y++) {
 				newImage.image.setRGB(x, y, this.image.getRGB(x, y));
 			}
 		}
@@ -127,8 +131,6 @@ public class Image {
 		
 		this.shape = ogShape;
 		this.image = rotated.getImage();
-		this.width = (int)Math.ceil(rotated.getShape().getBounds2D().getWidth() * scale);
-		this.height = (int)Math.ceil(rotated.getShape().getBounds2D().getHeight() * scale);
 		rotated.filters = new ArrayList<ImageFilter>();
 		for (int i = 0; i < this.filters.size(); i++)
 		{
@@ -189,7 +191,7 @@ public class Image {
 	{
 		newShape = ShapeUtils.scale(newShape, level.getManager().getScale());
 		newShape = ShapeUtils.translate(newShape, -(newShape.getBounds2D().getX() - xLoc), newShape.getBounds2D().getY() - yLoc);
-		Rectangle2D imageRect = new Rectangle2D.Double(0, 0, this.width, this.height);
+		Rectangle2D imageRect = new Rectangle2D.Double(0, 0, this.image.getWidth(), this.image.getHeight());
 		Rectangle2D newImageRect = new Rectangle2D.Double(xLoc, yLoc, newShape.getBounds2D().getWidth(), newShape.getBounds2D().getHeight());
 
 		if (imageRect.contains(newImageRect))
@@ -241,6 +243,10 @@ public class Image {
 			this.setImage(newImage);
 		}
 	}
+	/**
+	 * Creates the image
+	 * @param scaleImg Scale the image to the game scale
+	 */
 	private void createImage(boolean scaleImg)
 	{
 		double scale = level.getManager().getScale();
@@ -249,13 +255,57 @@ public class Image {
 		{
 			scaled = ShapeUtils.scale(this.shape, scale);
 		}
-		this.width = (int)Math.ceil(scaled.getBounds2D().getWidth());
-		this.height = (int)Math.ceil(scaled.getBounds2D().getHeight());
-		this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+		int width = (int)Math.ceil(scaled.getBounds2D().getWidth());
+		int height = (int)Math.ceil(scaled.getBounds2D().getHeight());
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = this.image.createGraphics();
-		imgGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		imgGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);	
 		imgGraphics.setColor(color);
 		imgGraphics.fill(scaled);
+		
+		// Manually set empty pixels to TRANSLUCENT. Not sure why I have to do this, but the Outline filter broke without it.
+		for (int x = 0; x < width; x++) {
+		    for (int y = 0; y < height; y++) {
+		    	if (image.getRGB(x, y) != color.getRGB())
+		    	{
+		    		image.setRGB(x, y, Transparency.TRANSLUCENT);
+//		    		image.setRGB(x, y, Color.BLUE.getRGB());
+		    	}
+		    }
+		}
+	}
+	
+	public void expandImageOnSide(ImageSide side)
+	{
+		BufferedImage newImg;
+		Graphics2D g2d;
+		switch(side)
+		{
+		case RIGHT:
+			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			g2d = newImg.createGraphics();
+			g2d.drawImage(image, null, 0, 0);
+			this.image = newImg;
+			break;
+		case LEFT:
+			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			g2d = newImg.createGraphics();
+			g2d.drawImage(image, null, 1, 0);
+			this.image = newImg;
+			break;
+		case TOP:
+			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
+			g2d = newImg.createGraphics();
+			g2d.drawImage(image, null, 0, 1);
+			this.image = newImg;
+			break;
+		case BOTTOM:
+			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
+			g2d = newImg.createGraphics();
+			g2d.drawImage(image, null, 0, 0);
+			this.image = newImg;		
+			break;
+		}
 	}
 	
 	/**
@@ -307,7 +357,7 @@ public class Image {
 	 */
 	public double getCenterX()
 	{
-		return x + (this.width / 2);
+		return x + (this.image.getWidth() / 2);
 	}
 	/**
 	 * Get the Y coordinate of the center of this image
@@ -315,7 +365,7 @@ public class Image {
 	 */
 	public double getCenterY()
 	{
-		return y + (this.height / 2);
+		return y + (this.image.getHeight() / 2);
 	}
 	public double getX() {
 		return x;
@@ -325,7 +375,7 @@ public class Image {
 		this.x = x;
 	}
 	public void setCenterX(double x) {
-		this.x = x - (this.width / 2);
+		this.x = x - (this.image.getWidth() / 2);
 	}
 	public double getY() {
 		return y;
@@ -335,15 +385,9 @@ public class Image {
 		this.y = y;
 	}
 	public void setCenterY(double y) {
-		this.y = y - (this.height / 2);
-	}
-	public int getWidth() {
-		return width;
+		this.y = y - (this.image.getHeight() / 2);
 	}
 
-	public int getHeight() {
-		return height;
-	}
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;

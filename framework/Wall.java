@@ -145,26 +145,26 @@ public class Wall extends GameObject{
 			{
 				if (type == WallTypes.FLOOR)
 				{
-					g2d.drawImage(background.getImage(), (int)line.getX1(), (int)line.getY1() - background.getHeight(),
-							background.getWidth(), background.getHeight(), null);
+					g2d.drawImage(background.getImage(), (int)line.getX1(), (int)line.getY1() - background.getImage().getHeight(),
+							background.getImage().getWidth(), background.getImage().getHeight(), null);
 				}
 				else if (type == WallTypes.WALL)
 				{
-					g2d.drawImage(background.getImage(), (int)line.getX1() - background.getWidth(), (int)line.getY1(),
-							background.getWidth(), background.getHeight(), null);
+					g2d.drawImage(background.getImage(), (int)line.getX1() - background.getImage().getWidth(), (int)line.getY1(),
+							background.getImage().getWidth(), background.getImage().getHeight(), null);
 				}
 			}
 			else
 			{
 				if (drawPoint != null)
 				{
-					g2d.drawImage(background.getImage(), (int)drawPoint.getX(), (int)drawPoint.getY(), background.getWidth(), 
-							background.getHeight(), null);
+					g2d.drawImage(background.getImage(), (int)drawPoint.getX(), (int)drawPoint.getY(), background.getImage().getWidth(), 
+							background.getImage().getHeight(), null);
 				}
 				else
 				{
-					g2d.drawImage(background.getImage(), (int)line.getX1(), (int)line.getY1(), background.getWidth(), 
-							background.getHeight(), null);
+					g2d.drawImage(background.getImage(), (int)line.getX1(), (int)line.getY1(), background.getImage().getWidth(), 
+							background.getImage().getHeight(), null);
 				}
 			}
 		}
