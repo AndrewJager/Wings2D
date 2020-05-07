@@ -58,102 +58,100 @@ public class Outline implements ImageFilter{
 	}
 	public void filter(Image img)
 	{
-		// Ensure that there is room on all sides for the outline
-		boolean imgClear = false;
-		int breakCount = 0;
-		while (!imgClear && breakCount < 100)
+		for(int runs = 0; runs < thickness; runs++)
 		{
-			System.out.println(img.getImage().getHeight());
-			imgClear = true;
-			for (int i = 0; i < img.getImage().getWidth(); i++) // Top
+			// Ensure that there is room on all sides for the outline
+			boolean imgClear = false;
+			while (!imgClear)
 			{
-				if (img.getImage().getRGB(i, 0) != Color.TRANSLUCENT)
+				imgClear = true;
+				for (int i = 0; i < img.getImage().getWidth(); i++) // Top
 				{
-					img.expandImageOnSide(ImageSide.TOP);
-					imgClear = false;
-					break;
-				}
-			}
-			if (imgClear)
-			{
-				for (int i = 0; i < img.getImage().getWidth(); i++) // Bottom
-				{
-					if (img.getImage().getRGB(i, img.getImage().getHeight() - 1) != Color.TRANSLUCENT)
+					if (img.getImage().getRGB(i, 0) != Color.TRANSLUCENT)
 					{
-						img.expandImageOnSide(ImageSide.BOTTOM);
+						img.expandImageOnSide(ImageSide.TOP);
 						imgClear = false;
 						break;
 					}
 				}
-			}
-			if (imgClear)
-			{
-				for (int i = 0; i < img.getImage().getHeight(); i++) // Left
+				if (imgClear)
 				{
-					if (img.getImage().getRGB(0, i) != Color.TRANSLUCENT)
+					for (int i = 0; i < img.getImage().getWidth(); i++) // Bottom
 					{
-						img.expandImageOnSide(ImageSide.LEFT);
-						imgClear = false;
-						break;
+						if (img.getImage().getRGB(i, img.getImage().getHeight() - 1) != Color.TRANSLUCENT)
+						{
+							img.expandImageOnSide(ImageSide.BOTTOM);
+							imgClear = false;
+							break;
+						}
+					}
+				}
+				if (imgClear)
+				{
+					for (int i = 0; i < img.getImage().getHeight(); i++) // Left
+					{
+						if (img.getImage().getRGB(0, i) != Color.TRANSLUCENT)
+						{
+							img.expandImageOnSide(ImageSide.LEFT);
+							imgClear = false;
+							break;
+						}
+					}
+				}
+				if (imgClear)
+				{
+					for (int i = 0; i < img.getImage().getHeight(); i++) // Right
+					{
+						if (img.getImage().getRGB(img.getImage().getWidth() - 1, i) != Color.TRANSLUCENT)
+						{
+							img.expandImageOnSide(ImageSide.RIGHT);
+							imgClear = false;
+							break;
+						}
 					}
 				}
 			}
-			if (imgClear)
+			// Find the edges of the shape
+			ArrayList<Point2D> edges = new ArrayList<Point2D>();
+			for (int x = 0; x < img.getImage().getWidth(); x++)
 			{
-				for (int i = 0; i < img.getImage().getHeight(); i++) // Right
+				for (int y = 0; y < img.getImage().getHeight(); y++)
 				{
-					if (img.getImage().getRGB(img.getImage().getWidth() - 1, i) != Color.TRANSLUCENT)
+					if (img.getImage().getRGB(x, y) == Color.TRANSLUCENT)
 					{
-						img.expandImageOnSide(ImageSide.RIGHT);
-						imgClear = false;
-						break;
+						boolean addPixel = false;
+	
+						if (y != 0 && img.getImage().getRGB(x, y - 1) != Color.TRANSLUCENT)
+						{
+							addPixel = true;
+						}
+						else if (y != (img.getImage().getHeight() - 1) && img.getImage().getRGB(x, y + 1) != Color.TRANSLUCENT)
+						{
+							addPixel = true;
+						}
+						else if (x != 0 && img.getImage().getRGB(x - 1, y) != Color.TRANSLUCENT)
+						{
+							addPixel = true;
+						}
+						else if (x != (img.getImage().getWidth() - 1) && img.getImage().getRGB(x + 1, y) != Color.TRANSLUCENT)
+						{
+							addPixel = true;
+						}
+	
+						if (addPixel)
+						{
+							edges.add(new Point2D.Double(x, y));
+						}
+	
 					}
 				}
 			}
-			breakCount++;
-		}
-		// Find the edges of the shape
-		ArrayList<Point2D> edges = new ArrayList<Point2D>();
-		for (int x = 0; x < img.getImage().getWidth(); x++)
-		{
-			for (int y = 0; y < img.getImage().getHeight(); y++)
+	
+			// Draw the color to the edges
+			for (int i = 0; i < edges.size(); i++)
 			{
-				if (img.getImage().getRGB(x, y) == Color.TRANSLUCENT)
-				{
-					boolean addPixel = false;
-
-					if (y != 0 && img.getImage().getRGB(x, y - 1) != Color.TRANSLUCENT)
-					{
-						addPixel = true;
-					}
-					else if (y != (img.getImage().getHeight() - 1) && img.getImage().getRGB(x, y + 1) != Color.TRANSLUCENT)
-					{
-						addPixel = true;
-					}
-					else if (x != 0 && img.getImage().getRGB(x - 1, y) != Color.TRANSLUCENT)
-					{
-						addPixel = true;
-					}
-					else if (x != (img.getImage().getWidth() - 1) && img.getImage().getRGB(x + 1, y) != Color.TRANSLUCENT)
-					{
-						addPixel = true;
-					}
-
-					if (addPixel)
-					{
-						edges.add(new Point2D.Double(x, y));
-					}
-
-				}
+				img.getImage().setRGB((int)edges.get(i).getX(), (int)edges.get(i).getY(), color.getRGB());
 			}
 		}
-
-		// Draw the color to the edges
-		System.out.println(edges.size());
-		for (int i = 0; i < edges.size(); i++)
-		{
-			img.getImage().setRGB((int)edges.get(i).getX(), (int)edges.get(i).getY(), color.getRGB());
-		}
-		System.out.println("there");
 	}
 }
