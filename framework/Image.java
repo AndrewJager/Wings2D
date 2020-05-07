@@ -6,6 +6,7 @@ import java.util.List;
 
 import framework.imageFilters.ImageFilter;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -264,12 +265,17 @@ public class Image {
 		imgGraphics.fill(scaled);
 		
 		// Manually set empty pixels to TRANSLUCENT. Not sure why I have to do this, but the Outline filter broke without it.
-		for (int x = 0; x < width; x++) {
-		    for (int y = 0; y < height; y++) {
-		    	if (image.getRGB(x, y) != color.getRGB())
+		clearImage(image);
+	}
+	
+	
+	private void clearImage(BufferedImage img)
+	{
+		for (int x = 0; x < img.getWidth(); x++) {
+		    for (int y = 0; y < img.getHeight(); y++) {
+		    	if (img.getRGB(x, y) != color.getRGB())
 		    	{
-		    		image.setRGB(x, y, Transparency.TRANSLUCENT);
-//		    		image.setRGB(x, y, Color.BLUE.getRGB());
+		    		img.setRGB(x, y, Transparency.TRANSLUCENT);
 		    	}
 		    }
 		}
@@ -284,26 +290,30 @@ public class Image {
 		case RIGHT:
 			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
+			clearImage(newImg);
 			g2d.drawImage(image, null, 0, 0);
 			this.image = newImg;
 			break;
 		case LEFT:
 			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
+			clearImage(newImg);
 			g2d.drawImage(image, null, 1, 0);
 			this.image = newImg;
 			break;
 		case TOP:
 			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
-			g2d = newImg.createGraphics();
+			g2d = newImg.createGraphics();			
+			clearImage(newImg);
 			g2d.drawImage(image, null, 0, 1);
 			this.image = newImg;
 			break;
 		case BOTTOM:
 			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
+			clearImage(newImg);
 			g2d.drawImage(image, null, 0, 0);
-			this.image = newImg;		
+			this.image = newImg;
 			break;
 		}
 	}
