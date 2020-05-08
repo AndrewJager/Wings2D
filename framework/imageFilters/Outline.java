@@ -1,9 +1,7 @@
 package framework.imageFilters;
 
 import java.awt.Color;
-import java.awt.Transparency;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import framework.Image;
@@ -136,15 +134,35 @@ public class Outline implements ImageFilter{
 						else if (x != (img.getImage().getWidth() - 1) && img.getImage().getRGB(x + 1, y) != Color.TRANSLUCENT)
 						{
 							addPixel = true;
-						}
+						}						
 	
 						if (addPixel)
 						{
 							edges.add(new Point2D.Double(x, y));
-						}
-	
+						}	
 					}
 				}
+			}
+			
+			// Special cases for corner pixels
+			if (edges.contains(new Point2D.Double(1, 0)) && edges.contains(new Point2D.Double(0, 1))) // Top left
+			{
+				edges.add(new Point2D.Double(0, 0));
+			}
+			if (edges.contains(new Point2D.Double(img.getImage().getWidth() - 2, 0)) 
+					&& edges.contains(new Point2D.Double(img.getImage().getWidth() - 1, 1))) // Top right
+			{
+				edges.add(new Point2D.Double(img.getImage().getWidth() - 1, 0));
+			}
+			if (edges.contains(new Point2D.Double(0, img.getImage().getHeight() - 2)) 
+					&& edges.contains(new Point2D.Double(1, img.getImage().getHeight() - 1))) // Bottom left
+			{
+				edges.add(new Point2D.Double(0, img.getImage().getHeight() - 1));
+			}
+			if (edges.contains(new Point2D.Double(img.getImage().getWidth() - 1, img.getImage().getHeight() - 2)) 
+					&& edges.contains(new Point2D.Double(img.getImage().getWidth() - 2, img.getImage().getHeight() - 1))) // Bottom right
+			{
+				edges.add(new Point2D.Double(img.getImage().getWidth() - 1, img.getImage().getHeight() - 1));
 			}
 	
 			// Draw the color to the edges
