@@ -6,7 +6,6 @@ import java.util.List;
 
 import framework.imageFilters.ImageFilter;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -121,8 +120,7 @@ public class Image {
 	public void rotate(double angle) {
 		this.image = null;
 		this.rotation += Math.toRadians(angle);
-		double scale = level.getManager().getScale();
-		
+
 		Shape newShape = ShapeUtils.rotateAround(this.ogShape, this.rotation, this.x + this.ogShape.getBounds2D().getCenterX(),
 				this.y + this.ogShape.getBounds2D().getCenterY());
 		
