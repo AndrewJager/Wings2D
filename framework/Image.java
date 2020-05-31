@@ -14,7 +14,7 @@ import java.awt.Transparency;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Custom Image class, based off a BufferedImage and a Shape. 
+ * Custom Image class, based off a BufferedImage, a Shape, and a list of filters. 
  */
 public class Image {
 	/**

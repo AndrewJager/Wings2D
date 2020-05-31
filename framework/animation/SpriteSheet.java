@@ -2,9 +2,6 @@ package framework.animation;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -77,10 +74,6 @@ public class SpriteSheet extends GameObject{
 						newFrame = new Frame(animations.get(animations.size() - 1), value);
 						frames = animations.get(animations.size() - 1).getFrames();
 						frames.add(newFrame);
-						if (frames.size() > 1)
-						{
-							frames.get(frames.size() - 2).setEditorChild(newFrame);
-						}
 						break;
 					case "TIME":
 						frames = animations.get(animations.size() - 1).getFrames();
@@ -161,22 +154,6 @@ public class SpriteSheet extends GameObject{
 		for(int i = 0; i < animations.size(); i++)
 		{
 			animations.get(i).generateImages();
-		}
-	}
-	
-	public void saveToFile()
-	{
-		try {
-			PrintWriter out = new PrintWriter(new FileOutputStream("Test/" + name + ".txt"));
-			out.write("SPRITE:" + name);
-			out.write("\n");
-			for(int i = 0; i < animations.size(); i++)
-			{
-				animations.get(i).saveToFile(out);
-			}
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 	

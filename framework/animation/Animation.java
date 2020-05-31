@@ -1,7 +1,6 @@
 package framework.animation;
 
 import java.awt.Graphics2D;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +32,6 @@ public class Animation {
 		this.timeCount = 0;
 		this.curFrame = 0;
 		this.delay = 25;
-	}
-	
-	public void saveToFile(PrintWriter out)
-	{
-		out.write("ANIM:" + name + "\n");
-		for (int i = 0; i < frames.size(); i++)
-		{
-			frames.get(i).saveToFile(out);
-		}
-		out.write("\n");
 	}
 	
 	public void setName(String name)

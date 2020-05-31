@@ -5,20 +5,12 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import framework.Image;
 import framework.Level;
-import framework.Utils;
-import framework.imageFilters.BasicVariance;
-import framework.imageFilters.BlurEdges;
-import framework.imageFilters.DarkenFrom;
 import framework.imageFilters.ImageFilter;
-import framework.imageFilters.LightenFrom;
-import framework.imageFilters.Outline;
-import framework.imageFilters.ShadeDir;
 
 /**
  * Contains information for both game and editor information
@@ -71,39 +63,6 @@ public class Joint {
 		}
 		
 		return newJoint;
-	}
-	
-	public void saveToFile(PrintWriter out)
-	{
-		out.write("JOINT:" + name + "\n");
-		out.write("POSITION:" + xOffset + ";" + yOffset + "\n");
-		out.write("ORDER" + renderOrder + "\n");
-		out.write("POINTS:");
-		for (int i = 0; i < points.size(); i++)
-		{
-			out.write(points.get(i).getX() + "," + points.get(i).getY());
-			if (i < points.size() - 1)
-			{
-				out.write(";");
-			}
-		}
-		out.write("\n");
-		out.write("COLOR:");
-		out.write(Utils.colorToString(color, ";"));
-		out.write("\n");
-		if (filters.size() > 0)
-		{
-			out.write("FILTERS:");
-			for (int i = 0; i < filters.size(); i++)
-			{
-				out.write(filters.get(i).toString());
-				if (i < filters.size() - 1)
-				{
-					out.write(";");
-				}
-			}
-		}
-		out.write("\n");
 	}
 	
 	public void setName(String name)
@@ -160,48 +119,6 @@ public class Joint {
 	public void addFilter(ImageFilter filter)
 	{
 		filters.add(filter);
-	}
-	public void addNewFilter(String filterName)
-	{
-		if (filterName == "Basic Variance")
-		{
-			addFilter(new BasicVariance());
-		}
-		else if (filterName == "Blur Edges")
-		{
-			addFilter(new BlurEdges());
-		}
-		else if (filterName == "Darken From")
-		{
-			addFilter(new DarkenFrom(ShadeDir.TOP, 1));
-		}
-		else if (filterName == "Lighten From")
-		{
-			addFilter(new LightenFrom(ShadeDir.TOP, 1));
-		}
-		else if (filterName == "Outline")
-		{
-			addFilter(new Outline(Color.BLACK));
-		}
-		
-		getFrame().addNewJointFilter(filterName, this.name);
-	}
-	public void swapFilters(int a, int b)
-	{
-		if (a >= 0 && b >= 0 && a < filters.size() && b < filters.size())
-		{
-			ImageFilter temp = filters.get(a);
-			filters.set(a, filters.get(b));
-			filters.set(b, temp);
-		}
-		
-		getFrame().swapJointFilters(this.name, a, b);
-	}
-	
-	public void deleteFilter(int i)
-	{
-		getFrame().deleteJointFilter(this.name, i);
-		filters.remove(i);
 	}
 	
 	public Point2D getPoint(int i)
