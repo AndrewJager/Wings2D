@@ -83,15 +83,6 @@ public class Frame {
 		}
 		return null; // No object found
 	}
-	public String[] getJointNames()
-	{
-		String[] names = new String[joints.size()];
-		for (int i = 0; i < joints.size(); i++)
-		{
-			names[i] = joints.get(i).getName();
-		}
-		return names;
-	}
 	public double getFrameTime() {
 		return frameTime;
 	}
