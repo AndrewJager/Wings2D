@@ -48,6 +48,14 @@ public class LevelManager {
 		return scale;
 	}
 	public void setScale(double scale) {
+		if (scale < 0)
+		{
+			throw new IllegalArgumentException("Scale of " + scale + " cannot be negative!");
+		}
+		if (scale == 0)
+		{
+			throw new IllegalArgumentException("Scale cannot be 0!");
+		}
 		if (this.scale != scale)
 		{
 			this.scale = scale;
