@@ -1,4 +1,4 @@
-# Java Game Framework
+# Wings2D
 
 An experimental 2D Java game framework. This project is currently very unfinished, and most of the goals listed below have not been met. 
 
@@ -19,7 +19,7 @@ All of the sprites used by a game developed with this framework are saved as sha
 
 This does not mean that the framework is limited to drawing plain shapes. While the sprites are saved as shape data, they are rendered as an image. The framework will provide many "filters" that can be run when the image is created, providing for shading, lighting, outlines, and more. All filters should correctly scaling with the images, ensuring a uniform presentation.
 
-An early version of an editor to create spritesheets for this framework is available here: https://github.com/CatsAreEvil/Indeterminate-SpriteEditor
+An early version of an editor to create spritesheets for this framework is available here: https://github.com/CatsAreEvil/Wings2D-Editor
 
 ##### Simple UI
 Whille this framework is based on the swing toolkit, the swing UI elements are not visually suitable for most games. Therefore, this framework will provide a few simple UI components to allow the developer to create buttons, simple menus, and text effects for added effect. All of this will scale cleanly with the drawing canvas.
