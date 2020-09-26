@@ -25,3 +25,5 @@ hs_err_pid*
 # javadoc
 doc/
 /target/
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.m2e.core.prefs
