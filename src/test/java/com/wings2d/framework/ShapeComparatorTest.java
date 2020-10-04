@@ -15,6 +15,8 @@ class ShapeComparatorTest {
 	@BeforeEach
 	void setUp() throws Exception {
 	}
+	
+	// similarShapes tests
 	@Test
 	void testSimilarSquares() {
 		Rectangle2D one = new Rectangle2D.Double(0, 0, 10, 10);
@@ -133,5 +135,71 @@ class ShapeComparatorTest {
 		transform.translate(34, -1);
 		two = (Path2D)transform.createTransformedShape(two);
 		assertTrue(ShapeComparator.similarShapes(one, two));
+	}
+	@Test
+	void testPreciseShapes() { 
+		Path2D one = new Path2D.Double();
+		one.moveTo(-30.0, -30.0);
+		one.lineTo(30.0, -30.0);
+		one.lineTo(71.72995780590716, 78.05907172995781);
+		one.lineTo(-51.68776371308019, 79.1139240506329);
+		Path2D two = new Path2D.Double();
+		two.moveTo(-24.14953415699774, 34.882660448996724);
+		two.lineTo(-34.882660448996724, -24.14953415699774);
+		two.lineTo(63.9685269512598, -84.53657838986543);
+		two.lineTo(87.08399760473866, 36.70170646613579);
+		assertTrue(ShapeComparator.similarShapes(one, two));
+	}
+	
+	// getRotationFrom tests
+	@Test
+	void testGetRotationNoRotation() { 
+		Shape one = new Rectangle2D.Double(0, 0, 10, 10);
+		Shape two = new Rectangle2D.Double(0, 0, 10, 10);
+		assertEquals(ShapeComparator.getRotationFrom(one, two, false), 0);
+	}
+	@Test
+	void testGetRotationRotateSecondObject() { 
+		Shape one = new Rectangle2D.Double(0, 0, 10, 10);
+		Shape two = new Rectangle2D.Double(0, 0, 10, 10);
+		AffineTransform transform = new AffineTransform();
+		transform.rotate(Math.toRadians(45));
+		two = transform.createTransformedShape(two);
+		assertEquals(ShapeComparator.getRotationFrom(one, two, false), 45);
+	}
+	@Test
+	void testGetRotationRotateFirstObject() { 
+		Shape one = new Rectangle2D.Double(0, 0, 10, 10);
+		Shape two = new Rectangle2D.Double(0, 0, 10, 10);
+		AffineTransform transform = new AffineTransform();
+		transform.rotate(Math.toRadians(35));
+		one = transform.createTransformedShape(one);
+		assertEquals(ShapeComparator.getRotationFrom(one, two, false), -35); // Is negative because the result is the second Shape
+	}
+	@Test
+	void testGetRotationRotateBothObjects() { 
+		Shape one = new Rectangle2D.Double(0, 0, 10, 10);
+		Shape two = new Rectangle2D.Double(0, 0, 10, 10);
+		AffineTransform transform = new AffineTransform();
+		transform.rotate(Math.toRadians(45));
+		one = transform.createTransformedShape(one);
+		transform = new AffineTransform();
+		transform.rotate(Math.toRadians(-12));
+		two = transform.createTransformedShape(two);
+		assertEquals(ShapeComparator.getRotationFrom(one, two, false), -57);
+	}
+	@Test
+	void testGetRotationComplexShapes() { 
+		Path2D one = new Path2D.Double();
+		one.moveTo(-30.0, -30.0);
+		one.lineTo(30.0, -30.0);
+		one.lineTo(71.72995780590716, 78.05907172995781);
+		one.lineTo(-51.68776371308019, 79.1139240506329);
+		Path2D two = new Path2D.Double();
+		two.moveTo(-24.14953415699774, 34.882660448996724);
+		two.lineTo(-34.882660448996724, -24.14953415699774);
+		two.lineTo(63.9685269512598, -84.53657838986543);
+		two.lineTo(87.08399760473866, 36.70170646613579);
+		assertEquals(ShapeComparator.getRotationFrom(one, two, false), 259.6952);
 	}
 }

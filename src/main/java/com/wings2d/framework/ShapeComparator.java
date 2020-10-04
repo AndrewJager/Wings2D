@@ -68,6 +68,45 @@ public class ShapeComparator {
 		return isSame;
 	}
 	
+	/**
+	 * Gets the angle in degrees that Shape b is rotated (offset) from Shape a. Assumes that the shapes are similar if validateSameness = false.
+	 * Rounds to 4 decimal places.
+	 * Unexpected behavior may result if the shapes are not similar.
+	 * @param a {@link java.awt.Shape Shape} to compare against.
+	 * @param b {@link java.awt.Shape Shape} to get the angle of.
+	 * @param validateSameness Calls {@link ShapeComparator#similarShapes similarShapes} before checking Rotation. 
+	 * Throws {@link java.lang.IllegalArgumentException IllegalArgumentException} if this fails.
+	 * @return
+	 */
+	public static double getRotationFrom(final Shape a, final Shape b, final boolean validateSameness)
+	{
+		if (validateSameness)
+		{
+			if (!similarShapes(a, b))
+			{
+				throw new IllegalArgumentException("Shapes are not similar!");
+			}
+		}
+		PathIterator iteratorA = a.getPathIterator(null);
+		PathIterator iteratorB = b.getPathIterator(null);
+		double[] coordsA = new double[6];
+		double[] coordsB = new double[6];
+		iteratorA.currentSegment(coordsA);
+		iteratorB.currentSegment(coordsB);
+		Point2D pointA1 = new Point2D.Double(coordsA[0], coordsA[1]);
+		Point2D pointB1 = new Point2D.Double(coordsB[0], coordsB[1]);
+		iteratorA.next();
+		iteratorB.next();
+		iteratorA.currentSegment(coordsA);
+		iteratorB.currentSegment(coordsB);
+		Point2D pointA2 = new Point2D.Double(coordsA[0], coordsA[1]);
+		Point2D pointB2 = new Point2D.Double(coordsB[0], coordsB[1]);
+		double angleA = Math.atan2(pointA2.getX() - pointA1.getX(), pointA2.getY() - pointA1.getY());
+		double angleB = Math.atan2(pointB2.getX() - pointB1.getX(), pointB2.getY() - pointB1.getY());
+		double angleDeg = Math.toDegrees(angleA - angleB);
+		return (double)Math.round((angleDeg) * 10000d) / 10000d;
+	}
+	
 	private static boolean softCompare(final double a, final double b)
 	{
 		return Math.abs(a - b) < 0.001;
