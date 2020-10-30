@@ -5,12 +5,23 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
 /**
  * Creates a {@link java.awt.image.BufferedImage BufferedImage} of a single char
  */
 public class CharImageCreator {
+	public static BaseMultiResolutionImage CreateMultiImage(final char character, double[] scales, final int baseSize, final int padding)
+	{
+		BufferedImage[] imgs = new BufferedImage[scales.length];
+		for (int i = 0; i < scales.length; i++)
+		{
+			imgs[i] = CharImageCreator.CreateImage(character, (int)Math.ceil(baseSize * scales[i]), padding, true);
+		}
+		BaseMultiResolutionImage multiImg = new BaseMultiResolutionImage(imgs);
+		return multiImg;
+	}
 	public static BufferedImage CreateImage(final char character, final int imgSize, final int padding, final boolean antiAlias)
 	{
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
@@ -50,6 +61,7 @@ public class CharImageCreator {
 		if (antiAlias)
 		{
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		}
 		
 		g2d.setColor(Color.BLACK);
