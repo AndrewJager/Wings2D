@@ -46,13 +46,13 @@ public class Outline implements ImageFilter{
 	{
 		return color;
 	}
+	public String getFileString()
+	{
+		return fileTitle + ImageFilter.DELIMITER + Utils.colorToString(color, ",");
+	}
 	public String toString()
 	{
-		return fileTitle + ImageFilter.delimiter + Utils.colorToString(color, ",");
-	}
-	public String getFilterInfoString()
-	{
-		return color.toString();
+		return "Outline - " + color.toString();
 	}
 	public void filter(Image img)
 	{

@@ -48,7 +48,11 @@ public class LightFrom implements ImageFilter{
 	{
 		return lightColor;
 	}
-	public String getFilterInfoString()
+	public String getFileString()
+	{
+		return "NOT WORKING";
+	}
+	public String toString()
 	{
 		return "NOT WORKING";
 	}

@@ -3,29 +3,35 @@ package com.wings2d.framework.imageFilters;
 import com.wings2d.framework.Image;
 
 /**
- * Interface for all image filters. Contains a single procedure that all must implement.
+ * Interface for all image filters. 
  */
 public interface ImageFilter
 {
+	/**
+	 * Return the value to be displayed in the UI
+	 * @return A likely incomplete amount of information about the filter
+	 */
+	public abstract String toString();
 	/**
 	 * Run the filter 
 	 * @param img {@link com.wings2d.framework.Image Image} to run the filter over
 	 */
 	public abstract void filter(Image img);
+
 	/**
-	 * Get the name of the filter, in English (so with spaces/capitalization)
-	 * @return The name of the filter
+	 * Gets the string to be used to save the filter to the file
+	 * @return A string that contains all information about the filter
+	 */
+	public abstract String getFileString();
+	
+	/**
+	 * Gets the name of the filter in plain English 
+	 * @return Name of the filter, with spaces
 	 */
 	public abstract String getFilterName();
 	
 	/**
-	 * Get a quick summary of the settings for the filter, for use in the editor's filter list. Not guaranteed to contain all info, as space is limited.
-	 * @return String with a arbitrary amount of info from the filter
-	 */
-	public abstract String getFilterInfoString();
-	
-	/**
 	 * Used to separate parts of the string when saving to a file
 	 */
-	final String delimiter = "~";
+	final String DELIMITER = "~";
 }

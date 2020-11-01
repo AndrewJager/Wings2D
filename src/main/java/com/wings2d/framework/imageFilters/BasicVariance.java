@@ -33,11 +33,11 @@ public class BasicVariance implements ImageFilter{
 	{
 		return this.varAmount;
 	}
-	public String toString()
+	public String getFileString()
 	{
-		return fileTitle + ImageFilter.delimiter + varAmount;
+		return fileTitle + ImageFilter.DELIMITER + varAmount;
 	}
-	public String getFilterInfoString()
+	public String toString()
 	{
 		return "Amount: " + varAmount;
 	}

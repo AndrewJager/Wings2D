@@ -40,11 +40,11 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	{
 		return varAmount;
 	}
-	public String toString()
+	public String getFileString()
 	{
-		return fileTitle + ImageFilter.delimiter + dir + ImageFilter.delimiter + varAmount;
+		return fileTitle + ImageFilter.DELIMITER + dir + ImageFilter.DELIMITER + varAmount;
 	}
-	public String getFilterInfoString()
+	public String toString()
 	{
 		return ShadeDir.getAsString(dir) + " " + varAmount;
 	}

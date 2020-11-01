@@ -17,12 +17,12 @@ public class CharImageCreator {
 		BufferedImage[] imgs = new BufferedImage[scales.length];
 		for (int i = 0; i < scales.length; i++)
 		{
-			imgs[i] = CharImageCreator.CreateImage(character, (int)Math.ceil(baseSize * scales[i]), padding, true);
+			imgs[i] = CharImageCreator.CreateImage(character, (int)Math.ceil(baseSize * scales[i]), padding);
 		}
 		BaseMultiResolutionImage multiImg = new BaseMultiResolutionImage(imgs);
 		return multiImg;
 	}
-	public static BufferedImage CreateImage(final char character, final int imgSize, final int padding, final boolean antiAlias)
+	public static BufferedImage CreateImage(final char character, final int imgSize, final int padding)
 	{
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D)img.getGraphics();
@@ -57,12 +57,9 @@ public class CharImageCreator {
 		double yLoc = -finalBounds.getY();
 		int centeredXLoc = (int)Math.floor(xLoc + (imgSize / 2) - (finalBounds.getWidth() / 2));
 		int centeredYLoc = (int)Math.floor(yLoc + (imgSize / 2) - (finalBounds.getHeight() / 2));
-		
-		if (antiAlias)
-		{
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		}
+
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(String.valueOf(character), centeredXLoc, centeredYLoc);
@@ -72,6 +69,6 @@ public class CharImageCreator {
 	
 	public static BufferedImage CreateImage(final char character, final int imgSize)
 	{
-		return CreateImage(character, imgSize, 0, true);
+		return CreateImage(character, imgSize, 0);
 	}
 }

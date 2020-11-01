@@ -21,9 +21,9 @@ public class BlurEdges implements ImageFilter{
 	{
 		return fileTitle;
 	}
-	public String getFilterInfoString()
+	public String getFileString()
 	{
-		return "";
+		return fileTitle;
 	}
 	public void filter(Image img)
 	{
