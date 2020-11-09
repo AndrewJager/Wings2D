@@ -175,7 +175,7 @@ public class Image {
 	public void addFilter(ImageFilter filter)
 	{
 		filters.add(filter);
-		filter.filter(this);
+		filter.filter(this.getImage());
 	}
 	
 	/**
@@ -323,7 +323,7 @@ public class Image {
 	{
 		for (int i = 0; i < filters.size(); i++)
 		{
-			filters.get(i).filter(this);
+			filters.get(i).filter(this.getImage());
 		}
 	}
 	public void rescale()

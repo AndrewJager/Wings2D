@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import com.wings2d.framework.Image;
 import com.wings2d.framework.Utils;
 
 /**
@@ -41,15 +40,14 @@ public class BasicVariance implements ImageFilter{
 	{
 		return "Amount: " + varAmount;
 	}
-	public void filter(Image img)
+	public void filter(BufferedImage img)
 	{
-		BufferedImage image = img.getImage();
 		Random rand = new Random();
-		for (int x = 0; x < image.getWidth(); x++)
+		for (int x = 0; x < img.getWidth(); x++)
 		{
-			for (int y = 0; y < image.getHeight(); y++)
+			for (int y = 0; y < img.getHeight(); y++)
 			{
-				Color color = new Color(image.getRGB(x, y), true);
+				Color color = new Color(img.getRGB(x, y), true);
 				if (color.getRGB() != Color.TRANSLUCENT)
 				{
 					int red = color.getRed() + (rand.nextInt(varAmount - (varAmount / 2)));
@@ -59,7 +57,7 @@ public class BasicVariance implements ImageFilter{
 					int green = color.getGreen() + (rand.nextInt(varAmount - (varAmount / 2))); 
 					green = Utils.makeInRange(green, 0, 255);
 					color = new Color(red, green, blue, color.getAlpha());
-					image.setRGB(x, y, color.getRGB());
+					img.setRGB(x, y, color.getRGB());
 				}
 			}
 		}

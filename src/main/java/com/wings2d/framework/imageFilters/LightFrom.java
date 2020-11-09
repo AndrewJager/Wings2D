@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.Image;
 import com.wings2d.framework.ShapeUtils;
 import com.wings2d.framework.Utils;
 
@@ -56,10 +55,8 @@ public class LightFrom implements ImageFilter{
 	{
 		return "NOT WORKING";
 	}
-	public void filter(Image img)
-	{
-		BufferedImage image = img.getImage();
-		
+	public void filter(BufferedImage image)
+	{	
 		double minDistance = Double.MAX_VALUE;
 		double maxDistance = 0;
 		double height = image.getHeight();

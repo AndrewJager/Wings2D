@@ -5,8 +5,6 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import com.wings2d.framework.Image;
-
 /**
  * Add some pixels around the edges of the shape to create a "blurred" effect.
  */
@@ -25,10 +23,9 @@ public class BlurEdges implements ImageFilter{
 	{
 		return fileTitle;
 	}
-	public void filter(Image img)
+	public void filter(BufferedImage image)
 	{
 		ArrayList<Point2D> edges = new ArrayList<Point2D>();
-		BufferedImage image = img.getImage();
 		for (int i = 0; i < image.getWidth(); i++)
 		{
 			for (int j = 0; j < image.getHeight(); j++)

@@ -3,7 +3,6 @@ package com.wings2d.framework.imageFilters;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.Image;
 import com.wings2d.framework.Utils;
 
 /**
@@ -51,13 +50,12 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	{
 		return ShadeDir.getAsString(dir) + " - " + varAmount;
 	}
-	public void filter(Image img)
+	public void filter(BufferedImage img)
 	{
-		BufferedImage image = img.getImage();
 		int colorIncrease = 0; 
-		for (int x = 0; x < image.getWidth(); x++)
+		for (int x = 0; x < img.getWidth(); x++)
 		{
-			for (int y = 0; y < image.getHeight(); y++)
+			for (int y = 0; y < img.getHeight(); y++)
 			{
 				if (dir == ShadeDir.RIGHT)
 				{
@@ -65,18 +63,18 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 				}
 				else if (dir == ShadeDir.LEFT)
 				{
-					colorIncrease = (int) ((image.getWidth() - x) * -varAmount);
+					colorIncrease = (int) ((img.getWidth() - x) * -varAmount);
 				}
 				else if (dir == ShadeDir.TOP)
 				{
-					colorIncrease = (int) ((image.getHeight() - y) * -varAmount);
+					colorIncrease = (int) ((img.getHeight() - y) * -varAmount);
 				}
 				else if (dir == ShadeDir.BOTTOM)
 				{
 					colorIncrease = (int) (y * -varAmount);
 				}
 				
-				Color color = new Color(image.getRGB(x, y), true); 
+				Color color = new Color(img.getRGB(x, y), true); 
 				int red = color.getRed() + colorIncrease;
 				red = Utils.makeInRange(red, 0, 255);
 				int blue = color.getBlue() + colorIncrease;
@@ -84,7 +82,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 				int green = color.getGreen() + colorIncrease; 
 				green = Utils.makeInRange(green, 0, 255);
 				color = new Color(red, green, blue, color.getAlpha());
-				image.setRGB(x, y, color.getRGB());
+				img.setRGB(x, y, color.getRGB());
 			}
 		}
 	}

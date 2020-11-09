@@ -3,7 +3,6 @@ package com.wings2d.framework.imageFilters;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.Image;
 import com.wings2d.framework.Utils;
 
 /**
@@ -48,9 +47,8 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	{
 		return ShadeDir.getAsString(dir) + " " + varAmount;
 	}
-	public void filter(Image img)
+	public void filter(BufferedImage image)
 	{
-		BufferedImage image = img.getImage();
 		int colorIncrease = 0; 
 		for (int x = 0; x < image.getWidth(); x++)
 		{
