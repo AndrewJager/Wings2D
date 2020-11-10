@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Transparency;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -23,7 +22,7 @@ public class Image {
 	/** Shape used when the first Image was created, before any rotations. **/
 	private Shape ogShape;
 	/** The actual image **/
-	private WingsImage image;
+	private BufferedImage image;
 	/** Functions that are run over the BufferedImage, saved here to be used for copied or rotated Images **/
 	private List<ImageFilter> filters;
 	/** Base color to fill the shape with **/
@@ -77,7 +76,7 @@ public class Image {
 	 * @param height Height of new image
 	 */
 	private Image(int width, int height) {
-		this.image = new WingsImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	/**
 	 * Makes a copy of the Image, including all info such as shape and filters
@@ -202,7 +201,7 @@ public class Image {
 		else
 		{
 			Rectangle2D fullRect = imageRect.createUnion(newImageRect);
-			WingsImage newImage = new WingsImage((int)fullRect.getWidth(), (int)fullRect.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			BufferedImage newImage = new BufferedImage((int)fullRect.getWidth(), (int)fullRect.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			int imgOneXOffset = 0;
 			int imgOneYOffset = 0;
 			if (xLoc < 0)
@@ -248,14 +247,14 @@ public class Image {
 		}
 		int width = (int)Math.ceil(scaled.getBounds2D().getWidth());
 		int height = (int)Math.ceil(scaled.getBounds2D().getHeight());
-		this.image = new WingsImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = this.image.createGraphics();
 		imgGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);	
 		imgGraphics.setColor(color);
 		imgGraphics.fill(scaled);
 		
 		// Manually set empty pixels to TRANSLUCENT. Not sure why I have to do this, but the Outline filter broke without it.
-		WingsImage.clearImage(image);
+		ImageUtils.clearImage(image);
 	}
 	
 	/**
@@ -277,7 +276,7 @@ public class Image {
 	 * Returns the image data of this Image
 	 * @return {@link java.awt.image.BufferedImage BufferedImage} that contains the pixel data
 	 */
-	public WingsImage getImage()
+	public BufferedImage getImage()
 	{
 		return this.image;
 	}
@@ -338,7 +337,7 @@ public class Image {
 		this.y = y - (this.image.getHeight() / 2);
 	}
 
-	public void setImage(WingsImage image)
+	public void setImage(BufferedImage image)
 	{
 		this.image = image;
 	}

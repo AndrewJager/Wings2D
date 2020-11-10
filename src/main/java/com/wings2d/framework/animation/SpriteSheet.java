@@ -16,7 +16,6 @@ import com.wings2d.framework.imageFilters.BlurEdges;
 import com.wings2d.framework.imageFilters.DarkenFrom;
 import com.wings2d.framework.imageFilters.ImageFilter;
 import com.wings2d.framework.imageFilters.LightenFrom;
-import com.wings2d.framework.imageFilters.Outline;
 import com.wings2d.framework.imageFilters.ShadeDir;
 
 
@@ -139,10 +138,6 @@ public class SpriteSheet extends GameObject{
 									ShadeDir alsoDir = ShadeDir.createFromString(filterParts[1]);
 									LightenFrom light = new LightenFrom(alsoDir, Double.parseDouble(filterParts[2]));
 									curItem.addFilter(light);
-									break;
-								case Outline.fileTitle:
-									Color col = Utils.stringToColor(filterParts[1], ",");
-									curItem.addFilter(new Outline(col));
 									break;
 							}
 						}

@@ -1,9 +1,9 @@
 package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
-import com.wings2d.framework.WingsImage;
 
 /**
  * Lighten the RGB values of the pixels in the image, in an increasing amount from the given direction.
@@ -47,7 +47,7 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	{
 		return ShadeDir.getAsString(dir) + " " + varAmount;
 	}
-	public void filter(WingsImage image)
+	public void filter(BufferedImage image)
 	{
 		int colorIncrease = 0; 
 		for (int x = 0; x < image.getWidth(); x++)

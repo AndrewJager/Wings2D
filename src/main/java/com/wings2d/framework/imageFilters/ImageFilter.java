@@ -1,6 +1,6 @@
 package com.wings2d.framework.imageFilters;
 
-import com.wings2d.framework.WingsImage;
+import java.awt.image.BufferedImage;
 
 /**
  * Interface for all image filters. 
@@ -16,7 +16,7 @@ public interface ImageFilter
 	 * Run the filter 
 	 * @param img {@link com.wings2d.framework.Image Image} to run the filter over
 	 */
-	public abstract void filter(WingsImage img);
+	public abstract void filter(BufferedImage img);
 
 	/**
 	 * Gets the string to be used to save the filter to the file

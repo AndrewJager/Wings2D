@@ -13,7 +13,6 @@ public class FilterFactory {
 					add(BlurEdges.class);
 					add(DarkenFrom.class);
 					add(LightenFrom.class);
-					add(Outline.class);
 				}
 			};
 	
