@@ -1,9 +1,9 @@
 package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
+import com.wings2d.framework.WingsImage;
 
 /**
  * Darken the RGB values of the pixels in the image, in an increasing amount from the given direction.
@@ -50,7 +50,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	{
 		return ShadeDir.getAsString(dir) + " - " + varAmount;
 	}
-	public void filter(BufferedImage img)
+	public void filter(WingsImage img)
 	{
 		int colorIncrease = 0; 
 		for (int x = 0; x < img.getWidth(); x++)

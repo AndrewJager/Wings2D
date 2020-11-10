@@ -2,9 +2,9 @@ package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
 import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
+import com.wings2d.framework.WingsImage;
 import com.wings2d.framework.shape.ShapeUtils;
 
 /**
@@ -55,7 +55,7 @@ public class LightFrom implements ImageFilter{
 	{
 		return "NOT WORKING";
 	}
-	public void filter(BufferedImage image)
+	public void filter(WingsImage image)
 	{	
 		double minDistance = Double.MAX_VALUE;
 		double maxDistance = 0;

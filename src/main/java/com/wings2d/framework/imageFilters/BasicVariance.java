@@ -1,10 +1,10 @@
 package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.wings2d.framework.Utils;
+import com.wings2d.framework.WingsImage;
 
 /**
  * Randomly modify the RGB values of the image pixels to create a distorted effect.
@@ -40,7 +40,7 @@ public class BasicVariance implements ImageFilter{
 	{
 		return "Amount: " + varAmount;
 	}
-	public void filter(BufferedImage img)
+	public void filter(WingsImage img)
 	{
 		Random rand = new Random();
 		for (int x = 0; x < img.getWidth(); x++)

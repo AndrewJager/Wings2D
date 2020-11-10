@@ -18,21 +18,12 @@ import java.awt.geom.Rectangle2D;
  * Custom Image class, based off a BufferedImage, a Shape, and a list of filters. 
  */
 public class Image {
-	/**
-	 * Represents a side of an image
-	 */
-	public enum ImageSide {
-		RIGHT,
-		LEFT,
-		TOP,
-		BOTTOM,
-	}
 	/** Shape used to generate the BufferedImage **/
 	private Shape shape;
 	/** Shape used when the first Image was created, before any rotations. **/
 	private Shape ogShape;
 	/** The actual image **/
-	private BufferedImage image;
+	private WingsImage image;
 	/** Functions that are run over the BufferedImage, saved here to be used for copied or rotated Images **/
 	private List<ImageFilter> filters;
 	/** Base color to fill the shape with **/
@@ -86,7 +77,7 @@ public class Image {
 	 * @param height Height of new image
 	 */
 	private Image(int width, int height) {
-		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.image = new WingsImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	/**
 	 * Makes a copy of the Image, including all info such as shape and filters
@@ -211,7 +202,7 @@ public class Image {
 		else
 		{
 			Rectangle2D fullRect = imageRect.createUnion(newImageRect);
-			BufferedImage newImage = new BufferedImage((int)fullRect.getWidth(), (int)fullRect.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			WingsImage newImage = new WingsImage((int)fullRect.getWidth(), (int)fullRect.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			int imgOneXOffset = 0;
 			int imgOneYOffset = 0;
 			if (xLoc < 0)
@@ -257,64 +248,14 @@ public class Image {
 		}
 		int width = (int)Math.ceil(scaled.getBounds2D().getWidth());
 		int height = (int)Math.ceil(scaled.getBounds2D().getHeight());
-		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.image = new WingsImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = this.image.createGraphics();
 		imgGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);	
 		imgGraphics.setColor(color);
 		imgGraphics.fill(scaled);
 		
 		// Manually set empty pixels to TRANSLUCENT. Not sure why I have to do this, but the Outline filter broke without it.
-		clearImage(image);
-	}
-	
-	
-	private void clearImage(BufferedImage img)
-	{
-		for (int x = 0; x < img.getWidth(); x++) {
-		    for (int y = 0; y < img.getHeight(); y++) {
-		    	if (img.getRGB(x, y) != color.getRGB())
-		    	{
-		    		img.setRGB(x, y, Transparency.TRANSLUCENT);
-		    	}
-		    }
-		}
-	}
-	
-	public void expandImageOnSide(ImageSide side)
-	{
-		BufferedImage newImg;
-		Graphics2D g2d;
-		switch(side)
-		{
-		case RIGHT:
-			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			g2d = newImg.createGraphics();
-			clearImage(newImg);
-			g2d.drawImage(image, null, 0, 0);
-			this.image = newImg;
-			break;
-		case LEFT:
-			newImg = new BufferedImage(image.getWidth() + 1, image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			g2d = newImg.createGraphics();
-			clearImage(newImg);
-			g2d.drawImage(image, null, 1, 0);
-			this.image = newImg;
-			break;
-		case TOP:
-			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
-			g2d = newImg.createGraphics();			
-			clearImage(newImg);
-			g2d.drawImage(image, null, 0, 1);
-			this.image = newImg;
-			break;
-		case BOTTOM:
-			newImg = new BufferedImage(image.getWidth(), image.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
-			g2d = newImg.createGraphics();
-			clearImage(newImg);
-			g2d.drawImage(image, null, 0, 0);
-			this.image = newImg;
-			break;
-		}
+		WingsImage.clearImage(image);
 	}
 	
 	/**
@@ -336,7 +277,7 @@ public class Image {
 	 * Returns the image data of this Image
 	 * @return {@link java.awt.image.BufferedImage BufferedImage} that contains the pixel data
 	 */
-	public BufferedImage getImage()
+	public WingsImage getImage()
 	{
 		return this.image;
 	}
@@ -397,7 +338,7 @@ public class Image {
 		this.y = y - (this.image.getHeight() / 2);
 	}
 
-	public void setImage(BufferedImage image)
+	public void setImage(WingsImage image)
 	{
 		this.image = image;
 	}
