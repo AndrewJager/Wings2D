@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.shape;
 
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;

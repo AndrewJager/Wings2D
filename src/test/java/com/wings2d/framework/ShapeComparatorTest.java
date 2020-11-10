@@ -11,6 +11,8 @@ import java.awt.geom.Rectangle2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.wings2d.framework.shape.ShapeComparator;
+
 class ShapeComparatorTest {
 	@BeforeEach
 	void setUp() throws Exception {

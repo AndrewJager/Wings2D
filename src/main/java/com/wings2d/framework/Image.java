@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wings2d.framework.imageFilters.ImageFilter;
+import com.wings2d.framework.shape.ShapeUtils;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
