@@ -122,23 +122,23 @@ public class SpriteSheet extends GameObject{
 							String[] filterParts = filter.split(ImageFilter.DELIMITER);
 							switch (filterParts[0])
 							{
-								case BasicVariance.fileTitle:
-									BasicVariance basicVar = new BasicVariance(Integer.parseInt(filterParts[1]));
-									curItem.addFilter(basicVar);
-									break;
-								case BlurEdges.fileTitle:
-									curItem.addFilter(new BlurEdges());
-									break;
-								case DarkenFrom.fileTitle:
-									ShadeDir dir = ShadeDir.createFromString(filterParts[1]);
-									DarkenFrom dark = new DarkenFrom(dir, Double.parseDouble(filterParts[2]));
-									curItem.addFilter(dark);
-									break;
-								case LightenFrom.fileTitle:
-									ShadeDir alsoDir = ShadeDir.createFromString(filterParts[1]);
-									LightenFrom light = new LightenFrom(alsoDir, Double.parseDouble(filterParts[2]));
-									curItem.addFilter(light);
-									break;
+//								case BasicVariance.fileTitle:
+//									BasicVariance basicVar = new BasicVariance(Integer.parseInt(filterParts[1]));
+//									curItem.addFilter(basicVar);
+//									break;
+//								case BlurEdges.fileTitle:
+//									curItem.addFilter(new BlurEdges());
+//									break;
+//								case DarkenFrom.fileTitle:
+//									ShadeDir dir = ShadeDir.createFromString(filterParts[1]);
+//									DarkenFrom dark = new DarkenFrom(dir, Double.parseDouble(filterParts[2]));
+//									curItem.addFilter(dark);
+//									break;
+//								case LightenFrom.fileTitle:
+//									ShadeDir alsoDir = ShadeDir.createFromString(filterParts[1]);
+//									LightenFrom light = new LightenFrom(alsoDir, Double.parseDouble(filterParts[2]));
+//									curItem.addFilter(light);
+//									break;
 							}
 						}
 						break;

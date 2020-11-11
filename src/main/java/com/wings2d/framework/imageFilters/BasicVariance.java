@@ -12,8 +12,6 @@ import com.wings2d.framework.Utils;
 public class BasicVariance implements ImageFilter{
 	/** Maximum amount to change the pixels (min is 0) **/
 	private int varAmount;
-	/** Used when saving to a file */
-	public final static String fileTitle = "BasicVariance";
 	
 	public BasicVariance()
 	{
@@ -22,6 +20,11 @@ public class BasicVariance implements ImageFilter{
 	public BasicVariance(int varAmount)
 	{
 		this.varAmount = varAmount;
+	}
+	
+	public BasicVariance(final String fileString)
+	{
+		this.varAmount = Integer.parseInt(fileString);
 	}
 	
 	public String getFilterName()
@@ -34,7 +37,7 @@ public class BasicVariance implements ImageFilter{
 	}
 	public String getFileString()
 	{
-		return fileTitle + ImageFilter.DELIMITER + varAmount;
+		return BasicVariance.class.getSimpleName() + FilterFactory.FILTER_TOKEN + varAmount;
 	}
 	public String toString()
 	{
