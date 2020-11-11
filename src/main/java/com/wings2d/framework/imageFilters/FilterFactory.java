@@ -7,15 +7,13 @@ import java.util.List;
 
 
 public class FilterFactory {
-	public static final String FILTER_TOKEN = "-";
+	public static final String FILTER_NAME_TOKEN = "-";
 	
-	// I think I know what I'm doing?
 	private static List<Class<? extends ImageFilter>> filterClasses = 
 			new ArrayList<Class<? extends ImageFilter>>() 
 			{
 				{
 					add(BasicVariance.class);
-					add(BlurEdges.class);
 					add(DarkenFrom.class);
 					add(LightenFrom.class);
 				}
@@ -29,7 +27,7 @@ public class FilterFactory {
 	public static ImageFilter fromFileString(final String filterString)
 	{
 		ImageFilter newFilter = null;
-		String[] tokens = filterString.split(FILTER_TOKEN);
+		String[] tokens = filterString.split(FILTER_NAME_TOKEN);
 		Class<? extends ImageFilter> filterClass = null;
 		for (int i = 0; i < filterClasses.size(); i++)
 		{

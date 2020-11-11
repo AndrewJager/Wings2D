@@ -33,5 +33,5 @@ public interface ImageFilter
 	/**
 	 * Used to separate parts of the string when saving to a file
 	 */
-	final String DELIMITER = "~";
+	final String FILTER_TOKEN = "~";
 }

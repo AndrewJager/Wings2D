@@ -37,7 +37,7 @@ public class BasicVariance implements ImageFilter{
 	}
 	public String getFileString()
 	{
-		return BasicVariance.class.getSimpleName() + FilterFactory.FILTER_TOKEN + varAmount;
+		return BasicVariance.class.getSimpleName() + FilterFactory.FILTER_NAME_TOKEN + varAmount;
 	}
 	public String toString()
 	{

@@ -27,7 +27,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	
 	public DarkenFrom(final String fileString)
 	{
-		String[] tokens = fileString.split(ImageFilter.DELIMITER);
+		String[] tokens = fileString.split(ImageFilter.FILTER_TOKEN);
 		this.dir = ShadeDir.createFromString(tokens[0]);
 		this.varAmount = Double.parseDouble(tokens[1]);
 	}
@@ -49,7 +49,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	}
 	public String getFileString()
 	{
-		return DarkenFrom.class.getSimpleName() + FilterFactory.FILTER_TOKEN + dir + ImageFilter.DELIMITER + varAmount;
+		return DarkenFrom.class.getSimpleName() + FilterFactory.FILTER_NAME_TOKEN + dir + ImageFilter.FILTER_TOKEN + varAmount;
 	}
 	public String toString()
 	{

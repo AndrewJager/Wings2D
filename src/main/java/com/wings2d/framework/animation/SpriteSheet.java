@@ -119,7 +119,7 @@ public class SpriteSheet extends GameObject{
 						for (int i = 0; i < filters.length; i++)
 						{
 							String filter = filters[i];
-							String[] filterParts = filter.split(ImageFilter.DELIMITER);
+							String[] filterParts = filter.split(ImageFilter.FILTER_TOKEN);
 							switch (filterParts[0])
 							{
 //								case BasicVariance.fileTitle:
