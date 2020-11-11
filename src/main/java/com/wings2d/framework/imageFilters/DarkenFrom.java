@@ -10,8 +10,6 @@ import com.wings2d.framework.Utils;
  * @see LightenFrom
  */
 public class DarkenFrom implements ImageFilter, ShadeFrom {
-	/** Used when saving to a file */
-	public final static String fileTitle = "DarkenFrom";
 	/** {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} - Direction from which to shade the image. Darker in the indicated direction **/
 	private ShadeDir dir;
 	/** Amount in which to darken the pixels **/
@@ -25,6 +23,13 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	{
 		this.dir = dir;
 		this.varAmount = varAmount;
+	}
+	
+	public DarkenFrom(final String fileString)
+	{
+		String[] tokens = fileString.split(ImageFilter.DELIMITER);
+		this.dir = ShadeDir.createFromString(tokens[0]);
+		this.varAmount = Double.parseDouble(tokens[1]);
 	}
 	public String getFilterName()
 	{
@@ -44,7 +49,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	}
 	public String getFileString()
 	{
-		return fileTitle + ImageFilter.DELIMITER + dir + ImageFilter.DELIMITER + varAmount;
+		return DarkenFrom.class.getSimpleName() + FilterFactory.FILTER_TOKEN + dir + ImageFilter.DELIMITER + varAmount;
 	}
 	public String toString()
 	{

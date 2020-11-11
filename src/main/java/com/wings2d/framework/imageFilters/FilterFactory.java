@@ -46,9 +46,12 @@ public class FilterFactory {
 		try {
 			Constructor<? extends ImageFilter> con = filterClass.getConstructor(String.class);
 			newFilter = con.newInstance(tokens[1]);
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException 
+		}
+		catch (SecurityException | InstantiationException | IllegalAccessException 
 				| IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException("File constructor not found for filter class " + filterClass.getSimpleName());
 		}
 		return newFilter;
 	}
