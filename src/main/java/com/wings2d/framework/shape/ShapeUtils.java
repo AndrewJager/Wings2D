@@ -3,11 +3,13 @@ package com.wings2d.framework.shape;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 
 /**
  * Static functions to perform operations on Shapes.
  */
 public class ShapeUtils {
+	
 	/**
 	 * Scale a shape uniformly on both axis
 	 * @param shape Shape to be scaled, does not modify the inputed Shape. 
@@ -123,5 +125,31 @@ public class ShapeUtils {
 	public static double distanceFromLineToPoint(double pointX, double pointY, Line2D line)
 	{
 		return distanceFromLineToPoint(pointX, pointY, line.getX1(), line.getY1(), line.getX2(), line.getY2());
+	}
+	
+	public static int getPointCount(final Shape shape)
+	{
+		int points = 0;
+		PathIterator iter = shape.getPathIterator(null);
+		double[] coords = new double[6];
+		while (!iter.isDone())
+		{
+			if (iter.currentSegment(coords) == PathIterator.SEG_LINETO)
+			{
+				points++;
+			}
+			iter.next();
+		}
+		
+		return points;
+	}
+	
+	public int[] getIteratorValidSegs()
+	{
+		int[] validSegs = new int[3];
+		validSegs[0] = PathIterator.SEG_CLOSE;
+		validSegs[1] = PathIterator.SEG_LINETO;
+		validSegs[2] = PathIterator.SEG_MOVETO;
+		return validSegs;
 	}
 }
