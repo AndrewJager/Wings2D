@@ -84,7 +84,8 @@ public class ShapeComparator {
 		{
 			if (!similarShapes(a, b))
 			{
-				throw new IllegalArgumentException("Shapes are not similar!");
+				throw new IllegalArgumentException("Shapes are not similar! + \n" +
+						a.getBounds2D() + " " + b.getBounds2D());
 			}
 		}
 		PathIterator iteratorA = a.getPathIterator(null);
