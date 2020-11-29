@@ -12,23 +12,53 @@ import java.awt.image.BufferedImage;
  * Creates a {@link java.awt.image.BufferedImage BufferedImage} of a single char
  */
 public class CharImageCreator {
-	public static BaseMultiResolutionImage CreateMultiImage(final char character, double[] scales, final int baseSize, final int padding)
-	{
-		BufferedImage[] imgs = new BufferedImage[scales.length];
-		for (int i = 0; i < scales.length; i++)
+	public static class ImageOptions {
+		public double scales[];
+		public int baseSize;
+		public int padding;
+		public Color color;
+		
+		public ImageOptions()
 		{
-			imgs[i] = CharImageCreator.CreateImage(character, (int)Math.ceil(baseSize * scales[i]), padding);
+			scales = new double[] {1.0, 1.25, 1.5};
+			baseSize = 10;
+			padding = 2;
+			color = Color.BLACK;
+		}
+		
+		public ImageOptions(final int baseSize, final int padding)
+		{
+			this();
+			this.baseSize = baseSize;
+			this.padding = padding;
+		}
+		
+		public ImageOptions(final int baseSize, final double[] scales, final int padding)
+		{
+			this();
+			this.baseSize = baseSize;
+			this.scales = scales;
+			this.padding = padding;
+		}
+	}
+	
+	public static BaseMultiResolutionImage CreateMultiImage(final char character, final ImageOptions options)
+	{
+		BufferedImage[] imgs = new BufferedImage[options.scales.length];
+		for (int i = 0; i < options.scales.length; i++)
+		{
+			imgs[i] = CharImageCreator.CreateImage(character, (int)Math.ceil(options.baseSize * options.scales[i]), options);
 		}
 		BaseMultiResolutionImage multiImg = new BaseMultiResolutionImage(imgs);
 		return multiImg;
 	}
-	public static BufferedImage CreateImage(final char character, final int imgSize, final int padding)
+	public static BufferedImage CreateImage(final char character, final int imgSize, final ImageOptions options)
 	{
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D)img.getGraphics();
 
 
-		int charSize = imgSize - padding;
+		int charSize = imgSize - options.padding;
 		Rectangle2D finalBounds = null;
 		
 		boolean sizeExceeded = false;
@@ -61,14 +91,9 @@ public class CharImageCreator {
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(options.color);
 		g2d.drawString(String.valueOf(character), centeredXLoc, centeredYLoc);
 		
 		return img;
-	}
-	
-	public static BufferedImage CreateImage(final char character, final int imgSize)
-	{
-		return CreateImage(character, imgSize, 0);
 	}
 }
