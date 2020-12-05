@@ -11,6 +11,12 @@ public class DoubleDimension extends Dimension2D{
 		this.height = height;
 	}
 	
+	public void setWidth(final double width) {
+		this.width = width;
+	}
+	public void setHeight(final double height) {
+		this.height = height;
+	}
 	@Override
 	public double getWidth() {
 		return width;
