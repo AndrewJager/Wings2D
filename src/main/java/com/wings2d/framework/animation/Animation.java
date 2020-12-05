@@ -14,7 +14,6 @@ public class Animation {
 	private SpriteSheet parent;
 	/** Level that this Animation belongs to */
 	private Level level;
-	/** {@link framework.animRework.Frame Frames} for this Animation */
 	private List<Frame> frames;
 	/** Keep track of the time from last frame change */
 	private double timeCount;
