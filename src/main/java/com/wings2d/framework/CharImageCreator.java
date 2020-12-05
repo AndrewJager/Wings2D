@@ -1,15 +1,17 @@
 package com.wings2d.framework;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
+
+import com.wings2d.framework.shape.DoubleDimension;
 
 /**
  * Creates a {@link java.awt.image.BufferedImage BufferedImage} of a single char
@@ -61,7 +63,12 @@ public class CharImageCreator {
 		 * Defaults to {@value #DEFAULT_ALIGN_TOP}.
 		 */
 		public boolean alignTop = DEFAULT_ALIGN_TOP;
-		public Dimension maxSize;
+		/**
+		 * Can be used to prevent the character from becoming larger than the specified size. Useful if creating a series of images without the character
+		 * changing size. May result in extra space around the character. The size is compared before the character is rotated.
+		 * Defaults to null;
+		 */
+		public Dimension2D maxSize = null;
 		
 		private static final double DEFAULT_SCALE_1 = 1.0;
 		private static final double DEFAULT_SCALE_2 = 1.25;
@@ -133,11 +140,24 @@ public class CharImageCreator {
 				charShape = transform.createTransformedShape(charShape);
 			}
 			Rectangle2D realBounds = charShape.getBounds2D();
-			double height = realBounds.getHeight();
-			double width = realBounds.getWidth();
+			DoubleDimension charSize = null;
+			if (options.maxSize != null)
+			{
+				AffineTransform transform = new AffineTransform();
+				transform.rotate(Math.toRadians(-options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+				charShape = transform.createTransformedShape(charShape);
+				charSize = new DoubleDimension(charShape.getBounds2D().getWidth(), charShape.getBounds2D().getHeight());
+				transform = new AffineTransform();
+				transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+				charShape = transform.createTransformedShape(charShape);
+			}
+			else
+			{
+				charSize = new DoubleDimension(realBounds.getWidth(), realBounds.getHeight());
+			}
 			
 			g2d.getFontMetrics().stringWidth(String.valueOf(character));
-			if (height > maxBounds.getHeight() || width > maxBounds.getWidth())
+			if (charSize.getHeight() > maxBounds.getHeight() || charSize.getWidth() > maxBounds.getWidth())
 			{
 				sizeExceeded = true;
 				finalBounds = realBounds;
