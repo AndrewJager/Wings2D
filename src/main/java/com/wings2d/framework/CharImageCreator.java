@@ -21,6 +21,8 @@ public class CharImageCreator {
 		public Color color;
 		public Color backgroundColor;
 		public double rotation;
+		public boolean alignLeft;
+		public boolean alignTop;
 		
 		public ImageOptions()
 		{
@@ -30,6 +32,8 @@ public class CharImageCreator {
 			color = Color.BLACK;
 			backgroundColor = new Color(0, 0, 0, 0); // Transparent
 			rotation = 0;
+			alignLeft = true;
+			alignTop = true;
 		}	
 		public ImageOptions(final int baseSize, final int padding)
 		{
@@ -69,7 +73,7 @@ public class CharImageCreator {
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D)img.getGraphics();
 
-		int charSize = imgSize - options.padding;
+		int charSize = imgSize - (options.padding * 2);
 		Rectangle2D finalBounds = null;
 		Shape finalShape = null;
 		
@@ -105,8 +109,25 @@ public class CharImageCreator {
 		
 		double xLoc = -finalBounds.getX();
 		double yLoc = -finalBounds.getY();
-		int centeredXLoc = (int)Math.floor(xLoc + (imgSize / 2) - (finalBounds.getWidth() / 2));
-		int centeredYLoc = (int)Math.floor(yLoc + (imgSize / 2) - (finalBounds.getHeight() / 2));
+		int centeredXLoc = 0;
+		if (options.alignLeft)
+		{
+			centeredXLoc = (int)Math.floor(xLoc + (imgSize / 2) - (finalBounds.getWidth() / 2));
+		}
+		else
+		{
+			centeredXLoc = (int)Math.ceil(xLoc + (imgSize / 2) - (finalBounds.getWidth() / 2));
+		}
+		int centeredYLoc = 0;
+		if (options.alignTop)
+		{
+			centeredYLoc = (int)Math.floor(yLoc + (imgSize / 2) - (finalBounds.getHeight() / 2));
+		}
+		else
+		{
+			centeredYLoc = (int)Math.ceil(yLoc + (imgSize / 2) - (finalBounds.getHeight() / 2));
+		}
+		
 
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
