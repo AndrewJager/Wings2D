@@ -20,7 +20,7 @@ public class CharImageCreator {
 	/**
 	 * Contains options used by {@link CharImageCreator} to control its behavior.
 	 */
-	public static class ImageOptions {
+	public static class CharImageOptions {
 		/** 
 		 * Values used to determine image sizes when creating the MultiResolutionImage. <br> <br> 
 		 * Defaults to {{@value #DEFAULT_SCALE_1}, {@value #DEFAULT_SCALE_2}, {@value #DEFAULT_SCALE_3}}.
@@ -81,22 +81,22 @@ public class CharImageCreator {
 		private static final boolean DEFAULT_ALIGN_LEFT = true;
 		private static final boolean DEFAULT_ALIGN_TOP = true;
 		
-		public ImageOptions(){}	// Use all default values
+		public CharImageOptions(){}	// Use all default values
 		
-		public ImageOptions(final int baseSize, final int padding)
+		public CharImageOptions(final int baseSize, final int padding)
 		{
 			this();
 			this.baseSize = baseSize;
 			this.padding = padding;
 		}	
-		public ImageOptions(final int baseSize, final double[] scales, final int padding)
+		public CharImageOptions(final int baseSize, final double[] scales, final int padding)
 		{
 			this();
 			this.baseSize = baseSize;
 			this.scales = scales;
 			this.padding = padding;
 		}
-		public ImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
+		public CharImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
 		{
 			this();
 			this.baseSize = baseSize;
@@ -106,7 +106,7 @@ public class CharImageCreator {
 		}
 	}
 	
-	public static BaseMultiResolutionImage CreateMultiImage(final char character, final ImageOptions options)
+	public static BaseMultiResolutionImage CreateMultiImage(final char character, final CharImageOptions options)
 	{
 		BufferedImage[] imgs = new BufferedImage[options.scales.length];
 		for (int i = 0; i < options.scales.length; i++)
@@ -116,7 +116,7 @@ public class CharImageCreator {
 		BaseMultiResolutionImage multiImg = new BaseMultiResolutionImage(imgs);
 		return multiImg;
 	}
-	public static BufferedImage CreateImage(final char character, final int imgSize, final ImageOptions options)
+	public static BufferedImage CreateImage(final char character, final int imgSize, final CharImageOptions options)
 	{
 		validateOptions(options);
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
@@ -187,7 +187,7 @@ public class CharImageCreator {
 		return img;
 	}
 	
-	private static void validateOptions(final ImageOptions options)
+	private static void validateOptions(final CharImageOptions options)
 	{
 		if (options.maxSize != null)
 		{
@@ -199,7 +199,7 @@ public class CharImageCreator {
 		}
 	}
 	
-	private static Rectangle2D getMaxBounds(final ImageOptions options, final int imgSize)
+	private static Rectangle2D getMaxBounds(final CharImageOptions options, final int imgSize)
 	{
 		Rectangle2D maxBounds = null;
 		if (options.maxSize != null)
@@ -216,7 +216,7 @@ public class CharImageCreator {
 		return maxBounds;
 	}
 	
-	private static int getCenteredX(final ImageOptions options, final int imgSize, final Rectangle2D finalBounds)
+	private static int getCenteredX(final CharImageOptions options, final int imgSize, final Rectangle2D finalBounds)
 	{
 		int centeredXLoc = 0;
 		double xLoc = -finalBounds.getX();
@@ -231,7 +231,7 @@ public class CharImageCreator {
 		return centeredXLoc;
 	}
 	
-	private static int getCenteredY(final ImageOptions options, final int imgSize, final Rectangle2D finalBounds)
+	private static int getCenteredY(final CharImageOptions options, final int imgSize, final Rectangle2D finalBounds)
 	{
 		int centeredYLoc = 0;
 		double yLoc = -finalBounds.getY();
