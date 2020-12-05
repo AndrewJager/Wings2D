@@ -3,7 +3,9 @@ package com.wings2d.framework;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
@@ -17,6 +19,8 @@ public class CharImageCreator {
 		public int baseSize;
 		public int padding;
 		public Color color;
+		public Color backgroundColor;
+		public double rotation;
 		
 		public ImageOptions()
 		{
@@ -24,21 +28,29 @@ public class CharImageCreator {
 			baseSize = 10;
 			padding = 2;
 			color = Color.BLACK;
-		}
-		
+			backgroundColor = new Color(0, 0, 0, 0); // Transparent
+			rotation = 0;
+		}	
 		public ImageOptions(final int baseSize, final int padding)
 		{
 			this();
 			this.baseSize = baseSize;
 			this.padding = padding;
-		}
-		
+		}	
 		public ImageOptions(final int baseSize, final double[] scales, final int padding)
 		{
 			this();
 			this.baseSize = baseSize;
 			this.scales = scales;
 			this.padding = padding;
+		}
+		public ImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
+		{
+			this();
+			this.baseSize = baseSize;
+			this.scales = scales;
+			this.padding = padding;
+			this.color = color;
 		}
 	}
 	
@@ -57,16 +69,23 @@ public class CharImageCreator {
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D)img.getGraphics();
 
-
 		int charSize = imgSize - options.padding;
 		Rectangle2D finalBounds = null;
+		Shape finalShape = null;
 		
 		boolean sizeExceeded = false;
 		int fontSize = 1;
 		while (!sizeExceeded)
 		{
 			GlyphVector v = g2d.getFont().createGlyphVector(g2d.getFontRenderContext(), String.valueOf(character));
-			Rectangle2D realBounds = v.getOutline().getBounds2D();
+			Shape charShape = v.getOutline();
+			if (options.rotation != 0)
+			{
+				AffineTransform transform = new AffineTransform();
+				transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+				charShape = transform.createTransformedShape(charShape);
+			}
+			Rectangle2D realBounds = charShape.getBounds2D();
 			double height = realBounds.getHeight();
 			double width = realBounds.getWidth();
 			
@@ -75,6 +94,7 @@ public class CharImageCreator {
 			{
 				sizeExceeded = true;
 				finalBounds = realBounds;
+				finalShape = charShape;
 			}
 			else
 			{
@@ -91,8 +111,14 @@ public class CharImageCreator {
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		
+		if (options.backgroundColor.getAlpha() != 0)
+		{
+			g2d.setColor(options.backgroundColor);
+			g2d.fillRect(0, 0, imgSize, imgSize);
+		}
 		g2d.setColor(options.color);
-		g2d.drawString(String.valueOf(character), centeredXLoc, centeredYLoc);
+		g2d.translate(centeredXLoc, centeredYLoc);
+		g2d.fill(finalShape);
 		
 		return img;
 	}
