@@ -85,20 +85,17 @@ public class CharImageCreator {
 		
 		public CharImageOptions(final int baseSize, final int padding)
 		{
-			this();
 			this.baseSize = baseSize;
 			this.padding = padding;
 		}	
 		public CharImageOptions(final int baseSize, final double[] scales, final int padding)
 		{
-			this();
 			this.baseSize = baseSize;
 			this.scales = scales;
 			this.padding = padding;
 		}
 		public CharImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
 		{
-			this();
 			this.baseSize = baseSize;
 			this.scales = scales;
 			this.padding = padding;

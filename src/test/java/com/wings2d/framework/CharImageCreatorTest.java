@@ -4,15 +4,49 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.wings2d.framework.CharImageCreator.CharImageOptions;
+import com.wings2d.framework.shape.CharImageCreatorTestWatcher;
 
-class CharImageCreatorTest {
-	private class TestColor extends Color
+@ExtendWith(CharImageCreatorTestWatcher.class)
+@TestInstance(Lifecycle.PER_CLASS)
+public class CharImageCreatorTest {
+	private Map<String, BufferedImage> generatedImgs;
+	private Map<String, BufferedImage> errorImgs;
+	
+	public CharImageCreatorTest()
+	{
+		generatedImgs = new HashMap<String, BufferedImage>();
+		errorImgs = new HashMap<String, BufferedImage>();
+	}
+
+	public Map<String, BufferedImage> getGeneratedImages() {
+		return generatedImgs;
+	}
+	public Map<String, BufferedImage> getErrorImages() {
+		return errorImgs;
+	}
+	private void logImg(final String methodName, final BufferedImage img) {
+		generatedImgs.put(methodName, img);
+	}
+	
+	private static class TestColor extends Color
 	{
 		public TestColor(int r, int g, int b, int a) {
 			super(r, g, b, a);
@@ -88,7 +122,7 @@ class CharImageCreatorTest {
 		}
 	}
 	
-	private class TestPointList
+	private static class TestPointList
 	{
 		private List<TestPoint> points;
 		
@@ -118,7 +152,7 @@ class CharImageCreatorTest {
 			return points.size();
 		}
 	}
-
+	
 	private TestPoint[] getPointColors(final BufferedImage img, final TestPointList points)
 	{
 		TestPoint[] imgPoints = new TestPoint[points.getPointCount()];
@@ -146,12 +180,34 @@ class CharImageCreatorTest {
 			}
 		}
 	}
+	
+	
+	@BeforeAll
+	static void setUp() throws Exception {
+		// Delete all files in output folder
+		File outputFolder = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator");
+		for(File f: outputFolder.listFiles()) { 
+			  f.delete(); 
+		}
+	}
+	@AfterAll
+	void saveErrorImgs() {
+		for (Map.Entry<String, BufferedImage> entry : errorImgs.entrySet()) {
+		    String methodName = entry.getKey();
+		    BufferedImage img = entry.getValue();
+			File outputFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator\\" + methodName + ".png");
+			try {
+				outputFile.createNewFile();
+				ImageIO.write(img, "png", outputFile); 
+			} catch (IOException e) {}
+		}
+	}
 
 	@Test
 	void test() {
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage('-', 40, options);
+		BufferedImage img = CharImageCreator.CreateImage('|', 40, options);
 		TestPointList testPoints = new TestPointList(
 				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
 				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),
@@ -159,7 +215,7 @@ class CharImageCreatorTest {
 				new TestPoint(0, 39, new TestColor(0, 0, 0, 0))
 				);
 		addPaddingPixels(img, testPoints, options.padding, new TestColor(options.backgroundColor));
+		logImg(new Throwable().getStackTrace()[0].getMethodName(), img);
 		assertArrayEquals(testPoints.getPointsArray(), getPointColors(img, testPoints));
 	}
-
 }
