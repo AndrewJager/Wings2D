@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.wings2d.framework.CharImageCreator.CharImageOptions;
-import com.wings2d.framework.shape.CharImageCreatorTestWatcher;
 
 @ExtendWith(CharImageCreatorTestWatcher.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -207,7 +205,7 @@ public class CharImageCreatorTest {
 	void test() {
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage('|', 40, options);
+		BufferedImage img = CharImageCreator.CreateImage('-', 40, options);
 		TestPointList testPoints = new TestPointList(
 				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
 				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),
