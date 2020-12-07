@@ -7,41 +7,55 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.wings2d.framework.CharImageCreator.CharImageOptions;
 
 @ExtendWith(CharImageCreatorTestWatcher.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class CharImageCreatorTest {
-	private Map<String, BufferedImage> generatedImgs;
-	private Map<String, BufferedImage> errorImgs;
+	private List<ImgWithInfo> generatedImgs;
+	private List<ImgWithInfo> errorImgs;
 	
 	public CharImageCreatorTest()
 	{
-		generatedImgs = new HashMap<String, BufferedImage>();
-		errorImgs = new HashMap<String, BufferedImage>();
+		generatedImgs = new ArrayList<ImgWithInfo>();
+		errorImgs = new ArrayList<ImgWithInfo>();
 	}
 
-	public Map<String, BufferedImage> getGeneratedImages() {
+	public List<ImgWithInfo> getGeneratedImages() {
 		return generatedImgs;
 	}
-	public Map<String, BufferedImage> getErrorImages() {
+	public List<ImgWithInfo> getErrorImages() {
 		return errorImgs;
 	}
-	private void logImg(final String methodName, final BufferedImage img) {
-		generatedImgs.put(methodName, img);
+	private void logImg(final ImgWithInfo imgInfo) {
+		generatedImgs.add(imgInfo);
+	}
+	public ImgWithInfo getImgInfoByInfo(final String methodName, final char character)
+	{
+		for (int i = 0; i < generatedImgs.size(); i++)
+		{
+			if (generatedImgs.get(i).getMethodName().equals(methodName)
+					&& generatedImgs.get(i).getCharacter() == character)
+			{
+				return generatedImgs.get(i);
+			}
+		}
+		return null;
+	}
+	public static char[] getTestChars() {
+		return new char[] {'-', '|', '<', '>'};
 	}
 	
 	private static class TestColor extends Color
@@ -151,6 +165,30 @@ public class CharImageCreatorTest {
 		}
 	}
 	
+	public static class ImgWithInfo
+	{
+		private BufferedImage img;
+		private String methodName;
+		private char character;
+		
+		public ImgWithInfo(final BufferedImage img, final String methodName, final char character)
+		{
+			this.img = img;
+			this.methodName = methodName;
+			this.character = character;
+		}
+		
+		public BufferedImage getImage() {
+			return img;
+		}
+		public String getMethodName() {
+			return methodName;
+		}
+		public char getCharacter() {
+			return character;
+		}
+	}
+	
 	private TestPoint[] getPointColors(final BufferedImage img, final TestPointList points)
 	{
 		TestPoint[] imgPoints = new TestPoint[points.getPointCount()];
@@ -190,45 +228,27 @@ public class CharImageCreatorTest {
 	}
 	@AfterAll
 	void saveErrorImgs() {
-		for (Map.Entry<String, BufferedImage> entry : errorImgs.entrySet()) {
-		    String methodName = entry.getKey();
-		    BufferedImage img = entry.getValue();
-			File outputFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator\\" + methodName + ".png");
+		for (int i = 0; i < errorImgs.size(); i++)
+		{
+		    ImgWithInfo imgInfo = errorImgs.get(i);
+			File outputFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator\\" + imgInfo.getMethodName() 
+					+ "-" + Character.getName(imgInfo.getCharacter()) + ".png");
 			try {
 				outputFile.createNewFile();
-				ImageIO.write(img, "png", outputFile); 
+				ImageIO.write(imgInfo.getImage(), "png", outputFile); 
 			} catch (IOException e) {}
 		}
 	}
 
-	@Test
-	void test() {
+	@ParameterizedTest
+	@MethodSource("getTestChars")
+	void test(char testChar) {
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage('|', 40, options);
-		TestPointList testPoints = new TestPointList(
-				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
-				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),
-				new TestPoint(39, 39, new TestColor(0, 0, 0, 0)),
-				new TestPoint(0, 39, new TestColor(0, 0, 0, 0))
-				);
+		BufferedImage img = CharImageCreator.CreateImage(testChar, 40, options);
+		TestPointList testPoints = new TestPointList();
 		addPaddingPixels(img, testPoints, options.padding, new TestColor(options.backgroundColor));
-		logImg(new Throwable().getStackTrace()[0].getMethodName(), img);
-		assertArrayEquals(testPoints.getPointsArray(), getPointColors(img, testPoints));
-	}
-	@Test
-	void test2() {
-		CharImageOptions options = new CharImageOptions();
-		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage('*', 40, options);
-		TestPointList testPoints = new TestPointList(
-				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
-				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),
-				new TestPoint(39, 39, new TestColor(0, 0, 0, 0)),
-				new TestPoint(0, 39, new TestColor(0, 0, 0, 0))
-				);
-		addPaddingPixels(img, testPoints, options.padding, new TestColor(options.backgroundColor));
-		logImg(new Throwable().getStackTrace()[0].getMethodName(), img);
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
 		assertArrayEquals(testPoints.getPointsArray(), getPointColors(img, testPoints));
 	}
 }

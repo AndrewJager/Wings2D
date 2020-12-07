@@ -1,35 +1,36 @@
 package com.wings2d.framework;
 
-import java.awt.image.BufferedImage;
-import java.util.Map;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+
+import com.wings2d.framework.CharImageCreatorTest.ImgWithInfo;
 
 public class CharImageCreatorTestWatcher implements TestWatcher{
 	@Override
 	public void testFailed(ExtensionContext context, Throwable cause)
 	{
 		CharImageCreatorTest testInstance = (CharImageCreatorTest)context.getRequiredTestInstance();
-		checkImgLogged(testInstance.getGeneratedImages(), context.getRequiredTestMethod().getName());
-		BufferedImage img = testInstance.getGeneratedImages().get(context.getRequiredTestMethod().getName());
-		testInstance.getErrorImages().put(context.getRequiredTestMethod().getName(), img);
+		ImgWithInfo imgInfo = getLoggedImg(testInstance, context);
+		testInstance.getErrorImages().add(imgInfo);
 	}
 	
 	@Override
 	public void testSuccessful(ExtensionContext context)
 	{
 		CharImageCreatorTest testInstance = (CharImageCreatorTest)context.getRequiredTestInstance();
-		checkImgLogged(testInstance.getGeneratedImages(), context.getRequiredTestMethod().getName());
-		BufferedImage img = testInstance.getGeneratedImages().get(context.getRequiredTestMethod().getName());
-		testInstance.getErrorImages().put(context.getRequiredTestMethod().getName(), img);
+		ImgWithInfo imgInfo = getLoggedImg(testInstance, context);
+		testInstance.getErrorImages().add(imgInfo);
 	}
 	
-	private void checkImgLogged(final Map<String, BufferedImage> generatedImgs, final String methodName)
+	private ImgWithInfo getLoggedImg(final CharImageCreatorTest testInstance, ExtensionContext context)
 	{
-		if (!generatedImgs.containsKey(methodName))
+		String methodName = context.getRequiredTestMethod().getName();
+		char testChar = context.getDisplayName().charAt(4);
+		ImgWithInfo imgInfo = testInstance.getImgInfoByInfo(methodName, testChar);
+		if (imgInfo == null)
 		{
-			throw new IllegalStateException("Test " + methodName + " has not logged it's generated image!");
+			throw new IllegalStateException("Test " + methodName + "(" + testChar + ")" + " has not logged it's generated image!");
 		}
+		return imgInfo;
 	}
 }
