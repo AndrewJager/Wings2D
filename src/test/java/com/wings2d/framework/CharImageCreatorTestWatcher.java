@@ -21,6 +21,8 @@ public class CharImageCreatorTestWatcher implements TestWatcher{
 	{
 		CharImageCreatorTest testInstance = (CharImageCreatorTest)context.getRequiredTestInstance();
 		checkImgLogged(testInstance.getGeneratedImages(), context.getRequiredTestMethod().getName());
+		BufferedImage img = testInstance.getGeneratedImages().get(context.getRequiredTestMethod().getName());
+		testInstance.getErrorImages().put(context.getRequiredTestMethod().getName(), img);
 	}
 	
 	private void checkImgLogged(final Map<String, BufferedImage> generatedImgs, final String methodName)

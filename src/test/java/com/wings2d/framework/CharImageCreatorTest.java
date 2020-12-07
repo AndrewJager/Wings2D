@@ -205,7 +205,22 @@ public class CharImageCreatorTest {
 	void test() {
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage('-', 40, options);
+		BufferedImage img = CharImageCreator.CreateImage('|', 40, options);
+		TestPointList testPoints = new TestPointList(
+				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
+				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),
+				new TestPoint(39, 39, new TestColor(0, 0, 0, 0)),
+				new TestPoint(0, 39, new TestColor(0, 0, 0, 0))
+				);
+		addPaddingPixels(img, testPoints, options.padding, new TestColor(options.backgroundColor));
+		logImg(new Throwable().getStackTrace()[0].getMethodName(), img);
+		assertArrayEquals(testPoints.getPointsArray(), getPointColors(img, testPoints));
+	}
+	@Test
+	void test2() {
+		CharImageOptions options = new CharImageOptions();
+		options.scales = new double[] {1.0};
+		BufferedImage img = CharImageCreator.CreateImage('*', 40, options);
 		TestPointList testPoints = new TestPointList(
 				new TestPoint(0, 0, new TestColor(0, 0, 0, 0)),
 				new TestPoint(39, 0, new TestColor(0, 0, 0, 0)),

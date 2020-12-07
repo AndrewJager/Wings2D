@@ -4,14 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.shape.DoubleDimension;
 
 /**
  * Creates a {@link java.awt.image.BufferedImage BufferedImage} of a single char
@@ -119,56 +117,34 @@ public class CharImageCreator {
 		BufferedImage img = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D)img.getGraphics();
 		
-		Rectangle2D finalBounds = null;
-		Shape finalShape = null;
-		
-		boolean sizeExceeded = false;
-		int fontSize = 1;
-		while (!sizeExceeded)
-		{
-			GlyphVector v = g2d.getFont().createGlyphVector(g2d.getFontRenderContext(), String.valueOf(character));
-			Shape charShape = v.getOutline();
-			Rectangle2D maxBounds = getMaxBounds(options, imgSize);
+		Rectangle2D maxBounds = getMaxBounds(options, imgSize);	
 
-			if (options.rotation != 0)
-			{
-				AffineTransform transform = new AffineTransform();
-				transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
-				charShape = transform.createTransformedShape(charShape);
-			}
-			Rectangle2D realBounds = charShape.getBounds2D();
-			DoubleDimension charSize = null;
-			if (options.maxSize != null)
-			{
-				AffineTransform transform = new AffineTransform();
-				transform.rotate(Math.toRadians(-options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
-				charShape = transform.createTransformedShape(charShape);
-				charSize = new DoubleDimension(charShape.getBounds2D().getWidth(), charShape.getBounds2D().getHeight());
-				transform = new AffineTransform();
-				transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
-				charShape = transform.createTransformedShape(charShape);
-			}
-			else
-			{
-				charSize = new DoubleDimension(realBounds.getWidth(), realBounds.getHeight());
-			}
-			
-			g2d.getFontMetrics().stringWidth(String.valueOf(character));
-			if (charSize.getHeight() > maxBounds.getHeight() || charSize.getWidth() > maxBounds.getWidth())
-			{
-				sizeExceeded = true;
-				finalBounds = realBounds;
-				finalShape = charShape;
-			}
-			else
-			{
-				fontSize++;
-				g2d.setFont(g2d.getFont().deriveFont(Float.parseFloat(String.valueOf(fontSize))));
-			}
+		Shape charShape = g2d.getFont().deriveFont(1.0f).createGlyphVector(g2d.getFontRenderContext(), String.valueOf(character)).getOutline();
+		
+		if (options.rotation != 0)
+		{
+			AffineTransform transform = new AffineTransform();
+			transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+			charShape = transform.createTransformedShape(charShape);
 		}
 		
-		int centeredXLoc = getCenteredX(options, imgSize, finalBounds);
-		int centeredYLoc = getCenteredY(options, imgSize, finalBounds);
+		if (options.maxSize != null)
+		{
+			AffineTransform transform = new AffineTransform();
+			transform.rotate(Math.toRadians(-options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+			charShape = transform.createTransformedShape(charShape);
+			charShape = scaleToBounds(charShape, maxBounds);
+			transform = new AffineTransform();
+			transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
+			charShape = transform.createTransformedShape(charShape);
+		}
+		else
+		{
+			charShape = scaleToBounds(charShape, maxBounds);
+		}
+		
+		int centeredXLoc = getCenteredX(options, imgSize, charShape.getBounds2D());
+		int centeredYLoc = getCenteredY(options, imgSize, charShape.getBounds2D());
 		
 		setRenderingHints(g2d);
 		
@@ -179,8 +155,8 @@ public class CharImageCreator {
 		}
 		g2d.setColor(options.color);
 		g2d.translate(centeredXLoc, centeredYLoc);
-		g2d.fill(finalShape);
-		
+		g2d.fill(charShape);
+
 		return img;
 	}
 	
@@ -247,5 +223,24 @@ public class CharImageCreator {
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	}
+	
+	private static Shape scaleToBounds(final Shape charShape, final Rectangle2D bounds)
+	{
+		Rectangle2D charBounds = charShape.getBounds2D();
+		double scaleToBounds = 0;
+		if (charBounds.getHeight() > charBounds.getWidth())
+		{
+			scaleToBounds = bounds.getHeight() / charBounds.getHeight();
+		}
+		else
+		{
+			scaleToBounds = bounds.getWidth() / charBounds.getWidth();
+		}
+
+		AffineTransform transform = new AffineTransform();
+		transform.scale(scaleToBounds, scaleToBounds);
+		Shape scaledShape = transform.createTransformedShape(charShape);
+		return scaledShape;
 	}
 }
