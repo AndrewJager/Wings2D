@@ -3,6 +3,13 @@ package com.wings2d.framework;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +33,16 @@ import com.wings2d.framework.CharImageCreator.CharImageOptions;
 public class CharImageCreatorTest {
 	private List<ImgWithInfo> generatedImgs;
 	private List<ImgWithInfo> errorImgs;
+	private Font testFont;
+	private Graphics2D g2d;
 	
 	public CharImageCreatorTest()
 	{
 		generatedImgs = new ArrayList<ImgWithInfo>();
 		errorImgs = new ArrayList<ImgWithInfo>();
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		g2d = env.createGraphics(new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB));
+		testFont = g2d.getFont();
 	}
 
 	public List<ImgWithInfo> getGeneratedImages() {
@@ -55,7 +67,7 @@ public class CharImageCreatorTest {
 		return null;
 	}
 	public static char[] getTestChars() {
-		return new char[] {'-', '|', '<', '>'};
+		return new char[] {'-', '|', '<', '>', '\u2B1B', 'M'};
 	}
 	
 	private static class TestColor extends Color
@@ -163,6 +175,34 @@ public class CharImageCreatorTest {
 		{
 			return points.size();
 		}
+		
+		public TestPoint[] getPointColors(final BufferedImage img)
+		{
+			TestPoint[] imgPoints = new TestPoint[this.getPointCount()];
+			for (int i = 0; i < this.getPointCount(); i++)
+			{
+				TestPoint point = this.getPoints().get(i);
+				TestColor pixelColor = new TestColor(img.getRGB(point.getX(), point.getY()), true);
+				imgPoints[i] = new TestPoint(point.getX(), point.getY(), pixelColor);
+			}
+			
+			return imgPoints;
+		}
+		
+		public void addPaddingPixels(final BufferedImage img, final int padding, final TestColor backgroundColor)
+		{
+			for (int x = 0; x < img.getWidth(); x++)
+			{
+				for (int y = 0; y < img.getHeight(); y++)
+				{
+					if ((x < padding || x > (img.getWidth() - padding - 1))
+							|| (y < padding || y > (img.getHeight() - padding - 1)))
+					{
+						this.getPoints().add(new TestPoint(x, y, backgroundColor));
+					}
+				}
+			}
+		}
 	}
 	
 	public static class ImgWithInfo
@@ -189,32 +229,52 @@ public class CharImageCreatorTest {
 		}
 	}
 	
-	private TestPoint[] getPointColors(final BufferedImage img, final TestPointList points)
+	private double calcPercentTargetFilled(final char testChar, final int imgSize, final CharImageOptions options)
 	{
-		TestPoint[] imgPoints = new TestPoint[points.getPointCount()];
-		for (int i = 0; i < points.getPointCount(); i++)
-		{
-			TestPoint point = points.getPoints().get(i);
-			TestColor pixelColor = new TestColor(img.getRGB(point.getX(), point.getY()), true);
-			imgPoints[i] = new TestPoint(point.getX(), point.getY(), pixelColor);
-		}
+		Rectangle2D imgRect = new Rectangle2D.Double(0, 0, imgSize - (options.padding * 2), imgSize - (options.padding * 2));
+		Shape charShape = testFont.createGlyphVector(g2d.getFontRenderContext(), Character.toString(testChar)).getOutline();
+		charShape = CharImageCreator.scaleToBounds(charShape, imgRect);
+		double translateToX = (imgRect.getWidth() / 2) - (charShape.getBounds2D().getWidth() / 2);
+		double translateToY = (imgRect.getHeight() / 2) - (charShape.getBounds2D().getHeight() / 2);
+		AffineTransform transform = new AffineTransform();
+		transform.translate(-charShape.getBounds2D().getX(), -charShape.getBounds2D().getY());
+		transform.translate(translateToX, translateToY);
+		charShape = transform.createTransformedShape(charShape);
 		
-		return imgPoints;
-	}
-	
-	private void addPaddingPixels(final BufferedImage img, final TestPointList points, final int padding, final TestColor backgroundColor)
-	{
-		for (int x = 0; x < img.getWidth(); x++)
+		Area area = new Area(charShape);
+		double step = 0.1;
+		double pointsChecked = 0;
+		double pointsContained = 0;
+		for (double x = 0; x < imgRect.getWidth(); x += 0.1)
 		{
-			for (int y = 0; y < img.getHeight(); y++)
+			for (double y = 0; y < imgRect.getHeight(); y += step)
 			{
-				if ((x < padding || x > (img.getWidth() - padding - 1))
-						|| (y < padding || y > (img.getHeight() - padding - 1)))
+				if (area.contains(x, y))
 				{
-					points.getPoints().add(new TestPoint(x, y, backgroundColor));
+					pointsContained++;
 				}
+				pointsChecked++;
 			}
 		}
+		return pointsContained / pointsChecked;
+	}
+	private double calcPercentImgFilled(final BufferedImage img, final CharImageOptions options)
+	{
+		double pointsChecked = 0;
+		double pointsContained = 0;
+		for (int x = options.padding; x < img.getWidth() - options.padding; x++)
+		{
+			for (int y = options.padding; y < img.getHeight() - options.padding; y++)
+			{
+				Color imgColor =  new Color(img.getRGB(x, y), true);
+				if (imgColor.equals(options.color))
+				{
+					pointsContained++;
+				}
+				pointsChecked++;
+			}
+		}
+		return pointsContained / pointsChecked;
 	}
 	
 	
@@ -242,13 +302,31 @@ public class CharImageCreatorTest {
 
 	@ParameterizedTest
 	@MethodSource("getTestChars")
-	void test(char testChar) {
+	void testPadding(final char testChar) {
+		int imgSize = 40;
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
-		BufferedImage img = CharImageCreator.CreateImage(testChar, 40, options);
+		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
 		TestPointList testPoints = new TestPointList();
-		addPaddingPixels(img, testPoints, options.padding, new TestColor(options.backgroundColor));
+		testPoints.addPaddingPixels(img, options.padding, new TestColor(options.backgroundColor));
+		
 		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
-		assertArrayEquals(testPoints.getPointsArray(), getPointColors(img, testPoints));
+		assertArrayEquals(testPoints.getPointsArray(), testPoints.getPointColors(img));
+	}
+	
+	@ParameterizedTest
+	@MethodSource("getTestChars")
+	void testFillPercent(final char testChar)
+	{
+		int imgSize = 40;
+		CharImageOptions options = new CharImageOptions();
+		options.scales = new double[] {1.0};
+		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
+		
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
+		double targetPercentFilled = calcPercentTargetFilled(testChar, imgSize, options);
+		double imgPercentFilled = calcPercentImgFilled(img, options);
+		double allowedError = 0.1;
+		assertEquals(targetPercentFilled, imgPercentFilled, allowedError);
 	}
 }

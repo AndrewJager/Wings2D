@@ -120,7 +120,6 @@ public class CharImageCreator {
 		Rectangle2D maxBounds = getMaxBounds(options, imgSize);	
 
 		Shape charShape = g2d.getFont().deriveFont(1.0f).createGlyphVector(g2d.getFontRenderContext(), String.valueOf(character)).getOutline();
-		
 		if (options.rotation != 0)
 		{
 			AffineTransform transform = new AffineTransform();
@@ -225,7 +224,7 @@ public class CharImageCreator {
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 	}
 	
-	private static Shape scaleToBounds(final Shape charShape, final Rectangle2D bounds)
+	public static Shape scaleToBounds(final Shape charShape, final Rectangle2D bounds)
 	{
 		Rectangle2D charBounds = charShape.getBounds2D();
 		double scaleToBounds = 0;
