@@ -3,7 +3,8 @@ package com.wings2d.framework;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 
-import com.wings2d.framework.CharImageCreatorTest.ImgWithInfo;
+import com.wings2d.framework.CharImageCreator.CharImageCreatorTest;
+import com.wings2d.framework.CharImageCreator.ImgWithInfo;
 
 public class CharImageCreatorTestWatcher implements TestWatcher{
 	@Override

@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.CharImageCreator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +26,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.wings2d.framework.CharImageCreator.CharImageOptions;
+import com.wings2d.framework.CharImageCreatorTestWatcher;
+import com.wings2d.framework.charImageCreator.CharImageCreator;
+import com.wings2d.framework.charImageCreator.CharImageOptions;
 
 @ExtendWith(CharImageCreatorTestWatcher.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -35,6 +37,13 @@ public class CharImageCreatorTest {
 	private List<ImgWithInfo> errorImgs;
 	private Font testFont;
 	private Graphics2D g2d;
+	
+	public static char[] getTestChars() {
+		return new char[] {'-', '|', '<', '>', '\u2B1B', 'C', 'A', 'T'};
+	}
+	public static int[] getTestSizes() {
+		return new int[] {20, 40, 60};
+	}
 	
 	public CharImageCreatorTest()
 	{
@@ -65,168 +74,6 @@ public class CharImageCreatorTest {
 			}
 		}
 		return null;
-	}
-	public static char[] getTestChars() {
-		return new char[] {'-', '|', '<', '>', '\u2B1B', 'M'};
-	}
-	
-	private static class TestColor extends Color
-	{
-		public TestColor(int r, int g, int b, int a) {
-			super(r, g, b, a);
-		}
-		public TestColor(int rgba, boolean hasalpha) {
-			super(rgba, hasalpha);
-		}
-		public TestColor(Color c){
-			super(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-		}
-		
-		@Override
-		public String toString()
-		{
-			return "{" + this.getRed() + ", " + this.getGreen() + ", " + this.getBlue() + ", " + this.getAlpha() +"}";
-		}
-	}
-	private static class TestPoint
-	{
-		private int x;
-		private int y;
-		private TestColor color;
-		
-		TestPoint(final int x, final int y, final TestColor color)
-		{
-			this.x = x;
-			this.y = y;
-			this.color = color;
-		}
-		
-		public int getX()
-		{
-			return x;
-		}
-		public int getY()
-		{
-			return y;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return x + ", " + y + ", {" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ", " + color.getAlpha() + "}";
-		}
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((color == null) ? 0 : color.hashCode());
-			result = prime * result + x;
-			result = prime * result + y;
-			return result;
-		}
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			TestPoint other = (TestPoint) obj;
-			if (color == null) {
-				if (other.color != null)
-					return false;
-			} else if (!color.equals(other.color))
-				return false;
-			if (x != other.x)
-				return false;
-			if (y != other.y)
-				return false;
-			return true;
-		}
-	}
-	
-	private static class TestPointList
-	{
-		private List<TestPoint> points;
-		
-		public TestPointList(TestPoint...testPoints)
-		{
-			points = new ArrayList<TestPoint>();
-			for(int i = 0; i < testPoints.length; i++)
-			{
-				points.add(testPoints[i]);
-			}
-		}
-		public List<TestPoint> getPoints()
-		{
-			return points;
-		}
-		public TestPoint[] getPointsArray()
-		{
-			TestPoint[] arr = new TestPoint[points.size()];
-			for (int i = 0; i < points.size(); i++)
-			{
-				arr[i] = points.get(i);
-			}
-			return arr;
-		}
-		public int getPointCount()
-		{
-			return points.size();
-		}
-		
-		public TestPoint[] getPointColors(final BufferedImage img)
-		{
-			TestPoint[] imgPoints = new TestPoint[this.getPointCount()];
-			for (int i = 0; i < this.getPointCount(); i++)
-			{
-				TestPoint point = this.getPoints().get(i);
-				TestColor pixelColor = new TestColor(img.getRGB(point.getX(), point.getY()), true);
-				imgPoints[i] = new TestPoint(point.getX(), point.getY(), pixelColor);
-			}
-			
-			return imgPoints;
-		}
-		
-		public void addPaddingPixels(final BufferedImage img, final int padding, final TestColor backgroundColor)
-		{
-			for (int x = 0; x < img.getWidth(); x++)
-			{
-				for (int y = 0; y < img.getHeight(); y++)
-				{
-					if ((x < padding || x > (img.getWidth() - padding - 1))
-							|| (y < padding || y > (img.getHeight() - padding - 1)))
-					{
-						this.getPoints().add(new TestPoint(x, y, backgroundColor));
-					}
-				}
-			}
-		}
-	}
-	
-	public static class ImgWithInfo
-	{
-		private BufferedImage img;
-		private String methodName;
-		private char character;
-		
-		public ImgWithInfo(final BufferedImage img, final String methodName, final char character)
-		{
-			this.img = img;
-			this.methodName = methodName;
-			this.character = character;
-		}
-		
-		public BufferedImage getImage() {
-			return img;
-		}
-		public String getMethodName() {
-			return methodName;
-		}
-		public char getCharacter() {
-			return character;
-		}
 	}
 	
 	private double calcPercentTargetFilled(final char testChar, final int imgSize, final CharImageOptions options)
@@ -307,8 +154,8 @@ public class CharImageCreatorTest {
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
 		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
-		TestPointList testPoints = new TestPointList();
-		testPoints.addPaddingPixels(img, options.padding, new TestColor(options.backgroundColor));
+		ImgTestPointList testPoints = new ImgTestPointList();
+		testPoints.addPaddingPixels(img, options.padding, new ImgTestColor(options.backgroundColor));
 		
 		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
 		assertArrayEquals(testPoints.getPointsArray(), testPoints.getPointColors(img));
