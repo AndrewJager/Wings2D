@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Static functions to perform operations on Shapes.
@@ -144,12 +145,31 @@ public class ShapeUtils {
 		return points;
 	}
 	
-	public int[] getIteratorValidSegs()
+	public static int[] getIteratorValidSegs()
 	{
 		int[] validSegs = new int[3];
 		validSegs[0] = PathIterator.SEG_CLOSE;
 		validSegs[1] = PathIterator.SEG_LINETO;
 		validSegs[2] = PathIterator.SEG_MOVETO;
 		return validSegs;
+	}
+	
+	public static Shape scaleToBounds(final Shape charShape, final Rectangle2D bounds)
+	{
+		Rectangle2D charBounds = charShape.getBounds2D();
+		double scaleToBounds = 0;
+		if (charBounds.getHeight() > charBounds.getWidth())
+		{
+			scaleToBounds = bounds.getHeight() / charBounds.getHeight();
+		}
+		else
+		{
+			scaleToBounds = bounds.getWidth() / charBounds.getWidth();
+		}
+
+		AffineTransform transform = new AffineTransform();
+		transform.scale(scaleToBounds, scaleToBounds);
+		Shape scaledShape = transform.createTransformedShape(charShape);
+		return scaledShape;
 	}
 }

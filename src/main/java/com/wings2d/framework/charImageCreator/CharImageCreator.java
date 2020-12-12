@@ -8,6 +8,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
+import com.wings2d.framework.shape.ShapeUtils;
+
 /**
  * Creates a {@link java.awt.image.BufferedImage BufferedImage} of a single char
  */
@@ -43,14 +45,14 @@ public class CharImageCreator {
 			AffineTransform transform = new AffineTransform();
 			transform.rotate(Math.toRadians(-options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
 			charShape = transform.createTransformedShape(charShape);
-			charShape = scaleToBounds(charShape, maxBounds);
+			charShape = ShapeUtils.scaleToBounds(charShape, maxBounds);
 			transform = new AffineTransform();
 			transform.rotate(Math.toRadians(options.rotation), charShape.getBounds2D().getCenterX(), charShape.getBounds2D().getCenterY());
 			charShape = transform.createTransformedShape(charShape);
 		}
 		else
 		{
-			charShape = scaleToBounds(charShape, maxBounds);
+			charShape = ShapeUtils.scaleToBounds(charShape, maxBounds);
 		}
 		
 		int centeredXLoc = getCenteredX(options, imgSize, charShape.getBounds2D());
@@ -133,24 +135,5 @@ public class CharImageCreator {
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-	}
-	
-	public static Shape scaleToBounds(final Shape charShape, final Rectangle2D bounds)
-	{
-		Rectangle2D charBounds = charShape.getBounds2D();
-		double scaleToBounds = 0;
-		if (charBounds.getHeight() > charBounds.getWidth())
-		{
-			scaleToBounds = bounds.getHeight() / charBounds.getHeight();
-		}
-		else
-		{
-			scaleToBounds = bounds.getWidth() / charBounds.getWidth();
-		}
-
-		AffineTransform transform = new AffineTransform();
-		transform.scale(scaleToBounds, scaleToBounds);
-		Shape scaledShape = transform.createTransformedShape(charShape);
-		return scaledShape;
 	}
 }

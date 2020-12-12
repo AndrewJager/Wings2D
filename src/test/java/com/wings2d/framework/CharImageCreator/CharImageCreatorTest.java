@@ -29,6 +29,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.wings2d.framework.CharImageCreatorTestWatcher;
 import com.wings2d.framework.charImageCreator.CharImageCreator;
 import com.wings2d.framework.charImageCreator.CharImageOptions;
+import com.wings2d.framework.shape.ShapeUtils;
 
 @ExtendWith(CharImageCreatorTestWatcher.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -40,9 +41,6 @@ public class CharImageCreatorTest {
 	
 	public static char[] getTestChars() {
 		return new char[] {'-', '|', '<', '>', '\u2B1B', 'C', 'A', 'T'};
-	}
-	public static int[] getTestSizes() {
-		return new int[] {20, 40, 60};
 	}
 	
 	public CharImageCreatorTest()
@@ -80,7 +78,7 @@ public class CharImageCreatorTest {
 	{
 		Rectangle2D imgRect = new Rectangle2D.Double(0, 0, imgSize - (options.padding * 2), imgSize - (options.padding * 2));
 		Shape charShape = testFont.createGlyphVector(g2d.getFontRenderContext(), Character.toString(testChar)).getOutline();
-		charShape = CharImageCreator.scaleToBounds(charShape, imgRect);
+		charShape = ShapeUtils.scaleToBounds(charShape, imgRect);
 		double translateToX = (imgRect.getWidth() / 2) - (charShape.getBounds2D().getWidth() / 2);
 		double translateToY = (imgRect.getHeight() / 2) - (charShape.getBounds2D().getHeight() / 2);
 		AffineTransform transform = new AffineTransform();
