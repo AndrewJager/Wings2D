@@ -1,6 +1,8 @@
 package com.wings2d.framework.rendering;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+
 import javax.swing.JPanel;
 
 /**
@@ -13,10 +15,19 @@ public abstract class DrawPanel {
 	/** Convert width to height **/
 	private static final double SIXTEEN_TO_NINE = 0.5625;
 	
+	
 	protected abstract void setSize(final Dimension dim);
 	protected abstract void setLocation(final int xPos, final int yPos);
 	public abstract int getWidth();
 	public abstract int getHeight();
+	public abstract Graphics2D getGraphics();
+	public abstract void initGraphics();
+	/**
+	 * Handle some possible exceptions from drawing
+	 * 
+	 * @return True if any error found
+	 */
+	public abstract boolean afterRender();
 
 	/**
 	 * Resize the canvas to be the largest it can be at a 16:9 display ratio. Canvas is positioned in the center of the container.

@@ -34,8 +34,6 @@ public abstract class Game extends Thread {
 	private JPanel panel;
 	/** Canvas used to draw with **/
 	private Canvas canvas;
-	/** Used internally by buffer */
-	private Graphics2D graphics;
 	/** Used to draw to canvas */
 	private Graphics2D renderer;
 	/** Used to stop program execution */
@@ -48,7 +46,6 @@ public abstract class Game extends Thread {
 	private Color canvasColor;
 	/** Background {@link java.awt.Color Color} of the frame */
 	private Color frameColor;
-	private BufferStrategy strat;
 	private double lastFpsTime = 0;
 	/** The current fps */
 	private int fps = 0;
@@ -97,10 +94,7 @@ public abstract class Game extends Thread {
 		});
 		
 		frame.setVisible(true);
-		draw.getCanvas().createBufferStrategy(3);
-		do {
-			strat = draw.getCanvas().getBufferStrategy();
-		} while (strat == null);
+		draw.initGraphics();
 		start();
 	}
 
@@ -142,34 +136,7 @@ public abstract class Game extends Thread {
 	 * @return Graphics2D object to draw with
 	 */
 	protected Graphics2D getDrawGraphics() {
-		if (graphics == null) {
-			try {
-				graphics = (Graphics2D) strat.getDrawGraphics();
-			} catch (IllegalStateException e) {
-				return null;
-			}
-		}
-		return graphics;
-	}
-
-	/**
-	 * Handle some possible exceptions from drawing
-	 * 
-	 * @return True if any error found
-	 */
-	private boolean updateScreen() {
-		graphics.dispose();
-		graphics = null;
-		try {
-			strat.show();
-			return (!strat.contentsLost());
-
-		} catch (NullPointerException e) {
-			return true;
-
-		} catch (IllegalStateException e) {
-			return true;
-		}
+		return draw.getGraphics();
 	}
 
 	public void run() {
@@ -212,7 +179,7 @@ public abstract class Game extends Thread {
 		
 			renderer = getDrawGraphics();
 			render(renderer);
-			updateScreen();
+			draw.afterRender();
 
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
