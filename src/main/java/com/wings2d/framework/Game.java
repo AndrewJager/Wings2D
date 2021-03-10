@@ -17,7 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import com.wings2d.framework.DrawPanel;
+import com.wings2d.framework.rendering.DrawPanel;
+import com.wings2d.framework.rendering.DrawPanelCanvas;
 
 /**
  * Extend this class with your main game class, and override the
@@ -42,7 +43,7 @@ public abstract class Game extends Thread {
 	/** Used to run the init() function only once */
 	private boolean initalized = false;
 	/** Handles the drawing canvas */
-	private DrawPanel draw;
+	private DrawPanelCanvas draw;
 	/** Background {@link java.awt.Color Color} of the canvas */
 	private Color canvasColor;
 	/** Background {@link java.awt.Color Color} of the frame */
@@ -84,13 +85,13 @@ public abstract class Game extends Thread {
 		panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
 		panel.setLayout(null);
 
-		draw = new DrawPanel();
+		draw = new DrawPanelCanvas();
 		panel.add(draw.getCanvas(), BorderLayout.CENTER);
 		canvas = draw.getCanvas();
 		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
-				draw.resizePreview(panel);
+				draw.resizePanel(panel);
 				onResize(draw);
 			}
 		});
@@ -117,11 +118,11 @@ public abstract class Game extends Thread {
 	
 	/**
 	 * Called when the frame is resized. Override this to use this event.
-	 * @param draw {@link com.wings2d.framework.DrawPanel DrawPanel} The game's window
+	 * @param draw {@link com.wings2d.framework.rendering.DrawPanel DrawPanel} The game's window
 	 */
-	public void onResize(DrawPanel draw)
+	public void onResize(final DrawPanel draw)
 	{
-		double scale = Double.valueOf(draw.getCanvas().getWidth()) / ogWidth; 
+		double scale = Double.valueOf(draw.getWidth()) / ogWidth; 
 		manager.setScale(scale);
 	}
 
