@@ -2,7 +2,6 @@ package com.wings2d.framework;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -10,7 +9,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferStrategy;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -32,8 +30,6 @@ public abstract class Game extends Thread {
 	 * This is not exposed to the user
 	 */
 	private JPanel panel;
-	/** Canvas used to draw with **/
-	private Canvas canvas;
 	/** Used to draw to canvas */
 	private Graphics2D renderer;
 	/** Used to stop program execution */
@@ -41,9 +37,9 @@ public abstract class Game extends Thread {
 	/** Used to run the init() function only once */
 	private boolean initalized = false;
 	/** Handles the drawing canvas */
-	private DrawPanelCanvas draw;
-	/** Background {@link java.awt.Color Color} of the canvas */
-	private Color canvasColor;
+	private DrawPanel draw;
+	/** Background {@link java.awt.Color Color} of the draw panel */
+	private Color backgroundColor;
 	/** Background {@link java.awt.Color Color} of the frame */
 	private Color frameColor;
 	private double lastFpsTime = 0;
@@ -66,7 +62,7 @@ public abstract class Game extends Thread {
 		
 		ogWidth = width;
 		
-		canvasColor = Color.DARK_GRAY;
+		backgroundColor = Color.DARK_GRAY;
 		frameColor = Color.BLACK;
 		
 		frame = new JFrame();
@@ -84,7 +80,6 @@ public abstract class Game extends Thread {
 
 		draw = new DrawPanelCanvas();
 		panel.add(draw.getCanvas(), BorderLayout.CENTER);
-		canvas = draw.getCanvas();
 		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
@@ -222,7 +217,7 @@ public abstract class Game extends Thread {
 	 *            object.
 	 */
 	public void render(Graphics2D g2d) {
-		g2d.setColor(canvasColor);
+		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getCanvas().getWidth(), draw.getCanvas().getHeight());
 	}
 	
@@ -235,19 +230,11 @@ public abstract class Game extends Thread {
 		return frame;
 	}
 	/**
-	 * Get the drawing canvas
-	 * @return The {@link java.awt.Canvas Canvas} used by the game to draw to
-	 */
-	public Canvas getCanvas()
-	{
-		return canvas;
-	}
-	/**
 	 * Get the background color of the canvas
 	 * @return {@link java.awt.Color Color} of the canvas
 	 */
 	public Color getCanvasColor() {
-		return canvasColor;
+		return backgroundColor;
 	}
 	/**
 	 * Set the background color of the canvas
@@ -255,7 +242,7 @@ public abstract class Game extends Thread {
 	 */
 	public void setCanvasColor(Color color) {
 		draw.getCanvas().setBackground(color);
-		this.canvasColor = color;
+		this.backgroundColor = color;
 	}
 	/**
 	 * Get the background color of the canvas
@@ -280,5 +267,10 @@ public abstract class Game extends Thread {
 	public LevelManager getManager()
 	{
 		return manager;
+	}
+	
+	public DrawPanel getDrawPanel()
+	{
+		return draw;
 	}
 }

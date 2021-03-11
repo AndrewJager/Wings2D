@@ -1,5 +1,6 @@
 package com.wings2d.framework.rendering;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
@@ -20,6 +21,7 @@ public abstract class DrawPanel {
 	protected abstract void setLocation(final int xPos, final int yPos);
 	public abstract int getWidth();
 	public abstract int getHeight();
+	public abstract Component getCanvas();
 	public abstract Graphics2D getGraphics();
 	public abstract void initGraphics();
 	/**
