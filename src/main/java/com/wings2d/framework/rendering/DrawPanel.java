@@ -3,8 +3,9 @@ package com.wings2d.framework.rendering;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
+
+import com.wings2d.framework.Game;
 
 /**
  * Class for the main drawing {@link java.awt.Canvas Canvas}
@@ -15,6 +16,12 @@ public abstract class DrawPanel {
 	private static final double NINE_TO_SIXTEEN = 1.77777778;
 	/** Convert width to height **/
 	private static final double SIXTEEN_TO_NINE = 0.5625;
+	/** Reference to the game, used to call the render function */
+	protected Game game;
+	
+	public DrawPanel(final Game game) {
+		this.game = game;
+	}
 	
 	
 	protected abstract void setSize(final Dimension dim);
@@ -24,6 +31,7 @@ public abstract class DrawPanel {
 	public abstract Component getCanvas();
 	public abstract Graphics2D getGraphics();
 	public abstract void initGraphics();
+	public abstract void render();
 	/**
 	 * Handle some possible exceptions from drawing
 	 * 

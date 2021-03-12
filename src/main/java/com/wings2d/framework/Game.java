@@ -17,6 +17,7 @@ import javax.swing.WindowConstants;
 
 import com.wings2d.framework.rendering.DrawPanel;
 import com.wings2d.framework.rendering.DrawPanelCanvas;
+import com.wings2d.framework.rendering.DrawPanelJPanel;
 
 /**
  * Extend this class with your main game class, and override the
@@ -78,7 +79,8 @@ public abstract class Game extends Thread {
 		panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
 		panel.setLayout(null);
 
-		draw = new DrawPanelCanvas();
+//		draw = new DrawPanelCanvas();
+		draw = new DrawPanelJPanel(this);
 		panel.add(draw.getCanvas(), BorderLayout.CENTER);
 		frame.add(panel);
 		frame.addComponentListener(new ComponentAdapter() {
@@ -172,8 +174,7 @@ public abstract class Game extends Thread {
 
 			update(delta);
 		
-			renderer = getDrawGraphics();
-			render(renderer);
+			draw.render();
 			draw.afterRender();
 
 			// we want each frame to take 10 milliseconds, to do this

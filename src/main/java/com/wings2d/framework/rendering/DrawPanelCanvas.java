@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
+import com.wings2d.framework.Game;
+
 public class DrawPanelCanvas extends DrawPanel{
 	/** {@link java.awt.Canvas Canvas} to draw with */
 	private Canvas canvas;
@@ -16,8 +18,9 @@ public class DrawPanelCanvas extends DrawPanel{
 	/**
 	 *	Initialize the canvas. Background color is set to DARK_GRAY. 
 	 */
-	public DrawPanelCanvas()
+	public DrawPanelCanvas(final Game game)
 	{
+		super(game);
         canvas = new Canvas();
         canvas.setBackground(Color.DARK_GRAY);
 	}
@@ -85,5 +88,10 @@ public class DrawPanelCanvas extends DrawPanel{
 		do {
 			strat = canvas.getBufferStrategy();
 		} while (strat == null);
+	}
+
+	@Override
+	public void render() {
+		game.render(getGraphics());
 	}
 }
