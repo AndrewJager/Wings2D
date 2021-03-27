@@ -1,12 +1,45 @@
 package com.wings2d.framework.charImageCreator;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Dimension2D;
 
 /**
  * Contains options used by {@link CharImageCreator} to control its behavior.
  */
 public class CharImageOptions {
+	/**
+	 * Algorithm used to draw the character shape.
+	 */
+	public enum Algorithm {
+		/** Call {@link java.awt.Graphics2D#fill Graphics2D.fill} with the character shape */
+		GRAPHICS_FILL,
+		PIXEL_INTERSECT,
+		PIXEL_CONTAINS;
+		
+		public static void drawCharShape(final CharImageOptions options, final Shape charShape, final Graphics2D g2d)
+		{
+			switch (options.algorithm) {
+				case GRAPHICS_FILL -> graphicsFill(charShape, g2d);
+				case PIXEL_INTERSECT -> pixelIntersect(options, charShape, g2d);
+				case PIXEL_CONTAINS -> pixelIntersect(options, charShape, g2d);
+			}
+		}
+		
+		private static void graphicsFill(final Shape charShape, final Graphics2D g2d)
+		{
+			g2d.fill(charShape);
+		}
+		private static void pixelIntersect(final CharImageOptions options, final Shape charShape, final Graphics2D g2d)
+		{
+			for (int x = 0; x < options.baseSize; x++)
+			{
+				
+			}
+		}
+	}
+	
 	/** 
 	 * Values used to determine image sizes when creating the MultiResolutionImage. <br> <br> 
 	 * Defaults to {{@value #DEFAULT_SCALE_1}, {@value #DEFAULT_SCALE_2}, {@value #DEFAULT_SCALE_3}}.
@@ -55,6 +88,10 @@ public class CharImageOptions {
 	 * Defaults to null;
 	 */
 	public Dimension2D maxSize = null;
+	/**
+	 * How to draw the character
+	 */
+	public Algorithm algorithm = DEFAULT_ALGORITHM;
 	
 	private static final double DEFAULT_SCALE_1 = 1.0;
 	private static final double DEFAULT_SCALE_2 = 1.25;
@@ -66,6 +103,7 @@ public class CharImageOptions {
 	private static final double DEFAULT_ROTATION = 0;
 	private static final boolean DEFAULT_ALIGN_LEFT = true;
 	private static final boolean DEFAULT_ALIGN_TOP = true;
+	private static final Algorithm DEFAULT_ALGORITHM = Algorithm.GRAPHICS_FILL;
 	
 	public CharImageOptions(){}	// Use all default values
 	
