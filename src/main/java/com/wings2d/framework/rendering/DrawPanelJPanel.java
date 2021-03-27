@@ -54,7 +54,7 @@ public class DrawPanelJPanel extends DrawPanel{
 	}
 
 	@Override
-	public Component getCanvas() {
+	public Component getDrawComponent() {
 		return panel;
 	}
 

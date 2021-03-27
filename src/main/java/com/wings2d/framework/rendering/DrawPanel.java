@@ -28,7 +28,7 @@ public abstract class DrawPanel {
 	protected abstract void setLocation(final int xPos, final int yPos);
 	public abstract int getWidth();
 	public abstract int getHeight();
-	public abstract Component getCanvas();
+	public abstract Component getDrawComponent();
 	public abstract Graphics2D getGraphics();
 	public abstract void initGraphics();
 	public abstract void render();

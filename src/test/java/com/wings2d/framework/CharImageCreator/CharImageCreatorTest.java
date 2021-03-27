@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -35,6 +34,7 @@ import com.wings2d.framework.shape.ShapeUtils;
 @TestInstance(Lifecycle.PER_CLASS)
 public class CharImageCreatorTest {
 	private List<ImgWithInfo> generatedImgs;
+	
 	private List<ImgWithInfo> errorImgs;
 	private Font testFont;
 	private Graphics2D g2d;
@@ -86,7 +86,6 @@ public class CharImageCreatorTest {
 		transform.translate(translateToX, translateToY);
 		charShape = transform.createTransformedShape(charShape);
 		
-		Area area = new Area(charShape);
 		double step = 0.1;
 		double pointsChecked = 0;
 		double pointsContained = 0;
@@ -94,7 +93,7 @@ public class CharImageCreatorTest {
 		{
 			for (double y = 0; y < imgRect.getHeight(); y += step)
 			{
-				if (area.contains(x, y))
+				if (charShape.contains(x, y))
 				{
 					pointsContained++;
 				}
@@ -148,7 +147,7 @@ public class CharImageCreatorTest {
 	@ParameterizedTest
 	@MethodSource("getTestChars")
 	void testPadding(final char testChar) {
-		int imgSize = 40;
+		int imgSize = 10;
 		CharImageOptions options = new CharImageOptions();
 		options.scales = new double[] {1.0};
 		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
@@ -163,8 +162,9 @@ public class CharImageCreatorTest {
 	@MethodSource("getTestChars")
 	void testFillPercent(final char testChar)
 	{
-		int imgSize = 40;
+		int imgSize = 10;
 		CharImageOptions options = new CharImageOptions();
+		options.padding = 0;
 		options.scales = new double[] {1.0};
 		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
 		

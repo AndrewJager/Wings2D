@@ -29,7 +29,7 @@ public class DrawPanelCanvas extends DrawPanel{
 	 * Get the canvas
 	 * @return The {@link java.awt.Canvas Canvas} object used by this object
 	 */
-	public Canvas getCanvas()
+	public Canvas getDrawComponent()
 	{
 		return canvas;
 	}

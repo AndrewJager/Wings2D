@@ -8,6 +8,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
+import com.wings2d.framework.charImageCreator.CharImageOptions.Algorithm;
 import com.wings2d.framework.shape.ShapeUtils;
 
 /**
@@ -67,7 +68,7 @@ public class CharImageCreator {
 		}
 		g2d.setColor(options.color);
 		g2d.translate(centeredXLoc, centeredYLoc);
-		g2d.fill(charShape);
+//		Algorithm.drawCharShape(options.algorithm, charShape, g2d);
 
 		return img;
 	}
@@ -135,5 +136,6 @@ public class CharImageCreator {
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 	}
 }
