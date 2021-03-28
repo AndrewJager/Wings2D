@@ -10,6 +10,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
@@ -26,7 +28,7 @@ import com.wings2d.framework.rendering.DrawPanelJPanel;
  * init/update/render methods. super.init() / super.update() / super.render()
  * should be called by your int/update/render functions.
  */
-public abstract class Game extends Thread {
+public abstract class Game{
 	public class DebugInfo {
 		protected int fps;
 		private boolean printInfo;
@@ -48,42 +50,49 @@ public abstract class Game extends Thread {
 		}
 	}
 	
+	// Members that can be accessed with getter functions
 	/** {@link javax.swing.JFrame JFrame} used to contain the canvas the game will be drawn on **/
 	private JFrame frame;
-	/** {@link java.awt.Canvas Canvas} needs to be inside a panel for sizing to work properly. 
-	 * This is not exposed to the user
-	 */
-	private JPanel panel;
-	/** Used to stop program execution */
-	private boolean isRunning = true;
-	/** Used to run the init() function only once */
-	private boolean initalized = false;
 	/** Handles the drawing canvas */
 	private DrawPanel draw;
 	/** Background {@link java.awt.Color Color} of the draw panel */
 	private Color backgroundColor;
 	/** Background {@link java.awt.Color Color} of the frame */
 	private Color frameColor;
-	private double lastFpsTime = 0;
 	/** Target Frames Per Second */
 	private int targetFPS;
-	/** The current fps */
-	private int fps = 0;
-	/** The width with the game was created. Used to determine scale */
-	private int ogWidth;
 	/** Level manager for this game. Other LevelManagers should not be created */
 	private LevelManager manager;
 	/** Debug information */
 	private DebugInfo debugInfo;
 	
+	
+	// Internal variables
+	/** Used to run the frames at fixed intervals */
+	private ScheduledExecutorService runner;
+	/** Used to run the init() function only once */
+	private boolean initalized = false;
+	/** {@link java.awt.Canvas Canvas} needs to be inside a panel for sizing to work properly. 
+	 * This is not exposed to the user
+	 */
+	private JPanel panel;
+	/** Used to calculated the number of frames executed in a second */
+	private double lastFpsTime = 0;
+	/** Time the previous frame took to render, used to calculate the frame delta */
+	private long lastLoopTime;
+	/** The current fps */
+	private int fps = 0;
+	/** The width with which the game was created. Used to determine scale */
+	private int ogWidth;
+	
 	/**
 	 * Call super(debug) from your constructor to use this
 	 * @param debug Use debug prints (FPS, ect.)
 	 */
-	public Game(final int width, final int height, final boolean useCanvas) {
+	public Game(final int width, final int height, final int fps, final boolean useCanvas) {
 		debugInfo = new DebugInfo();
 		manager = new LevelManager();
-		targetFPS = 60;
+		targetFPS = fps;
 		
 		ogWidth = width;
 		
@@ -120,11 +129,18 @@ public abstract class Game extends Thread {
 		
 		frame.setVisible(true);
 		draw.initGraphics();
-		start();
+		
+		
+		final long OPTIMAL_TIME = 1000000000 / targetFPS;  
+		runner = Executors.newSingleThreadScheduledExecutor();
+        runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);	
 	}
 	
-	public Game(final boolean debug, final int width, final int height) {
-		this(width, height, false);
+	public Game(final int width, final int height) {
+		this(width, height, 60, false);
+	}
+	public Game(final int width, final int height, final int fps) {
+		this(width, height, fps, false);
 	}
 
 	/**
@@ -134,8 +150,9 @@ public abstract class Game extends Thread {
 		@Override
 		/** Calls the onClose function */
 		public void windowClosing(final WindowEvent e) {
-			isRunning = false;
 			onClose();
+			runner.shutdown();
+			System.exit(0);
 		}
 	}
 	
@@ -168,68 +185,43 @@ public abstract class Game extends Thread {
 		return draw.getGraphics();
 	}
 
-	public void run() {
-		long lastLoopTime = System.nanoTime();
-		final long OPTIMAL_TIME = 1000000000 / targetFPS;   
-
-		while (isRunning)
+	/** "Game Loop" of the program. */
+	private void run() {
+		if (!initalized)
 		{
-			if (!initalized)
-			{
-				init();
-				initalized = true;
-			}
-			// work out how long its been since the last update, this
-			// will be used to calculate how far the entities should
-			// move this loop
-			long now = System.nanoTime();
-			long updateLength = now - lastLoopTime;
-			double delta = updateLength / 1000000000.0;
-			lastLoopTime = now;
-//			double delta = updateLength / ((double)OPTIMAL_TIME);
-
-			// update the frame counter
-			lastFpsTime += updateLength;
-			fps++;
-
-			// update our FPS counter if a second has passed since
-			// we last recorded
-			if (lastFpsTime >= 1000000000)
-			{
-				debugInfo.fps = fps;
-				if (debugInfo.shouldPrintInfo())
-				{
-					System.out.println("(FPS: " + fps + ")" + " (DELTA: " + delta +")");
-				}
-				lastFpsTime = 0;
-				fps = 0;
-			}
-
-			long preUpdate = System.nanoTime();
-			update(delta);
-		
-			draw.render();
-			draw.afterRender();
-			long postUpdate = System.nanoTime();
-			long timeDiff = (postUpdate - preUpdate);
-			
-			// we want each frame to take 10 milliseconds, to do this
-			// we've recorded when we started the frame. We add 10 milliseconds
-			// to this and then factor in the current time to give 
-			// us our final value to wait for
-			// remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
-			try {
-				long time = ((lastLoopTime-System.nanoTime() + OPTIMAL_TIME) / 1000000);
-				if (time < 0)
-				{
-					time = 0;
-				}
-				Thread.sleep(time);
-			} catch (InterruptedException e) {
-				System.out.println(e.getMessage());
-			}
-
+			init();
+			lastLoopTime = System.nanoTime();
+			initalized = true;
 		}
+		// work out how long its been since the last update, this
+		// will be used to calculate how far the entities should
+		// move this loop
+		long now = System.nanoTime();
+		long updateLength = now - lastLoopTime;
+		double delta = updateLength / 1000000000.0;
+		lastLoopTime = now;
+	
+		// update the frame counter
+		lastFpsTime += updateLength;
+		fps++;
+	
+		// update our FPS counter if a second has passed since
+		// we last recorded
+		if (lastFpsTime >= 1000000000)
+		{
+			debugInfo.fps = fps;
+			if (debugInfo.shouldPrintInfo())
+			{
+				System.out.println("(FPS: " + fps + ")" + " (DELTA: " + delta +")");
+			}
+			lastFpsTime = 0;
+			fps = 0;
+		}
+
+		update(delta);
+	
+		draw.render();
+		draw.afterRender();
 	}
 
 	/**
@@ -317,8 +309,5 @@ public abstract class Game extends Thread {
 	}
 	public int getTargetFPS() {
 		return targetFPS;
-	}
-	public void setTargetFPS(final int target) {
-		this.targetFPS = target;
 	}
 }
