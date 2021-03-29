@@ -78,12 +78,17 @@ public abstract class Game{
 	private JPanel panel;
 	/** Used to calculated the number of frames executed in a second */
 	private double lastFpsTime = 0;
-	/** Time the previous frame took to render, used to calculate the frame delta */
-	private long lastLoopTime;
+
 	/** The current fps */
-	private int fps = 0;
+	private int framesInSecond = 0;
 	/** The width with which the game was created. Used to determine scale */
 	private int ogWidth;
+	
+	/** Time at which the previous frame rendered */
+	private long lastLoopTime = 0;
+	/** Time at which the current frame rendered */
+	private long curLoopTime = 0;
+	private double deltaSum;
 	
 	/**
 	 * Call super(debug) from your constructor to use this
@@ -193,29 +198,31 @@ public abstract class Game{
 			lastLoopTime = System.nanoTime();
 			initalized = true;
 		}
-		// work out how long its been since the last update, this
-		// will be used to calculate how far the entities should
-		// move this loop
+
+
+		// Calculate time delta
 		long now = System.nanoTime();
-		long updateLength = now - lastLoopTime;
+		lastLoopTime = curLoopTime;
+		curLoopTime = now;
+		long updateLength = (curLoopTime - lastLoopTime);
 		double delta = updateLength / 1000000000.0;
-		lastLoopTime = now;
-	
-		// update the frame counter
+		deltaSum += delta;
 		lastFpsTime += updateLength;
-		fps++;
+		framesInSecond++;
 	
-		// update our FPS counter if a second has passed since
-		// we last recorded
+		// Update debug info every second
 		if (lastFpsTime >= 1000000000)
 		{
-			debugInfo.fps = fps;
+			debugInfo.fps = framesInSecond;
 			if (debugInfo.shouldPrintInfo())
 			{
-				System.out.println("(FPS: " + fps + ")" + " (DELTA: " + delta +")");
+				System.out.print("(FPS: " + framesInSecond + ")" + " (DELTA: " + delta +")"); 
+				System.out.printf(" (AVG DELTA: %f", (deltaSum / framesInSecond));
+				System.out.print(")\n");
 			}
 			lastFpsTime = 0;
-			fps = 0;
+			framesInSecond = 0;
+			deltaSum = 0;
 		}
 
 		update(delta);
