@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -26,9 +27,46 @@ import com.wings2d.framework.rendering.DrawPanelJPanel;
 /**
  * Extend this class with your main game class, and override the
  * init/update/render methods. super.init() / super.update() / super.render()
- * should be called by your int/update/render functions.
+ * should be called by your init/update/render functions.
  */
 public abstract class Game{
+	public class GameOptions {
+		private int targetFPS;
+		private boolean useVSync;
+		
+		private final String debugSeparator = " | ";
+		
+		public GameOptions(final int fps) {
+			this.targetFPS = fps;
+			useVSync = false;
+		}
+		public String getDebugPrint() {
+			
+			String print;
+			print = "Target FPS: " + targetFPS + debugSeparator; 
+			if (useVSync) {
+				print += "VSync = true";
+			}
+			else {
+				print += "VSync = false";
+			}
+			return print;
+		}
+		
+		public int getTargetFPS() {
+			return targetFPS;
+		}
+		public void setTargetFPS(final int fps) {
+			targetFPS = fps;
+		}
+		public boolean getUseVSync() {
+			return useVSync;
+		}
+		public void setUseVSync(final boolean vSync) {
+			useVSync = vSync;
+		}
+	}
+	
 	public class DebugInfo {
 		protected int fps;
 		private boolean printInfo;
@@ -51,6 +89,8 @@ public abstract class Game{
 	}
 	
 	// Members that can be accessed with getter functions
+	/** Game options */
+	private GameOptions options;
 	/** {@link javax.swing.JFrame JFrame} used to contain the canvas the game will be drawn on **/
 	private JFrame frame;
 	/** Handles the drawing canvas */
@@ -59,8 +99,6 @@ public abstract class Game{
 	private Color backgroundColor;
 	/** Background {@link java.awt.Color Color} of the frame */
 	private Color frameColor;
-	/** Target Frames Per Second */
-	private int targetFPS;
 	/** Level manager for this game. Other LevelManagers should not be created */
 	private LevelManager manager;
 	/** Debug information */
@@ -89,15 +127,17 @@ public abstract class Game{
 	/** Time at which the current frame rendered */
 	private long curLoopTime = 0;
 	private double deltaSum;
+	private Toolkit toolkit;
 	
 	/**
 	 * Call super(debug) from your constructor to use this
 	 * @param debug Use debug prints (FPS, ect.)
 	 */
 	public Game(final int width, final int height, final int fps, final boolean useCanvas) {
+		options = new GameOptions(fps);
 		debugInfo = new DebugInfo();
 		manager = new LevelManager();
-		targetFPS = fps;
+		toolkit = Toolkit.getDefaultToolkit();
 		
 		ogWidth = width;
 		
@@ -136,7 +176,7 @@ public abstract class Game{
 		draw.initGraphics();
 		
 		
-		final long OPTIMAL_TIME = 1000000000 / targetFPS;  
+		final long OPTIMAL_TIME = 1000000000 / options.getTargetFPS();  
 		runner = Executors.newSingleThreadScheduledExecutor();
         runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);	
 	}
@@ -199,7 +239,6 @@ public abstract class Game{
 			initalized = true;
 		}
 
-
 		// Calculate time delta
 		long now = System.nanoTime();
 		lastLoopTime = curLoopTime;
@@ -254,6 +293,9 @@ public abstract class Game{
 	 *            object.
 	 */
 	public void render(final Graphics2D g2d) {
+		if (options.getUseVSync()) {
+			toolkit.sync();
+		}
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getDrawComponent().getWidth(), draw.getDrawComponent().getHeight());
@@ -314,7 +356,7 @@ public abstract class Game{
 	public DebugInfo getDebugInfo() {
 		return debugInfo;
 	}
-	public int getTargetFPS() {
-		return targetFPS;
+	public GameOptions getOptions() {
+		return options;
 	}
 }
