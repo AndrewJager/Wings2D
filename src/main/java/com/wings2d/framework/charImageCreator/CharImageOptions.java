@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Dimension2D;
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -19,12 +20,12 @@ public class CharImageOptions {
 		PIXEL_INTERSECT,
 		PIXEL_CONTAINS;
 		
-		public static void drawCharShape(final CharImageOptions options, final Shape charShape, final Graphics2D g2d)
+		public static void drawCharShape(final CharImageOptions options, final Shape charShape, final Graphics2D g2d, final BufferedImage img)
 		{
 			switch (options.algorithm) {
 				case GRAPHICS_FILL -> graphicsFill(charShape, g2d);
-				case PIXEL_INTERSECT -> pixelIntersect(options, charShape, g2d);
-				case PIXEL_CONTAINS -> pixelIntersect(options, charShape, g2d);
+				case PIXEL_INTERSECT -> pixelIntersect(options, charShape, img);
+				case PIXEL_CONTAINS -> pixelIntersect(options, charShape, img);
 			}
 		}
 		
@@ -32,11 +33,12 @@ public class CharImageOptions {
 		{
 			g2d.fill(charShape);
 		}
-		private static void pixelIntersect(final CharImageOptions options, final Shape charShape, final Graphics2D g2d)
+		private static void pixelIntersect(final CharImageOptions options, final Shape charShape, final BufferedImage img)
 		{
-			for (int x = 0; x < options.baseSize; x++)
-			{
-				
+			for (int x = 0; x < img.getWidth(); x++){
+				for (int y = 0; y < img.getHeight(); y++) {
+//					img.setRGB(x, y, options.color.getRGB());
+				}
 			}
 		}
 	}

@@ -12,6 +12,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,8 +128,14 @@ public class CharImageCreatorTest {
 	static void setUp() throws Exception {
 		// Delete all files in output folder
 		File outputFolder = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator");
-		for(File f: outputFolder.listFiles()) { 
-			  f.delete(); 
+		if (!outputFolder.exists()) {
+			Files.createDirectories(Path.of(outputFolder.getPath()));
+		}
+		
+		if (outputFolder.listFiles() != null) {
+			for(File f: outputFolder.listFiles()) { 
+				  f.delete(); 
+			}
 		}
 	}
 	@AfterAll

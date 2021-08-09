@@ -73,7 +73,7 @@ public class CharImageCreator {
 		}
 		g2d.setColor(options.color);
 		g2d.translate(centeredXLoc, centeredYLoc);
-		Algorithm.drawCharShape(options, charShape, g2d);
+		Algorithm.drawCharShape(options, charShape, g2d, img);
 
 		return img;
 	}
