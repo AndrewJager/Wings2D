@@ -59,7 +59,12 @@ public class CharImageCreator {
 		int centeredXLoc = getCenteredX(options, imgSize, charShape.getBounds2D());
 		int centeredYLoc = getCenteredY(options, imgSize, charShape.getBounds2D());
 		
-		setRenderingHints(g2d);
+		if (options.hints != null) {
+			g2d.setRenderingHints(options.hints);
+		}
+		else {
+			setDefaultRenderingHints(g2d);
+		}
 		
 		if (options.backgroundColor.getAlpha() != 0)
 		{
@@ -132,10 +137,11 @@ public class CharImageCreator {
 		return centeredYLoc;
 	}
 	
-	private static void setRenderingHints(final Graphics2D g2d)
+	private static void setDefaultRenderingHints(final Graphics2D g2d)
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 }

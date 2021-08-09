@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Dimension2D;
+import java.util.Map;
 
 /**
  * Contains options used by {@link CharImageCreator} to control its behavior.
@@ -92,6 +93,10 @@ public class CharImageOptions {
 	 * How to draw the character
 	 */
 	public Algorithm algorithm = DEFAULT_ALGORITHM;
+	/**
+	 * Can be set to use RenderingHints outside of the default
+	 */
+	public Map<?,?> hints = null;
 	
 	private static final double DEFAULT_SCALE_1 = 1.0;
 	private static final double DEFAULT_SCALE_2 = 1.25;
