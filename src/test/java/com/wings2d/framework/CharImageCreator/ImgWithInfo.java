@@ -5,13 +5,13 @@ import java.awt.image.BufferedImage;
 public class ImgWithInfo {
 	private BufferedImage img;
 	private String methodName;
-	private char character;
+	private String methodData;
 	
-	public ImgWithInfo(final BufferedImage img, final String methodName, final char character)
+	public ImgWithInfo(final BufferedImage img, final String methodName, final String methodData)
 	{
 		this.img = img;
 		this.methodName = methodName;
-		this.character = character;
+		this.methodData = methodData;
 	}
 	
 	public BufferedImage getImage() {
@@ -20,7 +20,7 @@ public class ImgWithInfo {
 	public String getMethodName() {
 		return methodName;
 	}
-	public char getCharacter() {
-		return character;
+	public String getMethodData() {
+		return methodData;
 	}
 }

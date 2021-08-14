@@ -67,12 +67,12 @@ public class CharImageCreatorTest {
 	private void logImg(final ImgWithInfo imgInfo) {
 		generatedImgs.add(imgInfo);
 	}
-	public ImgWithInfo getImgInfoByInfo(final String methodName, final char character)
+	public ImgWithInfo getImgInfoByInfo(final String methodName, final String data)
 	{
 		for (int i = 0; i < generatedImgs.size(); i++)
 		{
 			if (generatedImgs.get(i).getMethodName().equals(methodName)
-					&& generatedImgs.get(i).getCharacter() == character)
+					&& generatedImgs.get(i).getMethodData().equals(data))
 			{
 				return generatedImgs.get(i);
 			}
@@ -148,7 +148,7 @@ public class CharImageCreatorTest {
 		{
 		    ImgWithInfo imgInfo = errorImgs.get(i);
 			File outputFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\CharImageCreator\\" + imgInfo.getMethodName() 
-					+ "-" + Character.getName(imgInfo.getCharacter()) + ".png");
+					+ "-" + imgInfo.getMethodData() + ".png");
 			try {
 				outputFile.createNewFile();
 				ImageIO.write(imgInfo.getImage(), "png", outputFile); 
@@ -156,7 +156,7 @@ public class CharImageCreatorTest {
 		}
 	}
 
-	@ParameterizedTest
+	@ParameterizedTest(name = "[{index}] - {0}")
 	@MethodSource("getTestChars")
 	void testPadding(final char testChar) {
 		int imgSize = 10;
@@ -166,11 +166,11 @@ public class CharImageCreatorTest {
 		ImgTestPointList testPoints = new ImgTestPointList();
 		testPoints.addPaddingPixels(img, options.padding, new ImgTestColor(options.backgroundColor));
 		
-		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), Character.toString(testChar)));
 		assertArrayEquals(testPoints.getPointsArray(), testPoints.getPointColors(img));
 	}
 	
-	@ParameterizedTest(name = "[{index}] '\u2B1B'")
+	@ParameterizedTest(name = "[{index}] - '\u2B1B'")
 	@MethodSource("getTestColors")
 	void testBaseColor(final Color color) {
 		int imgSize = 10;
@@ -180,7 +180,7 @@ public class CharImageCreatorTest {
 		options.color = color;
 		char testChar = '\u2B1B'; 
 		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options); // Square
-		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), Character.toString(testChar)));
 		
 		Color imgColor = new Color(img.getRGB(1, 1), true);
 		assertEquals(color.getRGB(), imgColor.getRGB());
@@ -197,7 +197,7 @@ public class CharImageCreatorTest {
 		options.scales = new double[] {1.0};
 		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options);
 		
-		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), Character.toString(testChar)));
 		double targetPercentFilled = calcPercentTargetFilled(testChar, imgSize, options);
 		double imgPercentFilled = calcPercentImgFilled(img, options);
 		double allowedError = 0.1;
