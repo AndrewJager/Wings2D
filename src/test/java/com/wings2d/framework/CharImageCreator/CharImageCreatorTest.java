@@ -45,6 +45,9 @@ public class CharImageCreatorTest {
 	public static char[] getTestChars() {
 		return new char[] {'-', '|', '<', '>', '\u2B1B', 'C', 'A', 'T'};
 	}
+	public static Color[] getTestColors() {
+		return new Color[] {Color.BLACK, Color.BLUE, Color.WHITE, Color.YELLOW, new Color(255, 255, 255, 25)};
+	}
 	
 	public CharImageCreatorTest()
 	{
@@ -165,6 +168,22 @@ public class CharImageCreatorTest {
 		
 		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
 		assertArrayEquals(testPoints.getPointsArray(), testPoints.getPointColors(img));
+	}
+	
+	@ParameterizedTest(name = "[{index}] '\u2B1B'")
+	@MethodSource("getTestColors")
+	void testBaseColor(final Color color) {
+		int imgSize = 10;
+		CharImageOptions options = new CharImageOptions();
+		options.padding = 0;
+		options.scales = new double[] {1.0};
+		options.color = color;
+		char testChar = '\u2B1B'; 
+		BufferedImage img = CharImageCreator.CreateImage(testChar, imgSize, options); // Square
+		logImg(new ImgWithInfo(img, new Throwable().getStackTrace()[0].getMethodName(), testChar));
+		
+		Color imgColor = new Color(img.getRGB(1, 1), true);
+		assertEquals(color.getRGB(), imgColor.getRGB());
 	}
 	
 	@Disabled("Broken when anti-aliasing was added")

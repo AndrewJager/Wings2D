@@ -18,9 +18,9 @@ public class CharImageCreatorTestWatcher implements TestWatcher{
 	@Override
 	public void testSuccessful(ExtensionContext context)
 	{
-		CharImageCreatorTest testInstance = (CharImageCreatorTest)context.getRequiredTestInstance();
-		ImgWithInfo imgInfo = getLoggedImg(testInstance, context);
-		testInstance.getErrorImages().add(imgInfo);
+//		CharImageCreatorTest testInstance = (CharImageCreatorTest)context.getRequiredTestInstance();
+//		ImgWithInfo imgInfo = getLoggedImg(testInstance, context);
+//		testInstance.getErrorImages().add(imgInfo);
 	}
 	
 	private ImgWithInfo getLoggedImg(final CharImageCreatorTest testInstance, ExtensionContext context)
