@@ -11,6 +11,7 @@ import com.wings2d.framework.Game;
 
 public class DrawPanelJPanel extends DrawPanel{
 	private class DrawingPanel extends JPanel{
+		private static final long serialVersionUID = 1L;
 		private Game game;
 		
 		public DrawingPanel(final Game game) {

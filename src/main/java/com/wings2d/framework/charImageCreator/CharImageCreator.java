@@ -8,6 +8,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
+import com.wings2d.framework.ImageUtils;
 import com.wings2d.framework.charImageCreator.CharImageOptions.Algorithm;
 import com.wings2d.framework.shape.ShapeUtils;
 
@@ -74,6 +75,11 @@ public class CharImageCreator {
 		g2d.setColor(options.color);
 		g2d.translate(centeredXLoc, centeredYLoc);
 		Algorithm.drawCharShape(options, charShape, g2d, img);
+		
+		// Add padding
+		for (int i = 0; i < options.padding; i++) {
+			img = ImageUtils.expandImageOnAllSides(img);
+		}
 
 		return img;
 	}
@@ -95,14 +101,13 @@ public class CharImageCreator {
 		Rectangle2D maxBounds = null;
 		if (options.maxSize != null)
 		{
-			maxBounds = new Rectangle2D.Double(options.padding, options.padding, options.maxSize.getWidth(),
+			maxBounds = new Rectangle2D.Double(0, 0, options.maxSize.getWidth(),
 				options.maxSize.getHeight());
 		}
 		else
 		{
-			int charSize = imgSize - (options.padding * 2);
-			maxBounds = new Rectangle2D.Double(options.padding, options.padding, charSize,
-					charSize);
+			maxBounds = new Rectangle2D.Double(0, 0, imgSize,
+					imgSize);
 		}
 		return maxBounds;
 	}

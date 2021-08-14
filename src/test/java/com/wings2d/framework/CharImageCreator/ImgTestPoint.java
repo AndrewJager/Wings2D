@@ -24,7 +24,7 @@ public class ImgTestPoint {
 	@Override
 	public String toString()
 	{
-		return x + ", " + y + ", {" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ", " + color.getAlpha() + "}";
+		return "X:" + x + ", Y:" + y + ", Color:{" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ", " + color.getAlpha() + "}";
 	}
 	@Override
 	public int hashCode() {
