@@ -23,8 +23,8 @@ class ImageUtilsTest{
 		return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	@DisplayName("Test expandImageOnSide")
 	@ParameterizedTest(name = "{index} -> side=''{0}''")
+	@DisplayName("Test expandImageOnSide")
 	@EnumSource(ImageSide.class)
 	void testExpandImageOnSide(final ImageSide side) {
 		int size = 5;
