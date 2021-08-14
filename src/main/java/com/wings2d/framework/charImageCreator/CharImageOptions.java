@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Dimension2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import com.wings2d.framework.imageFilters.ImageFilter;
 
 /**
  * Contains options used by {@link CharImageCreator} to control its behavior.
@@ -86,6 +90,10 @@ public class CharImageOptions {
 	 * Can be set to use RenderingHints outside of the default
 	 */
 	public Map<?,?> hints = null;
+	/**
+	 * {@link ImageFilter ImageFilters} to run over the generated image
+	 */
+	public List<ImageFilter> filters;
 	
 	private static final double DEFAULT_SCALE_1 = 1.0;
 	private static final double DEFAULT_SCALE_2 = 1.25;
@@ -99,24 +107,28 @@ public class CharImageOptions {
 	private static final boolean DEFAULT_ALIGN_TOP = true;
 	private static final Algorithm DEFAULT_ALGORITHM = Algorithm.GRAPHICS_FILL;
 	
-	public CharImageOptions(){}	// Use all default values
+	/**
+	 * Constructor with default values
+	 */
+	public CharImageOptions(){
+		filters = new ArrayList<ImageFilter>();
+	}	
 	
 	public CharImageOptions(final int baseSize, final int padding)
 	{
+		this();
 		this.baseSize = baseSize;
 		this.padding = padding;
 	}	
 	public CharImageOptions(final int baseSize, final double[] scales, final int padding)
 	{
-		this.baseSize = baseSize;
+		this(baseSize, padding);
 		this.scales = scales;
-		this.padding = padding;
 	}
-	public CharImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
+	public
+	CharImageOptions(final int baseSize, final double[] scales, final int padding, final Color color)
 	{
-		this.baseSize = baseSize;
-		this.scales = scales;
-		this.padding = padding;
+		this(baseSize, scales, padding);
 		this.color = color;
 	}
 }

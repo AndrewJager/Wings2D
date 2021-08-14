@@ -74,7 +74,14 @@ public class CharImageCreator {
 		}
 		g2d.setColor(options.color);
 		g2d.translate(centeredXLoc, centeredYLoc);
+		
+		// Draw character
 		Algorithm.drawCharShape(options, charShape, g2d);
+		
+		// Add filters
+		for (int i = 0; i < options.filters.size(); i++) {
+			options.filters.get(i).filter(img);
+		}
 		
 		// Add padding
 		for (int i = 0; i < options.padding; i++) {
