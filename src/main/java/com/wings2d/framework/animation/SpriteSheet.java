@@ -11,13 +11,7 @@ import com.wings2d.framework.GameObject;
 import com.wings2d.framework.KeyState;
 import com.wings2d.framework.Level;
 import com.wings2d.framework.Utils;
-import com.wings2d.framework.imageFilters.BasicVariance;
-import com.wings2d.framework.imageFilters.BlurEdges;
-import com.wings2d.framework.imageFilters.DarkenFrom;
 import com.wings2d.framework.imageFilters.ImageFilter;
-import com.wings2d.framework.imageFilters.LightenFrom;
-import com.wings2d.framework.imageFilters.ShadeDir;
-
 
 public class SpriteSheet extends GameObject{
 	/** Level that this SpriteSheet belongs to */

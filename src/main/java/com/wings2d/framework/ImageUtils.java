@@ -4,16 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.wings2d.framework.misc.CardinalDir;
+
 public class ImageUtils{
-	/**
-	 * Represents a side of an image
-	 */
-	public enum ImageSide {
-		RIGHT,
-		LEFT,
-		TOP,
-		BOTTOM,
-	}
 
 	/**
 	 * Add a row of pixels to an image
@@ -21,31 +14,31 @@ public class ImageUtils{
 	 * @param side Add pixels to Top/Bottom/Left/Right of image
 	 * @return Image with pixels added to side
 	 */
-	public static BufferedImage expandImageOnSide(final BufferedImage img, final ImageSide side)
+	public static BufferedImage expandImageOnSide(final BufferedImage img, final CardinalDir side)
 	{
 		BufferedImage newImg = null;
 		Graphics2D g2d;
 		switch(side)
 		{
-		case RIGHT:
+		case EAST:
 			newImg = new BufferedImage(img.getWidth() + 1, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
 			clearImage(newImg);
 			g2d.drawImage(img, null, 0, 0);
 			break;
-		case LEFT:
+		case WEST:
 			newImg = new BufferedImage(img.getWidth() + 1, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
 			clearImage(newImg);
 			g2d.drawImage(img, null, 1, 0);
 			break;
-		case TOP:
+		case NORTH:
 			newImg = new BufferedImage(img.getWidth(), img.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();			
 			clearImage(newImg);
 			g2d.drawImage(img, null, 0, 1);
 			break;
-		case BOTTOM:
+		case SOUTH:
 			newImg = new BufferedImage(img.getWidth(), img.getHeight() + 1, BufferedImage.TYPE_INT_ARGB);
 			g2d = newImg.createGraphics();
 			clearImage(newImg);
@@ -62,10 +55,10 @@ public class ImageUtils{
 	 */
 	public static BufferedImage expandImageOnAllSides(final BufferedImage img) {
 		BufferedImage newImg = img;
-		newImg = ImageUtils.expandImageOnSide(newImg, ImageSide.TOP);
-		newImg = ImageUtils.expandImageOnSide(newImg, ImageSide.BOTTOM);
-		newImg = ImageUtils.expandImageOnSide(newImg, ImageSide.LEFT);
-		newImg = ImageUtils.expandImageOnSide(newImg, ImageSide.RIGHT);
+		newImg = ImageUtils.expandImageOnSide(newImg, CardinalDir.NORTH);
+		newImg = ImageUtils.expandImageOnSide(newImg, CardinalDir.SOUTH);
+		newImg = ImageUtils.expandImageOnSide(newImg, CardinalDir.EAST);
+		newImg = ImageUtils.expandImageOnSide(newImg, CardinalDir.WEST);
 		return newImg;
 	}
 	

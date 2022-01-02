@@ -4,22 +4,23 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
+import com.wings2d.framework.misc.CardinalDir;
 
 /**
  * Lighten the RGB values of the pixels in the image, in an increasing amount from the given direction.
  * @see DarkenFrom
  */
 public class LightenFrom implements ImageFilter, ShadeFrom {
-	/** {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} - Direction from which to shade the image. Lighter in the indicated direction **/
-	private ShadeDir dir;
+	/** {@link com.wings2d.framework.misc.CardinalDir CardinalDir} - Direction from which to shade the image. Lighter in the indicated direction **/
+	private CardinalDir dir;
 	/** Amount in which to lighten the pixels **/
 	private double varAmount;
 	
 	/**
-	 * @param dir {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} - Direction to use when lightening the pixels
+	 * @param dir {@link com.wings2d.framework.misc.CardinalDir CardinalDir} - Direction to use when lightening the pixels
 	 * @param varAmount Amount to lighten the pixels
 	 */
-	public LightenFrom(ShadeDir dir, double varAmount)
+	public LightenFrom(CardinalDir dir, double varAmount)
 	{
 		this.dir = dir;
 		this.varAmount = varAmount;
@@ -28,7 +29,7 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	public LightenFrom(final String fileString)
 	{
 		String[] tokens = fileString.split(ImageFilter.FILTER_TOKEN);
-		this.dir = ShadeDir.createFromString(tokens[0]);
+		this.dir = CardinalDir.createFromString(tokens[0]);
 		this.varAmount = Double.parseDouble(tokens[1]);
 	}
 	
@@ -36,7 +37,7 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	{
 		return "Lighten From";
 	}
-	public ShadeDir getDirection()
+	public CardinalDir getDirection()
 	{
 		return dir;
 	}
@@ -50,8 +51,13 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	}
 	public String toString()
 	{
-		return ShadeDir.getAsString(dir) + " " + varAmount;
+		return CardinalDir.getAsString(dir) + " " + varAmount;
 	}
+
+	public CardinalDir[] getAllDirections() {
+		return CardinalDir.getAllDirections();
+	}
+	
 	public void filter(BufferedImage image)
 	{
 		int colorIncrease = 0; 
@@ -59,19 +65,19 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 		{
 			for (int y = 0; y < image.getHeight(); y++)
 			{
-				if (dir == ShadeDir.RIGHT)
+				if (dir == CardinalDir.EAST)
 				{
 					colorIncrease = (int) (x * varAmount);
 				}
-				else if (dir == ShadeDir.LEFT)
+				else if (dir == CardinalDir.WEST)
 				{
 					colorIncrease = (int) ((image.getWidth() - x) * varAmount);
 				}
-				else if (dir == ShadeDir.TOP)
+				else if (dir == CardinalDir.NORTH)
 				{
 					colorIncrease = (int) ((image.getHeight() - y) * varAmount);
 				}
-				else if (dir == ShadeDir.BOTTOM)
+				else if (dir == CardinalDir.SOUTH)
 				{
 					colorIncrease = (int) (y * varAmount);
 				}

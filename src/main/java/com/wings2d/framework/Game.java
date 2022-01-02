@@ -25,9 +25,10 @@ import com.wings2d.framework.rendering.DrawPanelCanvas;
 import com.wings2d.framework.rendering.DrawPanelJPanel;
 
 /**
- * Extend this class with your main game class, and override the
- * init/update/render methods. super.init() / super.update() / super.render()
- * should be called by your init/update/render functions.
+ * <p> Extend this class with your main game class, and override the
+ * init/update/render methods. </p> 
+ * <p> {@code super.update()} and {@code super.render()}
+ * should be called by your init/update/render functions. </p>
  */
 public abstract class Game{
 	public class GameOptions {

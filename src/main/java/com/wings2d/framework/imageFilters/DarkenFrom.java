@@ -4,22 +4,23 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
+import com.wings2d.framework.misc.CardinalDir;
 
 /**
  * Darken the RGB values of the pixels in the image, in an increasing amount from the given direction.
  * @see LightenFrom
  */
 public class DarkenFrom implements ImageFilter, ShadeFrom {
-	/** {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} - Direction from which to shade the image. Darker in the indicated direction **/
-	private ShadeDir dir;
+	/** {@link com.wings2d.framework.misc.CardinalDir CardinalDir} - Direction from which to shade the image. Darker in the indicated direction **/
+	private CardinalDir dir;
 	/** Amount in which to darken the pixels **/
 	private double varAmount;
 	
 	/**
-	 * @param dir {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} - Direction to use when darkening the pixels
+	 * @param dir {@link com.wings2d.framework.misc.CardinalDir CardinalDir} - Direction to use when darkening the pixels
 	 * @param varAmount Amount to darken the pixels
 	 */
-	public DarkenFrom(ShadeDir dir, double varAmount)
+	public DarkenFrom(CardinalDir dir, double varAmount)
 	{
 		this.dir = dir;
 		this.varAmount = varAmount;
@@ -28,7 +29,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	public DarkenFrom(final String fileString)
 	{
 		String[] tokens = fileString.split(ImageFilter.FILTER_TOKEN);
-		this.dir = ShadeDir.createFromString(tokens[0]);
+		this.dir = CardinalDir.createFromString(tokens[0]);
 		this.varAmount = Double.parseDouble(tokens[1]);
 	}
 	public String getFilterName()
@@ -37,9 +38,9 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	}
 	/**
 	 * Get the shade direction
-	 * @return {@link com.wings2d.framework.imageFilters.ShadeDir ShadeDir} to shade from
+	 * @return {@link com.wings2d.framework.misc.CardinalDir ShadeDir} to shade from
 	 */
-	public ShadeDir getDirection()
+	public CardinalDir getDirection()
 	{
 		return dir;
 	}
@@ -53,7 +54,7 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 	}
 	public String toString()
 	{
-		return ShadeDir.getAsString(dir) + " - " + varAmount;
+		return CardinalDir.getAsString(dir) + " - " + varAmount;
 	}
 	public void filter(BufferedImage img)
 	{
@@ -62,19 +63,19 @@ public class DarkenFrom implements ImageFilter, ShadeFrom {
 		{
 			for (int y = 0; y < img.getHeight(); y++)
 			{
-				if (dir == ShadeDir.RIGHT)
+				if (dir == CardinalDir.EAST)
 				{
 					colorIncrease = (int) (x * -varAmount);
 				}
-				else if (dir == ShadeDir.LEFT)
+				else if (dir == CardinalDir.WEST)
 				{
 					colorIncrease = (int) ((img.getWidth() - x) * -varAmount);
 				}
-				else if (dir == ShadeDir.TOP)
+				else if (dir == CardinalDir.NORTH)
 				{
 					colorIncrease = (int) ((img.getHeight() - y) * -varAmount);
 				}
-				else if (dir == ShadeDir.BOTTOM)
+				else if (dir == CardinalDir.SOUTH)
 				{
 					colorIncrease = (int) (y * -varAmount);
 				}
