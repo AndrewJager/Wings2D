@@ -31,6 +31,14 @@ public interface ImageFilter
 	public abstract String getFilterName();
 	
 	/**
+	 * Uses {@link FilterFactory#fromFileString(String)} to create a copy of the filter
+	 * @return A copy of the filter
+	 */
+	public default ImageFilter copy() {
+		return FilterFactory.fromFileString(getFileString());
+	}
+	
+	/**
 	 * Used to separate parts of the string when saving to a file
 	 */
 	final String FILTER_TOKEN = "~";
