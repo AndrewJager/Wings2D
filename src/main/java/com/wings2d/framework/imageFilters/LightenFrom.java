@@ -1,6 +1,7 @@
 package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.image.BufferedImage;
 
 import com.wings2d.framework.Utils;
@@ -11,6 +12,17 @@ import com.wings2d.framework.misc.CardinalDir;
  * @see DarkenFrom
  */
 public class LightenFrom implements ImageFilter, ShadeFrom {
+	public static class LightenFromEdit extends ShadeFromEdit<LightenFrom>{
+		private static final long serialVersionUID = 1L;
+		
+		public LightenFromEdit(final Frame owner) {
+			super(owner, ShadeType.LIGHTEN);
+		}
+		public LightenFromEdit(final LightenFrom filter, final Frame owner) {
+			super(filter, owner, ShadeType.LIGHTEN);
+		}
+	}
+	
 	/** {@link com.wings2d.framework.misc.CardinalDir CardinalDir} - Direction from which to shade the image. Lighter in the indicated direction **/
 	private CardinalDir dir;
 	/** Amount in which to lighten the pixels **/
@@ -52,6 +64,10 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 	public String toString()
 	{
 		return CardinalDir.getAsString(dir) + " " + varAmount;
+	}
+
+	public static Class<? extends FilterEdit<? extends ImageFilter>> getEditClass() {
+		return LightenFromEdit.class;
 	}
 
 	public CardinalDir[] getAllDirections() {

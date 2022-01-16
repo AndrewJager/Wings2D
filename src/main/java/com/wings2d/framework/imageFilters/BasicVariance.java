@@ -1,8 +1,11 @@
 package com.wings2d.framework.imageFilters;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+
+import javax.swing.JSpinner;
 
 import com.wings2d.framework.Utils;
 
@@ -10,6 +13,33 @@ import com.wings2d.framework.Utils;
  * Randomly modify the RGB values of the image pixels to create a distorted effect.
  */
 public class BasicVariance implements ImageFilter{
+	public static class BasicVarianceEdit extends FilterEdit<BasicVariance>{	
+		private static final long serialVersionUID = 1L;
+		private JSpinner spinner;
+		
+		public BasicVarianceEdit(final BasicVariance filter, final Frame owner) {
+			super(filter, owner);
+		}
+		public BasicVarianceEdit(final Frame owner) {
+			super(owner);
+		}
+
+		@Override
+		public void setup() {
+			spinner = new JSpinner();
+			spinner.setValue(25);
+			this.add(spinner);
+		}
+		@Override
+		public void setValues(final BasicVariance filter) {
+			spinner.setValue(filter.getVarAmt());
+		}
+		@Override
+		public BasicVariance getFilter() {
+			return new BasicVariance((int)spinner.getValue());
+		}
+	}
+	
 	/** Maximum amount to change the pixels (min is 0) **/
 	private int varAmount;
 	
@@ -42,6 +72,10 @@ public class BasicVariance implements ImageFilter{
 	public String toString()
 	{
 		return "Amount: " + varAmount;
+	}
+
+	public static Class<? extends FilterEdit<? extends ImageFilter>> getEditClass() {
+		return BasicVarianceEdit.class;
 	}
 	public void filter(BufferedImage img)
 	{

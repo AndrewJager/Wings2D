@@ -55,6 +55,10 @@ public class LightFrom implements ImageFilter{
 	{
 		return "NOT WORKING";
 	}
+	
+	public static Class<? extends FilterEdit<? extends ImageFilter>> getEditClass() {
+		return null;
+	}
 	public void filter(BufferedImage image)
 	{	
 		double minDistance = Double.MAX_VALUE;

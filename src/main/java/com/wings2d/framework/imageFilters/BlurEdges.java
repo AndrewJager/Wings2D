@@ -19,6 +19,10 @@ public class BlurEdges implements ImageFilter{
 	{
 		return fileTitle;
 	}
+	
+	public static Class<? extends FilterEdit<? extends ImageFilter>> getEditClass() {
+		return null;
+	}
 	public String getFileString()
 	{
 		return fileTitle;
