@@ -1,13 +1,22 @@
 package com.wings2d.framework.misc;
 
+import java.awt.event.KeyEvent;
+
 public class KeyBind{	
-	private String key;
+	public static final String DELIMITER = ",";
 	
-	public KeyBind(final String key) {
-		this.key = key;
+	private int keyCode;
+	
+	public KeyBind(final int keyCode) {
+		
+		this.keyCode = keyCode;
 	}
 	
 	public String getValue() {
-		return key;
+		return KeyEvent.getKeyText(keyCode);
+	}
+	
+	public int getKeyCode() {
+		return keyCode;
 	}
 }
