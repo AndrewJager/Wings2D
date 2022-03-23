@@ -142,7 +142,6 @@ public abstract class Game{
 		
 		ogWidth = width;
 		
-		backgroundColor = Color.DARK_GRAY;
 		frameColor = Color.BLACK;
 		
 		frame = new JFrame();
@@ -172,6 +171,8 @@ public abstract class Game{
 				onResize(draw);
 			}
 		});
+		
+		setCanvasColor(Color.DARK_GRAY);
 		
 		frame.setVisible(true);
 		draw.initGraphics();
@@ -332,15 +333,21 @@ public abstract class Game{
 	public Color getFrameColor() {
 		return frameColor;
 	}
+	
 	/**
 	 * Set the background color of the canvas
 	 * @param color {@link java.awt.Color Color} to set the frame to
 	 */
-	public void setFrameColor(Color color) {
+	public void setFrameColor(final Color color) {
 		this.frame.setBackground(color);
 		this.panel.setBackground(color);
 		this.frameColor = color;
 	}
+	
+	public void setTitle(final String title) {
+		this.frame.setTitle(title);
+	}
+	
 	/**
 	 * Get object to control the levels for the game
 	 * @return {@link com.wings2d.framework.LevelManager LevelManager} for this game

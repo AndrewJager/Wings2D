@@ -13,7 +13,7 @@ public final class Utils {
 	 * @param max If value is more than this, value will equal this
 	 * @return Value, possible changed to be inside range
 	 */
-	public static int makeInRange(int value, int min, int max)
+	public static int makeInRange(int value, final int min, final int max)
 	{
 		if (value > max)
 		{
@@ -32,7 +32,7 @@ public final class Utils {
 	 * @param max If value is more than this, value will equal this
 	 * @return Value, possible changed to be inside range
 	 */
-	public static double makeInRange(double value, int min, int max)
+	public static double makeInRange(double value, final int min, final int max)
 	{
 		if (value > max)
 		{
@@ -50,7 +50,7 @@ public final class Utils {
 	 * @param highlight Second color
 	 * @return A blend of the two provided colors
 	 */
-	public static Color getBlended(Color base, Color highlight)
+	public static Color getBlended(final Color base, final Color highlight)
 	{
 		int red = (base.getRed() + highlight.getRed()) / 2;
 		int green = (base.getGreen() + highlight.getGreen()) / 2;
@@ -64,7 +64,7 @@ public final class Utils {
 	 * @param highlight Increase the base color with this color's RGB values, never going above 255
 	 * @return Base color increased by the values of the highlight color
 	 */
-	public static Color overlayColor(Color base, Color highlight)
+	public static Color overlayColor(final Color base, final Color highlight)
 	{
 		int red = makeInRange(base.getRed() + highlight.getRed(), 0, 255);
 		int green = makeInRange(base.getGreen() + highlight.getGreen(), 0, 255);
@@ -78,7 +78,7 @@ public final class Utils {
 	 * @param percent Can be over 100
 	 * @return A new color, with the RGB values modified
 	 */
-	public static Color modifyColorByPercent(Color color, double percent)
+	public static Color modifyColorByPercent(final Color color, final double percent)
 	{
 		double red = makeInRange(color.getRed() * percent, 0, 255);
 		double green = makeInRange(color.getGreen() * percent, 0, 255);
@@ -92,7 +92,7 @@ public final class Utils {
 	 * @param end Ending character of substring. Substring can end earlier if end is outside length of str.
 	 * @return Requested substring, or as close as can be done with the given positions in the string.
 	 */
-	public static String safeSubstring(String str, int start, int end)
+	public static String safeSubstring(final String str, final int start, final int end)
 	{
 		int strEnd = str.length();
 		String subStr;
@@ -117,7 +117,7 @@ public final class Utils {
 	 * @param delimiter Used to separate each value
 	 * @return "Red(delimiter)Green(delimiter)Blue(delimiter)Alpha"
 	 */
-	public static String colorToString(Color color, String delimiter)
+	public static String colorToString(final Color color, final String delimiter)
 	{
 		return color.getRed() + delimiter + color.getGreen() + delimiter + color.getBlue() + delimiter + color.getAlpha();
 	}
@@ -127,7 +127,7 @@ public final class Utils {
 	 * @param color Color to get values from
 	 * @return "Red, Green, Blue, Alpha"
 	 */
-	public static String colorToString(Color color)
+	public static String colorToString(final Color color)
 	{
 		return colorToString(color, ", ");
 	}
@@ -138,7 +138,7 @@ public final class Utils {
 	 * @param delimiter Used to separate each value
 	 * @return Color object created from string
 	 */
-	public static Color stringToColor(String str, String delimiter)
+	public static Color stringToColor(final String str, final String delimiter)
 	{
 		String[] strCol = str.split(delimiter);
 		Color newColor = new Color(Integer.parseInt(strCol[0]), Integer.parseInt(strCol[1]), Integer.parseInt(strCol[2]), Integer.parseInt(strCol[3]));
@@ -150,7 +150,7 @@ public final class Utils {
 	 * @param str Expected in format of Red, Green, Blue, Alpha
 	 * @return Color object created from string
 	 */
-	public static Color stringToColor(String str)
+	public static Color stringToColor(final String str)
 	{
 		return stringToColor(str, ", ");
 	}
@@ -160,7 +160,7 @@ public final class Utils {
 	 * @param percent 0-100
 	 * @return percent * 2.55
 	 */
-	public static double percentTo255(double percent)
+	public static double percentTo255(final double percent)
 	{
 		return percent * 2.55;
 	}
