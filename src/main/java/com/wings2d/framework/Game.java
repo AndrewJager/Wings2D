@@ -234,6 +234,7 @@ public abstract class Game{
 
 	/** "Game Loop" of the program. */
 	private void run() {
+		lastLoopTime = curLoopTime; // Must be before setting of lastLoopTime in init
 		if (!initalized)
 		{
 			init();
@@ -243,7 +244,6 @@ public abstract class Game{
 
 		// Calculate time delta
 		long now = System.nanoTime();
-		lastLoopTime = curLoopTime;
 		curLoopTime = now;
 		long updateLength = (curLoopTime - lastLoopTime);
 		double delta = updateLength / 1000000000.0;
