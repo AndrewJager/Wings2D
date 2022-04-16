@@ -6,10 +6,10 @@ An experimental 2D Java game framework. This project is currently very unfinishe
 
 ### Goals
 ##### Cross-platform
-This framework should use the java.awt.canvas object, which will (in theory) allow it to work on any desktop platform that supports the JVM.
+This framework should use the java swing framework, which will (in theory) allow it to work on any desktop platform that supports the JVM.
 
 ##### Maintain aspect ratio
-The canvas used to draw on will be automatically scaled to a 16:9 aspect ratio (custom aspect ratio support may be added in the future). This allows the developer to ensure that the presentation of the game will always be the same, while the user can change their window size to anything without having to worry about losing part of the game offscreen.
+The canvas used to draw on will be automatically scaled to a fixed aspect ratio. This allows the developer to ensure that the presentation of the game will always be the same, while the user can change their window size to anything without having to worry about losing part of the game offscreen.
 
 ##### Automatic scaling
 The framework will automatically scale all images, graphical effects, and UI with the size of the drawing canvas. As long as the developer uses the provided classes, they should not have to worry about having to manually scale anything. The game presentation should appear the same, regardless of the size of the window.
@@ -21,5 +21,10 @@ This does not mean that the framework is limited to drawing plain shapes. While 
 
 An early version of an editor to create spritesheets for this framework is available here: https://github.com/CatsAreEvil/Wings2D-Editor
 
-##### Simple UI
-Whille this framework is based on the swing toolkit, the swing UI elements are not visually suitable for most games. Therefore, this framework will provide a few simple UI components to allow the developer to create buttons, simple menus, and text effects for added effect. All of this will scale cleanly with the drawing canvas.
+##### Simple Game UI
+While this framework is based on the swing toolkit, the swing UI elements are not visually suitable for most games. Therefore, this framework will implement reskins of some swing controls. 
+
+##### Accessibility
+This framework will make efforts to allow developers to make their games accessible to visually impaired users. This will primarily be done in two ways:
+1. Use swing controls as the base for the UI framework. This will allow the usage of built-in swing functionality that works with screen readers. Further research will be done with this to determine if this can be leveraged for non-UI game elements.
+2. The graphics system will support the ability to use alternate color pallettes for all visual elements with minimal effort, which will aid developers in creating colorblind-friendly games.
