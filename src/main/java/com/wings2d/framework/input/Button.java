@@ -1,8 +1,11 @@
-package com.wings2d.framework;
+package com.wings2d.framework.input;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+
+import com.wings2d.framework.core.Level;
+import com.wings2d.framework.rendering.Image;
 
 /**
  * Custom GUI button

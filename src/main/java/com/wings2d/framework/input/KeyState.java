@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.input;
 
 public class KeyState {
 	public boolean

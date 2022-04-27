@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.misc;
 
 /**
  * Different types of static level components

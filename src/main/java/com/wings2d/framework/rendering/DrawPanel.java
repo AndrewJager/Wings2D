@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
-import com.wings2d.framework.Game;
+import com.wings2d.framework.core.Game;
 
 /**
  * Class for the main drawing {@link java.awt.Canvas Canvas}

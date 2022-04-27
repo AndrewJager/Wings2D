@@ -1,9 +1,12 @@
-package com.wings2d.framework;
+package com.wings2d.framework.rendering;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.wings2d.framework.core.GameObject;
+import com.wings2d.framework.core.Level;
+import com.wings2d.framework.input.KeyState;
 import com.wings2d.framework.shape.ShapeUtils;
 
 import java.awt.BasicStroke;

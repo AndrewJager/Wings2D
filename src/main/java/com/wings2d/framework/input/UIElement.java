@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.input;
 
 import java.awt.Graphics2D;
 import java.awt.Point;

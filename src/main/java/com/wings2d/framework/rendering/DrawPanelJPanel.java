@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-import com.wings2d.framework.Game;
+import com.wings2d.framework.core.Game;
 
 public class DrawPanelJPanel extends DrawPanel{
 	private class DrawingPanel extends JPanel{

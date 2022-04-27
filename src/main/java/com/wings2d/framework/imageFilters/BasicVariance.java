@@ -7,7 +7,7 @@ import java.util.Random;
 
 import javax.swing.JSpinner;
 
-import com.wings2d.framework.Utils;
+import com.wings2d.framework.core.Utils;
 
 /**
  * Randomly modify the RGB values of the image pixels to create a distorted effect.

@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
-import com.wings2d.framework.Game;
+import com.wings2d.framework.core.Game;
 
 public class DrawPanelCanvas extends DrawPanel{
 	/** {@link java.awt.Canvas Canvas} to draw with */

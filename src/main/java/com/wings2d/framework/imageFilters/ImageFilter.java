@@ -14,7 +14,7 @@ public interface ImageFilter
 	public abstract String toString();
 	/**
 	 * Run the filter 
-	 * @param img {@link com.wings2d.framework.Image Image} to run the filter over
+	 * @param img {@link com.wings2d.framework.rendering.Image Image} to run the filter over
 	 */
 	public abstract void filter(BufferedImage img);
 

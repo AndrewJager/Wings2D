@@ -3,9 +3,9 @@ package com.wings2d.framework.text;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import com.wings2d.framework.GameObject;
-import com.wings2d.framework.KeyState;
-import com.wings2d.framework.Level;
+import com.wings2d.framework.core.GameObject;
+import com.wings2d.framework.core.Level;
+import com.wings2d.framework.input.KeyState;
 /**
  * Uses the DisplayableText interface to display an object of any class that implements this interface
  */

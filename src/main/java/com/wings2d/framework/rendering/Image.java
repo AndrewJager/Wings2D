@@ -1,9 +1,10 @@
-package com.wings2d.framework;
+package com.wings2d.framework.rendering;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wings2d.framework.core.Level;
 import com.wings2d.framework.imageFilters.ImageFilter;
 import com.wings2d.framework.shape.ShapeUtils;
 
@@ -43,7 +44,7 @@ public class Image {
 	 * Create an image by filling in the provided shape with the provided color
 	 * @param shape {@link java.awt.Shape Shape} that will be filled in. Can be any class that implements the Shape interface 
 	 * @param color {@link java.awt.Color Color} that the the shape will be filled with
-	 * @param level {@link com.wings2d.framework.Level Level} that the Image is associated with
+	 * @param level {@link com.wings2d.framework.core.Level Level} that the Image is associated with
 	 * @param scaleImg Scale the image by the levelManger scale value
 	 */
 	public Image(Shape shape, Color color, Level level, boolean scaleImg)
@@ -64,7 +65,7 @@ public class Image {
 	 * Create an image by filling in the provided shape with the provided color. Calls other constructor with scaleImg = true.
 	 * @param shape {@link java.awt.Shape Shape} that will be filled in. Can be any class that implements the Shape interface 
 	 * @param color {@link java.awt.Color Color} that the the shape will be filled with
-	 * @param level {@link com.wings2d.framework.Level Level} that the Image is associated with
+	 * @param level {@link com.wings2d.framework.core.Level Level} that the Image is associated with
 	 */
 	public Image(Shape shape, Color color, Level level)
 	{
@@ -80,7 +81,7 @@ public class Image {
 	}
 	/**
 	 * Makes a copy of the Image, including all info such as shape and filters
-	 * @return A new {@link com.wings2d.framework.Image Image} object
+	 * @return A new {@link com.wings2d.framework.rendering.Image Image} object
 	 */
 	public Image copy()
 	{

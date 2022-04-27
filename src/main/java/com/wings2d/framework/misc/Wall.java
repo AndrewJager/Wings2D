@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.misc;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -9,6 +9,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.wings2d.framework.core.GameObject;
+import com.wings2d.framework.core.Level;
+import com.wings2d.framework.rendering.Image;
 
 /** 
  * A static component of the level, eg. wall/floor/ramp. Represented as a line.

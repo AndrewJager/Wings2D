@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.Utils;
+import com.wings2d.framework.core.Utils;
 import com.wings2d.framework.misc.CardinalDir;
 
 /**

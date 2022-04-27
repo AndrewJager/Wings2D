@@ -1,4 +1,4 @@
-package com.wings2d.framework.animation;
+package com.wings2d.framework.animation.old;
 
 import java.io.FileReader;
 import java.util.ArrayList;

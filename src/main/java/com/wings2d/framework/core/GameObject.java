@@ -1,6 +1,9 @@
-package com.wings2d.framework;
+package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
+
+import com.wings2d.framework.input.KeyState;
+import com.wings2d.framework.misc.PhysicsType;
 
 /**
  * Abstract base class for all game entities
@@ -8,7 +11,7 @@ import java.awt.Graphics2D;
 public abstract class GameObject {
 	/**
 	 * Update the GameObject. Does nothing unless overridden
-	 * @param keys {@link com.wings2d.framework.KeyState KeyState} object containing the current keyboard state
+	 * @param keys {@link com.wings2d.framework.input.KeyState KeyState} object containing the current keyboard state
 	 */
 	public void update(double dt, KeyState keys)
 	{ /* Do nothing by default */ }
@@ -22,7 +25,7 @@ public abstract class GameObject {
 	/** Change the object's scale */
 	public abstract void rescale();
 	/** Check what the object should do in physics processing 
-	 * @return {@link com.wings2d.framework.PhysicsType PhysicsType} of the object. NONE by default.
+	 * @return {@link com.wings2d.framework.misc.PhysicsType PhysicsType} of the object. NONE by default.
 	 */
 	public PhysicsType getPhysicsType()
 	{

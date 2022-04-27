@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.core;
 
 import java.awt.Color;
 

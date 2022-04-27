@@ -1,8 +1,12 @@
-package com.wings2d.framework;
+package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+
+import com.wings2d.framework.input.KeyMapping;
+import com.wings2d.framework.input.KeyState;
+import com.wings2d.framework.input.TextBox;
 
 
 public class LevelManager {

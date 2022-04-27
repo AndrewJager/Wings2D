@@ -5,7 +5,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="target/classes" path="src/main/java">
+	<classpathentry excluding="com/wings2d/framework/animation/old/AnimatedEntity.java|com/wings2d/framework/animation/old/Animation.java|com/wings2d/framework/animation/old/Frame.java|com/wings2d/framework/animation/old/Joint.java|com/wings2d/framework/animation/old/SpriteSheet.java" kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>

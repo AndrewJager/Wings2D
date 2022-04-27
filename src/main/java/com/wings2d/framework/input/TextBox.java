@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.input;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,10 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.wings2d.framework.core.Level;
+import com.wings2d.framework.core.Utils;
+import com.wings2d.framework.rendering.Image;
 
 
 public class TextBox extends UIElement{

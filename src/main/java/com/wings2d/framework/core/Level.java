@@ -1,9 +1,12 @@
-package com.wings2d.framework;
+package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.wings2d.framework.input.KeyState;
+import com.wings2d.framework.input.UIElement;
 
 public class Level {
 	/** List of objects that descend from GameObject */

@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import com.wings2d.framework.misc.CardinalDir;
+import com.wings2d.framework.rendering.ImageUtils;
 
 @DisplayName("ImageUtils Test")
 class ImageUtilsTest{

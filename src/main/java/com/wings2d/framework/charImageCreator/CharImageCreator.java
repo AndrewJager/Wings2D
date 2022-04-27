@@ -8,8 +8,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.ImageUtils;
 import com.wings2d.framework.charImageCreator.CharImageOptions.Algorithm;
+import com.wings2d.framework.rendering.ImageUtils;
 import com.wings2d.framework.shape.ShapeUtils;
 
 /**

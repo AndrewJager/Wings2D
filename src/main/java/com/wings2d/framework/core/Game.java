@@ -1,4 +1,4 @@
-package com.wings2d.framework;
+package com.wings2d.framework.core;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -350,7 +350,7 @@ public abstract class Game{
 	
 	/**
 	 * Get object to control the levels for the game
-	 * @return {@link com.wings2d.framework.LevelManager LevelManager} for this game
+	 * @return {@link com.wings2d.framework.core.LevelManager LevelManager} for this game
 	 */
 	public LevelManager getManager()
 	{
