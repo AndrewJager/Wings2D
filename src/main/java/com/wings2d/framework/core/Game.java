@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.wings2d.framework.rendering.DrawPanel;
@@ -143,44 +144,47 @@ public abstract class Game{
 		ogWidth = width;
 		
 		frameColor = Color.BLACK;
-		
-		frame = new JFrame();
-		frame.addWindowListener(new FrameClose());
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(480, 270));
-		frame.setSize(width, height);
-		frame.setLocationRelativeTo(null);
-		frame.setBackground(frameColor);
-
-		panel = new JPanel();
-		panel.setBackground(frameColor);
-		panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
-		panel.setLayout(null);
-
 		if (useCanvas) {
 			draw = new DrawPanelCanvas(this);
 		}
 		else {
 			draw = new DrawPanelJPanel(this);
 		}
-		panel.add(draw.getDrawComponent(), BorderLayout.CENTER);
-		frame.add(panel);
-		frame.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				draw.resizePanel(panel);
-				onResize(draw);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				frame = new JFrame();
+				frame.addWindowListener(new FrameClose());
+				frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				frame.setMinimumSize(new Dimension(480, 270));
+				frame.setSize(width, height);
+				frame.setLocationRelativeTo(null);
+				frame.setBackground(frameColor);
+
+				panel = new JPanel();
+				panel.setBackground(frameColor);
+				panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
+				panel.setLayout(null);
+
+
+				panel.add(draw.getDrawComponent(), BorderLayout.CENTER);
+				frame.add(panel);
+				frame.addComponentListener(new ComponentAdapter() {
+					public void componentResized(ComponentEvent e) {
+						draw.resizePanel(panel);
+						onResize(draw);
+					}
+				});
+				
+				setCanvasColor(Color.DARK_GRAY);
+				
+				frame.setVisible(true);
+				draw.initGraphics();
+				
+				startLoop();
 			}
 		});
-		
-		setCanvasColor(Color.DARK_GRAY);
-		
-		frame.setVisible(true);
-		draw.initGraphics();
-		
-		
-		final long OPTIMAL_TIME = 1000000000 / options.getTargetFPS();  
-		runner = Executors.newSingleThreadScheduledExecutor();
-        runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);	
 	}
 	
 	public Game(final int width, final int height) {
@@ -188,6 +192,12 @@ public abstract class Game{
 	}
 	public Game(final int width, final int height, final int fps) {
 		this(width, height, fps, false);
+	}
+	
+	private void startLoop() {
+		final long OPTIMAL_TIME = 1000000000 / options.getTargetFPS();  
+		runner = Executors.newSingleThreadScheduledExecutor();
+        runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);
 	}
 
 	/**
@@ -366,5 +376,8 @@ public abstract class Game{
 	}
 	public GameOptions getOptions() {
 		return options;
+	}
+	public JPanel getFullPanel() {
+		return panel;
 	}
 }
