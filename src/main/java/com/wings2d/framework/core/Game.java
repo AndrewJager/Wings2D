@@ -21,8 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import com.wings2d.framework.rendering.DrawPanel;
-import com.wings2d.framework.rendering.DrawPanelCanvas;
 import com.wings2d.framework.rendering.DrawPanelJPanel;
 
 /**
@@ -96,7 +94,7 @@ public abstract class Game{
 	/** {@link javax.swing.JFrame JFrame} used to contain the canvas the game will be drawn on **/
 	private JFrame frame;
 	/** Handles the drawing canvas */
-	private DrawPanel draw;
+	private DrawPanelJPanel draw;
 	/** Background {@link java.awt.Color Color} of the draw panel */
 	private Color backgroundColor;
 	/** Background {@link java.awt.Color Color} of the frame */
@@ -144,16 +142,16 @@ public abstract class Game{
 		ogWidth = width;
 		
 		frameColor = Color.BLACK;
-		if (useCanvas) {
-			draw = new DrawPanelCanvas(this);
-		}
-		else {
-			draw = new DrawPanelJPanel(this);
-		}
+		draw = new DrawPanelJPanel(this);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				System.out.println("1 Start - " + System.nanoTime());
+				
+				// Set JVM properties
+				System.setProperty("sun.java2d.uiScale", "1.0");
+				
 				frame = new JFrame();
 				frame.addWindowListener(new FrameClose());
 				frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -168,7 +166,7 @@ public abstract class Game{
 				panel.setLayout(null);
 
 
-				panel.add(draw.getDrawComponent(), BorderLayout.CENTER);
+				panel.add(draw, BorderLayout.CENTER);
 				frame.add(panel);
 				frame.addComponentListener(new ComponentAdapter() {
 					public void componentResized(ComponentEvent e) {
@@ -181,8 +179,16 @@ public abstract class Game{
 				
 				frame.setVisible(true);
 				draw.initGraphics();
-				
+				System.out.println("1 End - " + System.nanoTime());
+			}
+		});
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("2 Start - " + System.nanoTime());
+				init();
 				startLoop();
+				System.out.println("2 End - " + System.nanoTime());
 			}
 		});
 	}
@@ -217,7 +223,7 @@ public abstract class Game{
 	 * Called when the frame is resized. Override this to use this event.
 	 * @param draw {@link com.wings2d.framework.rendering.DrawPanel DrawPanel} The game's window
 	 */
-	public void onResize(final DrawPanel draw)
+	public void onResize(final DrawPanelJPanel draw)
 	{
 		double scale = Double.valueOf(draw.getWidth()) / ogWidth; 
 		manager.setScale(scale);
@@ -239,7 +245,7 @@ public abstract class Game{
 	 * @return Graphics2D object to draw with
 	 */
 	protected Graphics2D getDrawGraphics() {
-		return draw.getGraphics();
+		return draw.getGraphics2D();
 	}
 
 	/** "Game Loop" of the program. */
@@ -247,11 +253,10 @@ public abstract class Game{
 		lastLoopTime = curLoopTime; // Must be before setting of lastLoopTime in init
 		if (!initalized)
 		{
-			init();
 			lastLoopTime = System.nanoTime();
 			initalized = true;
 		}
-
+		
 		// Calculate time delta
 		long now = System.nanoTime();
 		curLoopTime = now;
@@ -277,7 +282,6 @@ public abstract class Game{
 		}
 
 		update(delta);
-	
 		draw.render();
 		draw.afterRender();
 	}
@@ -310,7 +314,7 @@ public abstract class Game{
 		}
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setColor(backgroundColor);
-		g2d.fillRect(0, 0, draw.getDrawComponent().getWidth(), draw.getDrawComponent().getHeight());
+		g2d.fillRect(0, 0, draw.getWidth(), draw.getHeight());
 	}
 	
 	/**
@@ -333,7 +337,7 @@ public abstract class Game{
 	 * @param color {@link java.awt.Color Color} to set the canvas to
 	 */
 	public void setCanvasColor(Color color) {
-		draw.getDrawComponent().setBackground(color);
+		draw.setBackground(color);
 		this.backgroundColor = color;
 	}
 	/**
@@ -367,7 +371,7 @@ public abstract class Game{
 		return manager;
 	}
 	
-	public DrawPanel getDrawPanel()
+	public DrawPanelJPanel getDrawPanel()
 	{
 		return draw;
 	}
