@@ -6,7 +6,6 @@ import java.util.Random;
 
 import com.wings2d.framework.core.GameObject;
 import com.wings2d.framework.core.Level;
-import com.wings2d.framework.input.KeyState;
 import com.wings2d.framework.shape.ShapeUtils;
 
 import java.awt.BasicStroke;
@@ -116,7 +115,7 @@ public class GodRay extends GameObject{
 	}
 
 	@Override
-	public void update(double dt, KeyState keys) {
+	public void update(double dt) {
 		for (int i = 0; i < rays.size(); i++)
 		{
 			Line ray = rays.get(i);

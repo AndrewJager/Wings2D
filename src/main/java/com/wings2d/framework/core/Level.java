@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wings2d.framework.input.KeyState;
 import com.wings2d.framework.input.UIElement;
 
 public class Level {
@@ -25,6 +24,7 @@ public class Level {
 	{
 		this.thisLevel = thisLevel;
 		this.manager = manager;
+		manager.addLevel(this);
 		objects = new ArrayList<GameObject>();
 		ui = new ArrayList<UIElement>();
 		
@@ -61,11 +61,11 @@ public class Level {
 			ui.get(i).rescale();
 		}
 	}
-	public void update(double dt, KeyState keys)
+	public void update(double dt)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			objects.get(i).update(dt, keys);
+			objects.get(i).update(dt);
 		}
 	}
 	public void updateUI(Point mouseClick)

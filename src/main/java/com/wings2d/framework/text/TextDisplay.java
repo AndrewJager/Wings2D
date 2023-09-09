@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import com.wings2d.framework.core.GameObject;
 import com.wings2d.framework.core.Level;
-import com.wings2d.framework.input.KeyState;
+
 /**
  * Uses the DisplayableText interface to display an object of any class that implements this interface
  */
@@ -33,7 +33,7 @@ public class TextDisplay extends GameObject{
 	
 
 	@Override
-	public void update(double dt, KeyState keys)
+	public void update(double dt)
 	{
 		text.update(dt);
 	}

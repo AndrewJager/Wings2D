@@ -147,7 +147,6 @@ public abstract class Game{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("1 Start - " + System.nanoTime());
 				
 				// Set JVM properties
 				System.setProperty("sun.java2d.uiScale", "1.0");
@@ -179,16 +178,13 @@ public abstract class Game{
 				
 				frame.setVisible(true);
 				draw.initGraphics();
-				System.out.println("1 End - " + System.nanoTime());
 			}
 		});
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("2 Start - " + System.nanoTime());
 				init();
 				startLoop();
-				System.out.println("2 End - " + System.nanoTime());
 			}
 		});
 	}
@@ -280,10 +276,16 @@ public abstract class Game{
 			framesInSecond = 0;
 			deltaSum = 0;
 		}
-
-		update(delta);
-		draw.render();
-		draw.afterRender();
+		try {
+			update(delta);
+			draw.render();
+			draw.afterRender();
+		}
+		catch (Exception e) {
+			// Unsure why I have to do this, but I had an exception that was crashing the thread, but not printing to the console.
+			// This let's me debug that.
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -299,7 +301,7 @@ public abstract class Game{
 	 * Therefore, the delta for one frame at 60 FPS should be about 0.0166667 (1/60).
 	 */
 	public void update(final double delta) {
-
+		manager.update(delta);
 	}
 
 	/**
@@ -315,6 +317,8 @@ public abstract class Game{
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getWidth(), draw.getHeight());
+		
+		manager.render(g2d, debugInfo.shouldPrintInfo());
 	}
 	
 	/**
