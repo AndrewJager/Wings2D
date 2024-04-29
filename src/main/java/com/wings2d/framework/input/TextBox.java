@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wings2d.framework.core.Level;
-import com.wings2d.framework.core.Utils;
+import com.wings2d.framework.core.Wings2DUtils;
 import com.wings2d.framework.rendering.Image;
 
 
@@ -91,7 +91,7 @@ public class TextBox extends UIElement{
 		int charactersIndexed = 0;
 		while (charactersIndexed < text.length())
 		{
-			lines.add(Utils.safeSubstring(text, charactersIndexed, charactersIndexed + lineLimit).trim());
+			lines.add(Wings2DUtils.safeSubstring(text, charactersIndexed, charactersIndexed + lineLimit).trim());
 			charactersIndexed = charactersIndexed + lineLimit;
 		}
 	}

@@ -71,6 +71,7 @@ public class LevelManager {
 		
 		public void setNode(final Node node) {
 			this.node = node;
+			rescale();
 		}
 		
 		public Coord getX() {
@@ -97,11 +98,13 @@ public class LevelManager {
 	private KeyMapping keys;
 	private double scale;
 	private TextBox textBox;
-	private List<Coord> coords; // List of coords so we can automatically scale them anytime the scale changes
-	private List<Location> locs;
+	private List<Location> locs; // List of Locations so we can automatically scale them anytime the scale changes
+	private Game game;
 	
-	public LevelManager()
+	public LevelManager(final Game game)
 	{
+		this.game = game;
+		
 		curLevel = 0; // First level, probably menu
 		scale = 1;
 		keys = new KeyMapping();
@@ -112,22 +115,22 @@ public class LevelManager {
 		keys.setKey("Jump", 38);
 		
 		levels = new ArrayList<Level>();
-		coords = new ArrayList<Coord>();
 		locs = new ArrayList<Location>();
 	}
 	public void rescale()
 	{
-		for (int i = 0; i < levels.size(); i++)
-		{
+		for (int i = 0; i < levels.size(); i++) {
 			levels.get(i).rescale();
-		}
-		for (int i = 0; i < coords.size(); i++) {
-			coords.get(i).rescale();
 		}
 		for (int i = 0; i < locs.size(); i++) {
 			locs.get(i).rescale();
 		}
+		
+		for (int i = 0; i < levels.size(); i++) {
+			levels.get(i).afterRescale();
+		}
 	}
+
 	public KeyMapping getKeyMapping()
 	{
 		return this.keys;
@@ -190,5 +193,9 @@ public class LevelManager {
 		Location l = new Location(this);
 		locs.add(l);
 		return l;
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 }

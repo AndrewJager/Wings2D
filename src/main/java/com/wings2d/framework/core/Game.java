@@ -136,7 +136,7 @@ public abstract class Game{
 	public Game(final int width, final int height, final int fps, final boolean useCanvas) {
 		options = new GameOptions(fps);
 		debugInfo = new DebugInfo();
-		manager = new LevelManager();
+		manager = new LevelManager(this);
 		toolkit = Toolkit.getDefaultToolkit();
 		
 		ogWidth = width;
@@ -315,6 +315,7 @@ public abstract class Game{
 			toolkit.sync();
 		}
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getWidth(), draw.getHeight());
 		

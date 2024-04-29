@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.core.Utils;
+import com.wings2d.framework.core.Wings2DUtils;
 import com.wings2d.framework.misc.CardinalDir;
 
 /**
@@ -100,11 +100,11 @@ public class LightenFrom implements ImageFilter, ShadeFrom {
 				
 				Color color = new Color(image.getRGB(x, y), true); 
 				int red = color.getRed() + colorIncrease;
-				red = Utils.makeInRange(red, 0, 255);
+				red = Wings2DUtils.makeInRange(red, 0, 255);
 				int blue = color.getBlue() + colorIncrease;
-				blue = Utils.makeInRange(blue, 0, 255);
+				blue = Wings2DUtils.makeInRange(blue, 0, 255);
 				int green = color.getGreen() + colorIncrease; 
-				green = Utils.makeInRange(green, 0, 255);
+				green = Wings2DUtils.makeInRange(green, 0, 255);
 				color = new Color(red, green, blue, color.getAlpha());
 				image.setRGB(x, y, color.getRGB());
 			}

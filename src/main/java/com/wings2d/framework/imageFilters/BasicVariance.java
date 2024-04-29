@@ -7,7 +7,7 @@ import java.util.Random;
 
 import javax.swing.JSpinner;
 
-import com.wings2d.framework.core.Utils;
+import com.wings2d.framework.core.Wings2DUtils;
 
 /**
  * Randomly modify the RGB values of the image pixels to create a distorted effect.
@@ -88,11 +88,11 @@ public class BasicVariance implements ImageFilter{
 				if (color.getRGB() != Color.TRANSLUCENT)
 				{
 					int red = color.getRed() + (rand.nextInt(varAmount - (varAmount / 2)));
-					red = Utils.makeInRange(red, 0, 255);
+					red = Wings2DUtils.makeInRange(red, 0, 255);
 					int blue = color.getBlue() + (rand.nextInt(varAmount - (varAmount / 2)));
-					blue = Utils.makeInRange(blue, 0, 255);
+					blue = Wings2DUtils.makeInRange(blue, 0, 255);
 					int green = color.getGreen() + (rand.nextInt(varAmount - (varAmount / 2))); 
-					green = Utils.makeInRange(green, 0, 255);
+					green = Wings2DUtils.makeInRange(green, 0, 255);
 					color = new Color(red, green, blue, color.getAlpha());
 					img.setRGB(x, y, color.getRGB());
 				}

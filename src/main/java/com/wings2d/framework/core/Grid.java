@@ -187,15 +187,18 @@ public class Grid {
             }
         }
         
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-            	Node node = nodes[i][j];
-            	g2d.setColor(Color.WHITE);
-            	g2d.translate(this.getNodeX(node), this.getNodeY(node));
-            	g2d.drawRect(0, 0, 2, 2);
-            	g2d.translate(-this.getNodeX(node), -this.getNodeY(node));
-            }
-        }
+//        for (int i = 0; i < x; i++) {
+//            for (int j = 0; j < y; j++) {
+//            	Node node = nodes[i][j];
+//            	g2d.setColor(Color.WHITE);
+//            	Wings2DUtils.translateRender(g2d, new Runnable() {
+//            		@Override
+//            	    public void run() {
+//            			g2d.drawRect(0, 0, 2, 2);
+//            	    }
+//            	}, this.getNodeX(node), this.getNodeY(node));
+//            }
+//        }
         
         
         // Draw path
@@ -247,11 +250,28 @@ public class Grid {
 		double cellHalf = (double)cellSize / 2;
 		
 		double result = xPos + ((double)(node.getX() * cellSize)) + cellHalf;
-//		System.out.println(result);
 		return result;
 	}
 	public double getNodeY(final Node node) {
 		return yPos + (node.getY() * cellSize) + (cellSize / 2);
+	}
+	
+	/*
+	 * Input as a percentage, 0 - 100
+	 */
+	public double getX(final double xPercent) {
+		return xPos + (gridWidth * xPercent);
+	}
+	public double getY(final double yPercent) {
+		return yPos + (gridHeight * yPercent);
+	}
+	public double getNodePercentX(final Node node) {
+		double cellPercent = (double)cellSize / gridWidth;
+		return ((double)node.getX() / x) + (cellPercent / 2);
+	}
+	public double getNodePercentY(final Node node) {
+		double cellPercent = (double)cellSize / gridHeight;
+		return ((double)node.getY() / y) + (cellPercent / 2);
 	}
 	
 	private void updateEntity(final GridEntity e, final double dt) {
@@ -346,5 +366,9 @@ public class Grid {
 	
 	public void OnEntityPathComplete(final GridEntity e) {
 		playerNode = e.getNode();
+	}
+	
+	public void print() {
+//		test.print();
 	}
 }

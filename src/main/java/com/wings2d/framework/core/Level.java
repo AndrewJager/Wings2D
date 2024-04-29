@@ -89,4 +89,8 @@ public class Level {
 			ui.get(i).renderUI(g2d, debug);
 		}
 	}
+	
+	public void afterRescale() {
+		
+	}
 }

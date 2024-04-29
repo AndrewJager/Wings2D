@@ -1,11 +1,12 @@
 package com.wings2d.framework.core;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * Contains various static utility functions that can be used anywhere in the program.
  */
-public final class Utils {
+public final class Wings2DUtils {
 	/**
 	 * If the value is less then the minimum, or greater than the maximum, force it to be inside the range.
 	 * @param value Number to make in range
@@ -163,5 +164,11 @@ public final class Utils {
 	public static double percentTo255(final double percent)
 	{
 		return percent * 2.55;
+	}
+	
+	public static void translateRender(final Graphics2D g2d, final Runnable renderMethod, final double xDist, final double yDist) {
+		g2d.translate(xDist, yDist);
+		renderMethod.run();
+		g2d.translate(-xDist, -yDist);
 	}
 }

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
-import com.wings2d.framework.core.Utils;
+import com.wings2d.framework.core.Wings2DUtils;
 import com.wings2d.framework.shape.ShapeUtils;
 
 /**
@@ -89,8 +89,8 @@ public class LightFrom implements ImageFilter{
 				double invertedDistance = distance + (amtFromMid * 2);
 				double distPercent = invertedDistance / height;
 				
-				Color highlight = Utils.modifyColorByPercent(lightColor, distPercent);	
-				image.setRGB(x, y, Utils.overlayColor(new Color(image.getRGB(x, y), true), highlight).getRGB());
+				Color highlight = Wings2DUtils.modifyColorByPercent(lightColor, distPercent);	
+				image.setRGB(x, y, Wings2DUtils.overlayColor(new Color(image.getRGB(x, y), true), highlight).getRGB());
 			}
 		}
 	}
