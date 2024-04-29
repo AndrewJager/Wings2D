@@ -2,6 +2,7 @@ package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,11 +59,11 @@ public class Level {
 		}
 	}
 
-	public void render(Graphics2D g2d, boolean debug)
+	public void render(final Graphics2D g2d)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			objects.get(i).render(g2d, debug);
+			objects.get(i).render(g2d, false);
 		}
 	}
 	

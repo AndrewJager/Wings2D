@@ -49,7 +49,6 @@ public class Grid {
 	private int xPos;
 	private int yPos;
 	
-	private GridEntity test;
 	private LevelManager manager;
 	
 	public Grid(final int x, final int y, final Component panel, final LevelManager manager) {
@@ -91,8 +90,6 @@ public class Grid {
         
         playerNode = nodes[0][0];
 
-        test = new GridEntity(this, playerNode);
-        
         panel.addMouseMotionListener(new MouseMotionListener() {
 			public void mouseDragged(MouseEvent e) {}
 			public void mouseMoved(MouseEvent e) {
@@ -138,7 +135,7 @@ public class Grid {
 //					test.setTarget(getNodeX(activeNode), getNodeY(activeNode), manager.getScale());
 					path = aStarPath(playerNode, nodes[activeNode.getX()][activeNode.getY()]);
 					if (path != null) {
-						test.setPath(path);
+
 					}
 //					playerNode = nodes[activeNode.getX()][activeNode.getY()];
 				}
@@ -222,11 +219,7 @@ public class Grid {
 		}
 		
 		// draw test
-		test.render(g2d, scale);
-	}
-	
-	public void update(final double dt) {
-		updateEntity(test, dt);
+
 	}
 	
 	public void recalcGridSize(final JComponent panel) {
@@ -272,10 +265,6 @@ public class Grid {
 	public double getNodePercentY(final Node node) {
 		double cellPercent = (double)cellSize / gridHeight;
 		return ((double)node.getY() / y) + (cellPercent / 2);
-	}
-	
-	private void updateEntity(final GridEntity e, final double dt) {
-		e.update(dt);
 	}
 	
 	private List<Node> aStarPath(final Node startNode, final Node endNode) {
@@ -362,10 +351,6 @@ public class Grid {
 	
 	public Node[][] getNodes() {
 		return nodes;
-	}
-	
-	public void OnEntityPathComplete(final GridEntity e) {
-		playerNode = e.getNode();
 	}
 	
 	public void print() {

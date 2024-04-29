@@ -12,7 +12,7 @@ public abstract class SVGItem {
 	public static final String ELLIPSE = "ellipse";
 	public static final String PATH = "path";
 	
-	protected static final boolean DEBUG = true;
+	protected static final boolean DEBUG = false;
 	protected static final BasicStroke DEBUG_STROKE = new BasicStroke(1);
 	protected static final Color DEBUG_COLOR = Color.RED;
 	
