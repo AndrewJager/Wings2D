@@ -5,13 +5,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wings2d.framework.input.UIElement;
-
 public class Level {
 	/** List of objects that descend from GameObject */
 	private List<GameObject> objects;
-	/** List of UI elements */
-	private List<UIElement> ui;
+
 	/** Identifier for this level */
 	private int thisLevel;
 	private LevelManager manager;
@@ -26,7 +23,6 @@ public class Level {
 		this.manager = manager;
 		manager.addLevel(this);
 		objects = new ArrayList<GameObject>();
-		ui = new ArrayList<UIElement>();
 		
 		manager.addLevel(this);
 	}
@@ -38,10 +34,7 @@ public class Level {
 	{
 		return this.thisLevel;
 	}
-	public void addUI(UIElement ui)
-	{
-		this.ui.add(ui);
-	}
+
 	public void addObject(GameObject newObject)
 	{
 		this.objects.add(newObject);
@@ -56,10 +49,6 @@ public class Level {
 		{
 			objects.get(i).rescale();
 		}
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).rescale();
-		}
 	}
 	public void update(double dt)
 	{
@@ -68,25 +57,12 @@ public class Level {
 			objects.get(i).update(dt);
 		}
 	}
-	public void updateUI(Point mouseClick)
-	{
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).updateUI(mouseClick);
-		}
-	}
+
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
 			objects.get(i).render(g2d, debug);
-		}
-	}
-	public void renderUI(Graphics2D g2d, boolean debug)
-	{
-		for (int i = 0; i < ui.size(); i++)
-		{
-			ui.get(i).renderUI(g2d, debug);
 		}
 	}
 	

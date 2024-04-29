@@ -21,8 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import com.wings2d.framework.rendering.DrawPanelJPanel;
-
 /**
  * <p> Extend this class with your main game class, and override the
  * init/update/render methods. </p> 

@@ -1,12 +1,10 @@
-package com.wings2d.framework.rendering;
+package com.wings2d.framework.core;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
-
-import com.wings2d.framework.core.Game;
 
 @SuppressWarnings("serial")
 public class DrawPanelJPanel extends JPanel{

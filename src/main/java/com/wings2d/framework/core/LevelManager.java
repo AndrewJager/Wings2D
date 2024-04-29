@@ -5,9 +5,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wings2d.framework.input.KeyMapping;
-import com.wings2d.framework.input.TextBox;
-
 
 public class LevelManager {
 
@@ -95,9 +92,7 @@ public class LevelManager {
 
 	private List<Level> levels;
 	private int curLevel;
-	private KeyMapping keys;
 	private double scale;
-	private TextBox textBox;
 	private List<Location> locs; // List of Locations so we can automatically scale them anytime the scale changes
 	private Game game;
 	
@@ -107,12 +102,6 @@ public class LevelManager {
 		
 		curLevel = 0; // First level, probably menu
 		scale = 1;
-		keys = new KeyMapping();
-		keys.setKey("Enter", 10);
-		keys.setKey("Left", 37);
-		keys.setKey("Right", 39);
-		keys.setKey("Esc", 27);
-		keys.setKey("Jump", 38);
 		
 		levels = new ArrayList<Level>();
 		locs = new ArrayList<Location>();
@@ -129,11 +118,6 @@ public class LevelManager {
 		for (int i = 0; i < levels.size(); i++) {
 			levels.get(i).afterRescale();
 		}
-	}
-
-	public KeyMapping getKeyMapping()
-	{
-		return this.keys;
 	}
 	public void setLevel(int newLevel)
 	{
@@ -168,26 +152,13 @@ public class LevelManager {
 	{
 		levels.get(curLevel).update(dt);
 	}
-	public void updateUI(Point mouseClick)
-	{
-		this.levels.get(curLevel).updateUI(mouseClick);
-	}
+
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		this.levels.get(curLevel).render(g2d, debug);
 	}
-	public void renderUI(Graphics2D g2d, boolean debug)
-	{
-		this.levels.get(curLevel).renderUI(g2d, debug);
-	}
 
 
-	public TextBox getTextBox() {
-		return textBox;
-	}
-	public void setTextBox(TextBox textBox) {
-		this.textBox = textBox;
-	}
 	
 	public Location makeLocation() {
 		Location l = new Location(this);

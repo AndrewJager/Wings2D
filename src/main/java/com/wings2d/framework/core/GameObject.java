@@ -2,8 +2,6 @@ package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
 
-import com.wings2d.framework.misc.PhysicsType;
-
 /**
  * Abstract base class for all game entities
  */
@@ -24,11 +22,4 @@ public abstract class GameObject {
 	{ /* Do nothing by default */ }
 	/** Change the object's scale */
 	public abstract void rescale();
-	/** Check what the object should do in physics processing 
-	 * @return {@link com.wings2d.framework.misc.PhysicsType PhysicsType} of the object. NONE by default.
-	 */
-	public PhysicsType getPhysicsType()
-	{
-		return PhysicsType.NONE;
-	}
 }
