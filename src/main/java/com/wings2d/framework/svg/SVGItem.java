@@ -30,4 +30,5 @@ public abstract class SVGItem {
 	public abstract void printData(final String indent);
 	public abstract Rectangle2D getBounds();
 	public abstract void applyTransform(final AffineTransform t);
+	public abstract void endUpdate();
 }

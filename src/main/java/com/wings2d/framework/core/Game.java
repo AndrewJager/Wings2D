@@ -9,8 +9,11 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -66,17 +69,21 @@ public abstract class Game{
 	}
 	
 	public class DebugInfo {
-		protected int fps;
+		protected int updateFps, renderFps;
 		private boolean printInfo;
 		
 		public DebugInfo()
 		{
-			fps = 0;
+			updateFps = 0;
+			renderFps = 0;
 			setPrintInfo(false);
 		}
 		
-		public int getFPS() {
-			return fps;
+		public int getUpdateFPS() {
+			return updateFps;
+		}
+		public int getRenderFPS() {
+			return renderFps;
 		}
 		public boolean shouldPrintInfo() {
 			return printInfo;
@@ -105,33 +112,41 @@ public abstract class Game{
 	
 	// Internal variables
 	/** Used to run the frames at fixed intervals */
-	private ScheduledExecutorService runner;
+	private ScheduledExecutorService runner, runner2;
 	/** Used to run the init() function only once */
 	private boolean initalized = false;
 	/** {@link java.awt.Canvas Canvas} needs to be inside a panel for sizing to work properly. 
 	 * This is not exposed to the user
 	 */
 	private JPanel panel;
-	/** Used to calculated the number of frames executed in a second */
-	private double lastFpsTime = 0;
-
-	/** The current fps */
-	private int framesInSecond = 0;
 	/** The width with which the game was created. Used to determine scale */
 	private int ogWidth;
 	
+	
+	/** Used to calculated the number of frames executed in a second */
+	private double lastUpdateFpsTime = 0;
+	private double lastRenderFpsTime = 0;
+
+	/** The current fps */
+	private int updateFramesInSecond = 0;
+	private int renderFramesInSecond = 0;
+
 	/** Time at which the previous frame rendered */
-	private long lastLoopTime = 0;
+	private long lastUpdateLoopTime = 0;
+	private long lastRenderLoopTime = 0;
 	/** Time at which the current frame rendered */
-	private long curLoopTime = 0;
-	private double deltaSum;
+	private long curUpdateLoopTime = 0;
+	private long curRenderLoopTime = 0;
+	private boolean renderInitalized = false;
+	private double updateDeltaSum;
+	private double renderDeltaSum;
 	private Toolkit toolkit;
 	
 	/**
 	 * Call super(debug) from your constructor to use this
 	 * @param debug Use debug prints (FPS, ect.)
 	 */
-	public Game(final int width, final int height, final int fps, final boolean useCanvas) {
+	public Game(final int width, final int height, final int fps) {
 		options = new GameOptions(fps);
 		debugInfo = new DebugInfo();
 		manager = new LevelManager(this);
@@ -148,6 +163,7 @@ public abstract class Game{
 				
 				// Set JVM properties
 				System.setProperty("sun.java2d.uiScale", "1.0");
+//				System.setProperty("sun.java2d.opengl", "true");
 				
 				frame = new JFrame();
 				frame.addWindowListener(new FrameClose());
@@ -162,8 +178,7 @@ public abstract class Game{
 				panel.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0f)));
 				panel.setLayout(null);
 
-
-				panel.add(draw, BorderLayout.CENTER);
+				panel.add(draw);
 				frame.add(panel);
 				frame.addComponentListener(new ComponentAdapter() {
 					public void componentResized(ComponentEvent e) {
@@ -172,9 +187,11 @@ public abstract class Game{
 					}
 				});
 				
-				setCanvasColor(Color.DARK_GRAY);
+				setCanvasColor(Color.GRAY);
 				
 				frame.setVisible(true);
+//				frame.createBufferStrategy(2);
+//				draw.b = frame.getBufferStrategy();
 				draw.initGraphics();
 			}
 		});
@@ -188,16 +205,16 @@ public abstract class Game{
 	}
 	
 	public Game(final int width, final int height) {
-		this(width, height, 60, false);
-	}
-	public Game(final int width, final int height, final int fps) {
-		this(width, height, fps, false);
+		this(width, height, 60);
 	}
 	
 	private void startLoop() {
 		final long OPTIMAL_TIME = 1000000000 / options.getTargetFPS();  
 		runner = Executors.newSingleThreadScheduledExecutor();
-        runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);
+		runner2 = Executors.newSingleThreadScheduledExecutor();
+
+        runner.scheduleAtFixedRate(this::run, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);   
+        runner2.scheduleAtFixedRate(this::renderLoop, 0, OPTIMAL_TIME, TimeUnit.NANOSECONDS);   
 	}
 
 	/**
@@ -209,6 +226,7 @@ public abstract class Game{
 		public void windowClosing(final WindowEvent e) {
 			onClose();
 			runner.shutdown();
+			runner2.shutdown();
 			System.exit(0);
 		}
 	}
@@ -244,38 +262,80 @@ public abstract class Game{
 
 	/** "Game Loop" of the program. */
 	private void run() {
-		lastLoopTime = curLoopTime; // Must be before setting of lastLoopTime in init
+		lastUpdateLoopTime = curUpdateLoopTime; // Must be before setting of lastLoopTime in init
 		if (!initalized)
 		{
-			lastLoopTime = System.nanoTime();
+			lastUpdateLoopTime = System.nanoTime();
 			initalized = true;
 		}
 		
 		// Calculate time delta
 		long now = System.nanoTime();
-		curLoopTime = now;
-		long updateLength = (curLoopTime - lastLoopTime);
+		curUpdateLoopTime = now;
+		long updateLength = (curUpdateLoopTime - lastUpdateLoopTime);
 		double delta = updateLength / 1000000000.0;
-		deltaSum += delta;
-		lastFpsTime += updateLength;
-		framesInSecond++;
+		updateDeltaSum += delta;
+		lastUpdateFpsTime += updateLength;
+		updateFramesInSecond++;
 	
 		// Update debug info every second
-		if (lastFpsTime >= 1000000000)
+		if (lastUpdateFpsTime >= 1000000000)
 		{
-			debugInfo.fps = framesInSecond;
+			debugInfo.updateFps = updateFramesInSecond;
 			if (debugInfo.shouldPrintInfo())
 			{
-				System.out.print("(FPS: " + framesInSecond + ")" + " (DELTA: " + delta +")"); 
-				System.out.printf(" (AVG DELTA: %f", (deltaSum / framesInSecond));
+				System.out.print("(FPS: " + updateFramesInSecond + ")" + " (DELTA: " + delta +")"); 
+				System.out.printf(" (AVG DELTA: %f", (updateDeltaSum / updateFramesInSecond));
 				System.out.print(")\n");
 			}
-			lastFpsTime = 0;
-			framesInSecond = 0;
-			deltaSum = 0;
+			lastUpdateFpsTime = 0;
+			updateFramesInSecond = 0;
+			updateDeltaSum = 0;
 		}
 		try {
 			update(delta);
+//			draw.render();
+//			draw.afterRender();
+		}
+		catch (Exception e) {
+			// Unsure why I have to do this, but I had an exception that was crashing the thread, but not printing to the console.
+			// This let's me debug that.
+			e.printStackTrace();
+		}
+	}
+	
+	private void renderLoop() {
+		lastRenderLoopTime = curRenderLoopTime; // Must be before setting of lastLoopTime in init
+		if (!renderInitalized)
+		{
+			lastRenderLoopTime = System.nanoTime();
+			renderInitalized = true;
+		}
+		
+		// Calculate time delta
+		long now = System.nanoTime();
+		curRenderLoopTime = now;
+		long renderLength = (curRenderLoopTime - lastRenderLoopTime);
+		double delta = renderLength / 1000000000.0;
+		renderDeltaSum += delta;
+		lastRenderFpsTime += renderLength;
+		renderFramesInSecond++;
+	
+		// Update debug info every second
+		if (lastRenderFpsTime >= 1000000000)
+		{
+			debugInfo.renderFps = renderFramesInSecond;
+			if (debugInfo.shouldPrintInfo())
+			{
+				System.out.print("(FPS: " + renderFramesInSecond + ")" + " (DELTA: " + delta +")"); 
+				System.out.printf(" (AVG DELTA: %f", (renderDeltaSum / renderFramesInSecond));
+				System.out.print(")\n");
+			}
+			lastRenderFpsTime = 0;
+			renderFramesInSecond = 0;
+			renderDeltaSum = 0;
+		}
+		try {
 			draw.render();
 			draw.afterRender();
 		}
@@ -312,10 +372,19 @@ public abstract class Game{
 		if (options.getUseVSync()) {
 			toolkit.sync();
 		}
+
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		
+
+		
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getWidth(), draw.getHeight());
+		
+
 		
 		manager.render(g2d, debugInfo.shouldPrintInfo());
 	}
@@ -332,9 +401,9 @@ public abstract class Game{
 	 * Get the background color of the canvas
 	 * @return {@link java.awt.Color Color} of the canvas
 	 */
-	public Color getCanvasColor() {
-		return backgroundColor;
-	}
+//	public Color getCanvasColor() {
+//		return backgroundColor;
+//	}
 	/**
 	 * Set the background color of the canvas
 	 * @param color {@link java.awt.Color Color} to set the canvas to

@@ -52,6 +52,13 @@ public class SVGShapeGroup extends SVGItem{
 		}
 		recalcBounds();
 	}
+	@Override
+	public void endUpdate() {
+		for (int i = 0; i < children.size(); i++) {	
+			children.get(i).endUpdate();
+		}
+		recalcBounds();
+	}
 	
 	public static SVGShapeGroup parseG(final Node gNode) {
 		String gID = gNode.getAttributes().getNamedItem("id").getNodeValue();

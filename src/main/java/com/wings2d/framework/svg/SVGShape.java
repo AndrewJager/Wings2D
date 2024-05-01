@@ -14,15 +14,18 @@ public class SVGShape extends SVGItem{
 	public static final String OPTIONAL_STROKE = "stroke";
 	public static final String OPTIONAL_TRANSFORM = "transform"; 
 	
-	private Shape shape;
+	private Shape shape, newShape;
 	private SVGStyles styles; 
 	private Map<String, Object> optionalData;
+	private boolean shapeUpdated;
 
 	public SVGShape(final String id, final Shape shape, final SVGStyles styles, final Map<String, Object> optionalData) {
 		super(id);
 		this.shape = shape;
 		this.styles = styles;
 		this.optionalData = optionalData;
+		
+		this.shapeUpdated = false;
 	}
 
 	@Override
@@ -57,7 +60,15 @@ public class SVGShape extends SVGItem{
 
 	@Override
 	public void applyTransform(AffineTransform t) {
-		shape = t.createTransformedShape(shape);
+		newShape = t.createTransformedShape(shape);
+		shapeUpdated = true;
 	}
-
+	@Override
+	public void endUpdate() {
+		// Avoid rendering some items that have moved, and some that have not, due to rendering being independent of update
+		if (shapeUpdated) {
+			shape = newShape;
+			shapeUpdated = false;
+		}
+	}
 }

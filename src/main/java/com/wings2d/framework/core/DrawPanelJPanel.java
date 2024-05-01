@@ -3,8 +3,10 @@ package com.wings2d.framework.core;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public class DrawPanelJPanel extends JPanel{
@@ -14,7 +16,7 @@ public class DrawPanelJPanel extends JPanel{
 	private static final double SIXTEEN_TO_NINE = 0.5625;
 	/** Reference to the game, used to call the render function */
 	protected Game game;
-	
+
 	public DrawPanelJPanel(final Game game)
 	{
 		super();
@@ -33,7 +35,7 @@ public class DrawPanelJPanel extends JPanel{
 	}
 
 	public void initGraphics() {
-		
+
 	}
 
 	public boolean afterRender() {
@@ -41,7 +43,18 @@ public class DrawPanelJPanel extends JPanel{
 	}
 
 	public void render() {
-		this.repaint();
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					// Use this method, not repaint(), to force draw and reduce stutters with moving graphics
+					paintImmediately(0, 0, getWidth(), getHeight());
+//					repaint();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -50,8 +63,8 @@ public class DrawPanelJPanel extends JPanel{
 	 * calculate the size of the canvas
 	 */
 	public void resizePanel(final JPanel container) {
-		int width = container.getWidth();
-        int height = container.getHeight();
+		int width = game.getFrame().getWidth();
+        int height = game.getFrame().getHeight();
 
     	if ((width * SIXTEEN_TO_NINE) <= height )
     	{
