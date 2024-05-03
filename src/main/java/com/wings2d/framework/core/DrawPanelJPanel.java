@@ -63,8 +63,8 @@ public class DrawPanelJPanel extends JPanel{
 	 * calculate the size of the canvas
 	 */
 	public void resizePanel(final JPanel container) {
-		int width = game.getFrame().getWidth();
-        int height = game.getFrame().getHeight();
+		int width = container.getWidth();
+        int height = container.getHeight();
 
     	if ((width * SIXTEEN_TO_NINE) <= height )
     	{
@@ -76,7 +76,7 @@ public class DrawPanelJPanel extends JPanel{
     	}
     	int xPos = (container.getWidth() - getWidth()) / 2;
     	int yPos = (container.getHeight() - getHeight()) / 2;
-    	setLocation(xPos, yPos);
-        container.revalidate();
+
+		setLocation(xPos, yPos);
     }
 }

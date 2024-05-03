@@ -49,9 +49,9 @@ public class Grid {
 	private int xPos;
 	private int yPos;
 	
-	private LevelManager manager;
+	private SceneManager manager;
 	
-	public Grid(final int x, final int y, final Component panel, final LevelManager manager) {
+	public Grid(final int x, final int y, final Component panel, final SceneManager manager) {
 		this.x = x;
 		this.y = y;
 		this.manager = manager;
@@ -345,7 +345,7 @@ public class Grid {
 		return exists;
 	}
 	
-	public LevelManager getManager() {
+	public SceneManager getManager() {
 		return manager;
 	}
 	

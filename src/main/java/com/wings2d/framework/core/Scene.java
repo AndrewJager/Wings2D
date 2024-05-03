@@ -1,39 +1,38 @@
 package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level {
+public class Scene {
 	/** List of objects that descend from GameObject */
 	private List<GameObject> objects;
 
-	/** Identifier for this level */
-	private int thisLevel;
-	private LevelManager manager;
+	private String sceneId;
+	
+	private SceneManager manager;
 	/**
 	 * Class constructor
-	 * @param manager Level Manager object
 	 * @param thisLevel Identifier for this level
 	 */
-	public Level(LevelManager manager, int thisLevel)
+	public Scene(String sceneId)
 	{
-		this.thisLevel = thisLevel;
-		this.manager = manager;
-		manager.addLevel(this);
+		this.sceneId = sceneId;
 		objects = new ArrayList<GameObject>();
-		
-		manager.addLevel(this);
 	}
-	public LevelManager getManager()
+	
+	public void setManager(final SceneManager manager) {
+		this.manager = manager;
+	}
+	
+	public SceneManager getManager()
 	{
 		return this.manager;
 	}
-	public int getIdentifer()
+	
+	public String getIdentifer()
 	{
-		return this.thisLevel;
+		return this.sceneId;
 	}
 
 	public void addObject(GameObject newObject)
@@ -44,13 +43,7 @@ public class Level {
 	{
 		return objects;
 	}
-	public void rescale()
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			objects.get(i).rescale();
-		}
-	}
+
 	public void update(double dt)
 	{
 		for (int i = 0; i < objects.size(); i++)
@@ -67,7 +60,11 @@ public class Level {
 		}
 	}
 	
-	public void afterRescale() {
+	/**
+	 * Everything draw in this method will be drawn after render().
+	 * Graphics transform is reset, and window scale is then applied.
+	 */
+	public void renderUI(final Graphics2D g2d) {
 		
 	}
 }

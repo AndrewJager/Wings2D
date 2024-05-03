@@ -105,7 +105,7 @@ public abstract class Game{
 	/** Background {@link java.awt.Color Color} of the frame */
 	private Color frameColor;
 	/** Level manager for this game. Other LevelManagers should not be created */
-	private LevelManager manager;
+	private SceneManager manager;
 	/** Debug information */
 	private DebugInfo debugInfo;
 	
@@ -149,7 +149,7 @@ public abstract class Game{
 	public Game(final int width, final int height, final int fps) {
 		options = new GameOptions(fps);
 		debugInfo = new DebugInfo();
-		manager = new LevelManager(this);
+		manager = new SceneManager(this);
 		toolkit = Toolkit.getDefaultToolkit();
 		
 		ogWidth = width;
@@ -436,9 +436,9 @@ public abstract class Game{
 	
 	/**
 	 * Get object to control the levels for the game
-	 * @return {@link com.wings2d.framework.core.LevelManager LevelManager} for this game
+	 * @return {@link com.wings2d.framework.core.SceneManager LevelManager} for this game
 	 */
-	public LevelManager getManager()
+	public SceneManager getManager()
 	{
 		return manager;
 	}

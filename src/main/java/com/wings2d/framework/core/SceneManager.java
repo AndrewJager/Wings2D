@@ -1,53 +1,56 @@
 package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 
-public class LevelManager {
-	private List<Level> levels;
-	private int curLevel;
+@SuppressWarnings("serial")
+public class SceneManager extends HashMap<String, Scene>{
+	private Scene activeScene;
 	private double scale;
 	private Game game;
 	private AffineTransform viewTransform;
+	private AffineTransform uiTransform;
 	
-	public LevelManager(final Game game)
+	public SceneManager(final Game game)
 	{
+		super();
+		
 		this.game = game;
 		
-		curLevel = 0; // First level, probably menu
+		activeScene = null; 
 		scale = 1;
 		viewTransform = new AffineTransform();
-		
-		levels = new ArrayList<Level>();
+		uiTransform = new AffineTransform();
 	}
+	
 	public void rescale()
 	{
 		viewTransform.setToScale(scale, scale);
-		for (int i = 0; i < levels.size(); i++) {
-			levels.get(i).rescale();
-		}
-		
-		for (int i = 0; i < levels.size(); i++) {
-			levels.get(i).afterRescale();
-		}
-	}
-	public void setLevel(int newLevel)
-	{
-		curLevel = newLevel;
+		uiTransform.setToScale(scale, scale);
 	}
 	
-	public void addLevel(Level newLevel)
+	public void setLevel(final String sceneId)
 	{
-		levels.add(newLevel);
-		levels.set(newLevel.getIdentifer(), newLevel);
+		activeScene = this.get(sceneId);
 	}
+	
+	public void addLevel(Scene newScene)
+	{
+		this.put(newScene.getIdentifer(), newScene);
+		newScene.setManager(this);
+		
+		// By default, set the first scene added to the active scene
+		if (activeScene == null) {
+			activeScene = newScene;
+		}
+	}
+	
 	public double getScale() {
 		return scale;
 	}
+	
 	public void setScale(double scale) {
 		if (scale < 0)
 		{
@@ -64,15 +67,19 @@ public class LevelManager {
 		}
 		this.scale = scale;
 	}
+	
 	public void update(double dt)
 	{
-		levels.get(curLevel).update(dt);
+		activeScene.update(dt);
 	}
 
 	public void render(Graphics2D g2d, boolean debug)
 	{
 		g2d.setTransform(viewTransform);
-		this.levels.get(curLevel).render(g2d);
+		activeScene.render(g2d);
+		
+		g2d.setTransform(uiTransform);
+		activeScene.renderUI(g2d);
 	}
 	
 	public Game getGame() {

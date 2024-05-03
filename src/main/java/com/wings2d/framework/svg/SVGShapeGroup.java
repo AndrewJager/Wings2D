@@ -10,6 +10,7 @@ import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.wings2d.framework.core.GameObject;
 import com.wings2d.framework.svg.util.SVGTransform;
 
 public class SVGShapeGroup extends SVGItem{
