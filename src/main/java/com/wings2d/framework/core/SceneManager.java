@@ -1,8 +1,11 @@
 package com.wings2d.framework.core;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 
 @SuppressWarnings("serial")
@@ -85,4 +88,25 @@ public class SceneManager extends HashMap<String, Scene>{
 	public Game getGame() {
 		return game;
 	}
+	
+	
+	private void runSceneMouseMethod(final Consumer<MouseEvent> method, final MouseEvent e) {
+		if (method != null) {
+			method.accept(e);
+		}
+	}
+	private void runSceneMouseWheelMethod(final Consumer<MouseWheelEvent> method, final MouseWheelEvent e) {
+		if (method != null) {
+			method.accept(e);
+		}
+	}
+	
+	public void mouseClicked(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseClicked(), e);};
+	public void mousePressed(final MouseEvent e) {runSceneMouseMethod(activeScene.getMousePressed(), e);};
+	public void mouseReleased(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseReleased(), e);};
+	public void mouseEntered(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseEntered(), e);};
+	public void mouseExited(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseExited(), e);};
+	public void mouseDragged(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseDragged(), e);};
+	public void mouseMoved(final MouseEvent e) {runSceneMouseMethod(activeScene.getMouseMoved(), e);};
+	public void mouseWheelMoved(final MouseWheelEvent e) {runSceneMouseWheelMethod(activeScene.getMouseWheelMoved(), e);};
 }

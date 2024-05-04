@@ -3,6 +3,11 @@ package com.wings2d.framework.core;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
@@ -21,6 +26,45 @@ public class DrawPanelJPanel extends JPanel{
 	{
 		super();
 		this.game = game;
+		
+		this.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				game.getManager().mouseClicked(e);
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				game.getManager().mousePressed(e);	
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				game.getManager().mouseReleased(e);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				game.getManager().mouseEntered(e);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				game.getManager().mouseExited(e);
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				game.getManager().mouseDragged(e);
+			}
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				game.getManager().mouseMoved(e);
+			}
+		});
+		this.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				game.getManager().mouseWheelMoved(e);
+			}
+		});
 	}
 	
 	@Override
