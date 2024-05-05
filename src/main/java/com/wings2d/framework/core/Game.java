@@ -1,7 +1,6 @@
 package com.wings2d.framework.core;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -9,11 +8,10 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,12 +28,16 @@ import javax.swing.WindowConstants;
  * <p> {@code super.update()} and {@code super.render()}
  * should be called by your init/update/render functions. </p>
  */
-public abstract class Game{
+public abstract class Game<T>{
+	public interface OnCommand {
+	    void runCommand();
+	}
+	
 	public class GameOptions {
 		private int targetFPS;
 		private boolean useVSync;
 		
-		private final String debugSeparator = " | ";
+		private static final String debugSeparator = " | ";
 		
 		public GameOptions(final int fps) {
 			this.targetFPS = fps;
@@ -108,6 +110,8 @@ public abstract class Game{
 	private SceneManager manager;
 	/** Debug information */
 	private DebugInfo debugInfo;
+	/** Map commands to events */
+	private Map<T, OnCommand> commands;
 	
 	
 	// Internal variables
@@ -150,6 +154,8 @@ public abstract class Game{
 		options = new GameOptions(fps);
 		debugInfo = new DebugInfo();
 		manager = new SceneManager(this);
+		commands = new HashMap<T, OnCommand>();
+		
 		toolkit = Toolkit.getDefaultToolkit();
 		
 		ogWidth = width;
@@ -401,9 +407,9 @@ public abstract class Game{
 	 * Get the background color of the canvas
 	 * @return {@link java.awt.Color Color} of the canvas
 	 */
-//	public Color getCanvasColor() {
-//		return backgroundColor;
-//	}
+	public Color getCanvasColor() {
+		return backgroundColor;
+	}
 	/**
 	 * Set the background color of the canvas
 	 * @param color {@link java.awt.Color Color} to set the canvas to
@@ -438,10 +444,8 @@ public abstract class Game{
 	 * Get object to control the levels for the game
 	 * @return {@link com.wings2d.framework.core.SceneManager LevelManager} for this game
 	 */
-	public SceneManager getManager()
-	{
-		return manager;
-	}
+	public SceneManager getManager() {return manager;}
+	public Map<T, OnCommand> getCommands() {return commands;}
 	
 	public DrawPanelJPanel getDrawPanel()
 	{
