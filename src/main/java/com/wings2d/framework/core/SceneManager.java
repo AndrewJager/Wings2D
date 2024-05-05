@@ -76,7 +76,7 @@ public class SceneManager extends HashMap<String, Scene>{
 		activeScene.update(dt);
 	}
 
-	public void render(Graphics2D g2d, boolean debug)
+	public void render(final Graphics2D g2d)
 	{
 		g2d.setTransform(viewTransform);
 		activeScene.render(g2d);
