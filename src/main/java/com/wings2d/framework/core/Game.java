@@ -158,8 +158,13 @@ public abstract class Game<T>{
 				frame.add(panel);
 				frame.addComponentListener(new ComponentAdapter() {
 					public void componentResized(ComponentEvent e) {
-						draw.resizePanel(panel);
-						onResize(draw);
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								draw.resizePanel(panel);
+								onResize(draw);
+							}
+						});
 					}
 				});
 				
@@ -261,7 +266,7 @@ public abstract class Game<T>{
 		if (options.getUseVSync()) {
 			toolkit.sync();
 		}
-
+	
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);

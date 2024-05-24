@@ -4,15 +4,34 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class Scene {
+public abstract class Scene {
+	
+	public enum BufferType {
+		UPDATE_SAFE,
+		UPDATING,
+		RENDER_SAFE,
+		RENDERING
+	}
+	public enum Buffer {
+		A,
+		B,
+		C,
+		D,
+		UNASSIGNED
+	}
+	
 	/** List of objects that descend from GameObject */
 	private List<GameObject> objects;
 
 	private String sceneId;
+	protected
+	Map<BufferType, Buffer> buffers;
 	
 	private SceneManager manager;
 	
@@ -33,6 +52,29 @@ public class Scene {
 	{
 		this.sceneId = sceneId;
 		objects = new ArrayList<GameObject>();
+		
+		buffers = new HashMap<BufferType, Buffer>();
+		buffers.put(BufferType.UPDATE_SAFE, Buffer.UNASSIGNED);
+		buffers.put(BufferType.UPDATING, Buffer.A);
+		buffers.put(BufferType.RENDER_SAFE, Buffer.UNASSIGNED);
+		buffers.put(BufferType.RENDERING, Buffer.UNASSIGNED);
+	}
+	
+	public abstract void update(double dt);
+	public abstract void render(final Graphics2D g2d);
+	public abstract void renderUI(final Graphics2D g2d);
+	
+	public void beforeUpdate() {
+		
+	}
+	public void afterUpdate() {
+
+	}
+	public void beforeRender() {
+
+	}
+	public void afterRender() {
+		
 	}
 	
 	public void setManager(final SceneManager manager) {
@@ -56,30 +98,6 @@ public class Scene {
 	public List<GameObject> getObjects()
 	{
 		return objects;
-	}
-
-	public void update(double dt)
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			objects.get(i).update(dt);
-		}
-	}
-
-	public void render(final Graphics2D g2d)
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			objects.get(i).render(g2d);
-		}
-	}
-	
-	/**
-	 * Everything draw in this method will be drawn after render().
-	 * Graphics transform is reset, and window scale is then applied.
-	 */
-	public void renderUI(final Graphics2D g2d) {
-		
 	}
 	
 	

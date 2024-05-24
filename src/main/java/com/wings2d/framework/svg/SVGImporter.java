@@ -23,12 +23,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.wings2d.framework.core.Game;
 import com.wings2d.framework.svg.util.SVGEllipse;
 import com.wings2d.framework.svg.util.SVGPath;
 import com.wings2d.framework.svg.util.SVGRectangle;
 
 public class SVGImporter {
-	public static SVGShapeGroup importSVG(final String svgFilePath) {
+	public static SVGShapeGroup importSVG(final String svgFilePath, final Game game) {
 		DocumentBuilder builder;
 		Document doc = null;
 		try {
@@ -43,11 +44,11 @@ public class SVGImporter {
 	    NodeList svgChildren = svg.getChildNodes();
 	    
 	    String svgID = svg.getAttributes().getNamedItem("id").getNodeValue();
-	    SVGShapeGroup shapeGroup = new SVGShapeGroup(svgID);
+	    SVGShapeGroup shapeGroup = new SVGShapeGroup(svgID, game);
 	    
 	    for (int i = 0; i < svgChildren.getLength(); i++) {
 	    	Node n = svgChildren.item(i); 
-	    	SVGItem item = parseNode(n);
+	    	SVGItem item = parseNode(n, game);
 	    	if (item != null) {
 	    		shapeGroup.getChildren().add(item);
 	    	}
@@ -56,9 +57,9 @@ public class SVGImporter {
 		
 		return shapeGroup;
 	}
-	public static SVGItem parseNode(final Node n) {
+	public static SVGItem parseNode(final Node n, final Game game) {
 		if (n.getNodeName().equals(SVGShape.GROUP)) {
-			return SVGShapeGroup.parseG(n);
+			return SVGShapeGroup.parseG(n, game);
 		}
 		else if (n.getNodeName().equals(SVGShape.RECT)) {
 			return SVGRectangle.parseRect(n);

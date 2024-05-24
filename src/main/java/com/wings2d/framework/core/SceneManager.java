@@ -73,16 +73,21 @@ public class SceneManager extends HashMap<String, Scene>{
 	
 	public void update(double dt)
 	{
+		activeScene.beforeUpdate();
 		activeScene.update(dt);
+		activeScene.afterUpdate();
 	}
 
 	public void render(final Graphics2D g2d)
 	{
+		activeScene.beforeRender();
 		g2d.setTransform(viewTransform);
 		activeScene.render(g2d);
 		
 		g2d.setTransform(uiTransform);
 		activeScene.renderUI(g2d);
+		
+		activeScene.afterRender();
 	}
 	
 	public Game getGame() {

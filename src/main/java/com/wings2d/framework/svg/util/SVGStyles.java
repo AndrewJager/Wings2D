@@ -38,7 +38,12 @@ public class SVGStyles extends HashMap<String, Object>{
 					}
 				}
 				case (STROKE_WIDTH) -> {
-					Float width = Float.parseFloat(styleValue);
+					String strWidth = styleValue; 
+					if (styleValue.substring(styleValue.length() - 2).equals("px")) {
+						System.out.println(STROKE_WIDTH + " value is in px. Ignoring units.");
+						strWidth = styleValue.substring(0, styleValue.length() - 2);
+					}
+					Float width = Float.parseFloat(strWidth);
 					styles.put(styleName, width);
 				}
 				case (STROKE_LINECAP) -> {

@@ -1,5 +1,6 @@
 package com.wings2d.framework.core;
 
+import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ public class DrawPanelJPanel extends JPanel{
 	{
 		super();
 		this.game = game;
+
 		
 		this.addMouseListener(new MouseListener() {
 			@Override
@@ -121,6 +123,6 @@ public class DrawPanelJPanel extends JPanel{
     	int xPos = (container.getWidth() - getWidth()) / 2;
     	int yPos = (container.getHeight() - getHeight()) / 2;
 
-		setLocation(xPos, yPos);
+		setLocation(xPos, yPos);	
     }
 }

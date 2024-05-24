@@ -10,6 +10,7 @@ import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.wings2d.framework.core.Game;
 import com.wings2d.framework.core.GameObject;
 import com.wings2d.framework.svg.util.SVGTransform;
 
@@ -17,7 +18,7 @@ public class SVGShapeGroup extends SVGItem{
 	private List<SVGItem> children;
 	private Rectangle2D bounds;
 	
-	public SVGShapeGroup(final String id) {
+	public SVGShapeGroup(final String id, final Game game) {
 		super(id);
 		children = new ArrayList<SVGItem>();
 	}
@@ -61,16 +62,16 @@ public class SVGShapeGroup extends SVGItem{
 		recalcBounds();
 	}
 	
-	public static SVGShapeGroup parseG(final Node gNode) {
+	public static SVGShapeGroup parseG(final Node gNode, final Game game) {
 		String gID = gNode.getAttributes().getNamedItem("id").getNodeValue();
 		Node transform = gNode.getAttributes().getNamedItem("transform");
 		AffineTransform t = SVGTransform.parseTransform(transform);
 
-		SVGShapeGroup group = new SVGShapeGroup(gID);
+		SVGShapeGroup group = new SVGShapeGroup(gID, game);
     	NodeList l = gNode.getChildNodes();
     	for (int i = 0; i < l.getLength(); i++) {
     		Node gChild = l.item(i);
-    		SVGItem data = SVGImporter.parseNode(gChild);
+    		SVGItem data = SVGImporter.parseNode(gChild, game);
     		if (data != null) {
     			group.getChildren().add(data);
     		}
