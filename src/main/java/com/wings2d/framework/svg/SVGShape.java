@@ -14,10 +14,9 @@ public class SVGShape extends SVGItem{
 	public static final String OPTIONAL_STROKE = "stroke";
 	public static final String OPTIONAL_TRANSFORM = "transform"; 
 	
-	private Shape shape, newShape;
+	private Shape shape;
 	private SVGStyles styles; 
 	private Map<String, Object> optionalData;
-	private boolean shapeUpdated;
 
 	public SVGShape(final String id, final Shape shape, final SVGStyles styles, final Map<String, Object> optionalData) {
 		super(id);
@@ -60,15 +59,10 @@ public class SVGShape extends SVGItem{
 
 	@Override
 	public void applyTransform(AffineTransform t) {
-		newShape = t.createTransformedShape(shape);
-		shapeUpdated = true;
+		shape = t.createTransformedShape(shape);
 	}
 	@Override
 	public void endUpdate() {
-		// Avoid rendering some items that have moved, and some that have not, due to rendering being independent of update
-		if (shapeUpdated) {
-			shape = newShape;
-			shapeUpdated = false;
-		}
+
 	}
 }
