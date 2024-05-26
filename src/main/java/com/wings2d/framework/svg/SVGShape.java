@@ -23,8 +23,6 @@ public class SVGShape extends SVGItem{
 		this.shape = shape;
 		this.styles = styles;
 		this.optionalData = optionalData;
-		
-		this.shapeUpdated = false;
 	}
 
 	@Override
