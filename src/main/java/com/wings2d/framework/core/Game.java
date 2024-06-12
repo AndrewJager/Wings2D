@@ -171,8 +171,6 @@ public abstract class Game<T>{
 				setCanvasColor(Color.GRAY);
 				
 				frame.setVisible(true);
-//				frame.createBufferStrategy(2);
-//				draw.b = frame.getBufferStrategy();
 				draw.initGraphics();
 			}
 		});
@@ -267,18 +265,20 @@ public abstract class Game<T>{
 			toolkit.sync();
 		}
 	
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-		g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		
-
+		setRenderingHints(g2d);
 		
 		g2d.setColor(backgroundColor);
 		g2d.fillRect(0, 0, draw.getWidth(), draw.getHeight());
 			
 		manager.render(g2d);
+	}
+	
+	public static void setRenderingHints(final Graphics2D g2d) {
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 	}
 	
 	/**
