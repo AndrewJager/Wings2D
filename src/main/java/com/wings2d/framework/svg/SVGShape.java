@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
+import com.wings2d.framework.svg.SVGImporter.ImportOverrides;
 import com.wings2d.framework.svg.util.SVGStyles;
 
 public class SVGShape extends SVGItem{
@@ -62,5 +63,14 @@ public class SVGShape extends SVGItem{
 	@Override
 	public void endUpdate() {
 
+	}
+	
+	@Override
+	public void applyOverrides(final ImportOverrides overrides) {
+		if (styles.containsKey(SVGStyles.FILL)) {
+			Color fill = (Color)styles.get(SVGStyles.FILL);
+			fill = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), overrides.alpha());
+			styles.replace(SVGStyles.FILL, fill);
+		}
 	}
 }

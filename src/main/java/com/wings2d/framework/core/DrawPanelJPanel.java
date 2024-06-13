@@ -123,6 +123,6 @@ public class DrawPanelJPanel extends JPanel{
     	int xPos = (container.getWidth() - getWidth()) / 2;
     	int yPos = (container.getHeight() - getHeight()) / 2;
 
-		setLocation(xPos, yPos);	
+		setLocation(xPos, yPos);
     }
 }

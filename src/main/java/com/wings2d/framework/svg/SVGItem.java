@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
+import com.wings2d.framework.svg.SVGImporter.ImportOverrides;
+
 public abstract class SVGItem {
 	public static final String GROUP = "g";
 	public static final String RECT = "rect";
@@ -31,4 +33,5 @@ public abstract class SVGItem {
 	public abstract Rectangle2D getBounds();
 	public abstract void applyTransform(final AffineTransform t);
 	public abstract void endUpdate();
+	public abstract void applyOverrides(final ImportOverrides overrides);
 }
